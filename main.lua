@@ -15,11 +15,13 @@ end
 function love.draw()
     love.graphics.setCanvas(canvas.c)
     love.graphics.clear()
-
+    love.graphics.setShader(pixelatedShader)
     game:draw()
     
     love.graphics.setCanvas()
-    love.graphics.draw(canvas.c, math.floor(canvas.x), math.floor(canvas.y), canvas.r, canvas.scale, canvas.scale, gameWW / 2, gameWH / 2)
+    pixelatedShader:send("size", {WW, WH})
+    pixelatedShader:send("factor", scale / canvas.scale)
+    love.graphics.draw(canvas.c, canvas.x, canvas.y, canvas.r, canvas.scale, canvas.scale, gameWW / 2, gameWH / 2)
 end
 
 function love.update(dt)
