@@ -1,27 +1,33 @@
 function love.load()
+    windowStartup()
+    gameStartup()
     pixelatedShader = love.graphics.newShader([[
-        extern vec2 size;            //vector contains image size, like shader:send('size', {img:getWidth(), img:getHeight()})	
-        extern number factor;    //nimber contains sample size, like shader:send('factor', 2), use number is divisible by two
+
+        extern vec2 size;
+        extern number factor;
         vec4 effect(vec4 color, Image img, vec2 texture_coords, vec2 pixel_coords){
            vec2 tc = floor(texture_coords * size / factor) * factor / size;
            return Texel(img, tc);
         }
+    
     ]])
-    love.graphics.setShader(pixelatedShader)
-    windowStartup()
-    gameStartup()
 end
 
 function love.draw()
     love.graphics.setCanvas(canvas.c)
     love.graphics.clear()
+    
+    pixelatedShader:send("size", {WW, WH})
+    pixelatedShader:send("factor", scale / canvas.scale)
     love.graphics.setShader(pixelatedShader)
+    
     game:draw()
     
     love.graphics.setCanvas()
-    pixelatedShader:send("size", {WW, WH})
-    pixelatedShader:send("factor", scale / canvas.scale)
-    love.graphics.draw(canvas.c, canvas.x, canvas.y, canvas.r, canvas.scale, canvas.scale, gameWW / 2, gameWH / 2)
+    
+    love.graphics.setShader()
+
+    love.graphics.draw(canvas.c, canvas.x, canvas.y, 0, canvas.scale, canvas.scale, gameWW / 2, gameWH / 2)
 end
 
 function love.update(dt)
@@ -47,7 +53,7 @@ function windowStartup()
         r = 0,
         scale = 0,
         update = function(dt)
-            canvas.scale = canvas.scale < scale and canvas.scale + dt or canvas.scale
+            canvas.scale = canvas.scale < scale and canvas.scale + dt * 3 or canvas.scale
             --canvas.r = canvas.scale < scale and canvas.r + dt or 0
         end
     }
