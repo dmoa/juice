@@ -26,13 +26,12 @@ function love.draw()
     love.graphics.setCanvas()
     
     love.graphics.setShader()
-
-    love.graphics.draw(canvas.c, canvas.x, canvas.y, 0, canvas.scale, canvas.scale, gameWW / 2, gameWH / 2)
+    love.graphics.draw(canvas.c, canvas.x, canvas.y, canvas.r, canvas.scale, canvas.scale, gameWW / 2, gameWH / 2)
 end
 
 function love.update(dt)
     game:update(dt)
-    canvas.update(dt)
+    canvas:update(dt)
 end
 
 function love.keypressed(key)
@@ -43,20 +42,21 @@ function windowStartup()
     love.mouse.setVisible(false)
     love.graphics.setDefaultFilter("nearest", "nearest", 1, 1)
     WW, WH = love.graphics.getDimensions()
-    gameWW = 512
-    gameWH = 288
+    gameWW = 256
+    gameWH = 144
     scale = WH / gameWH
+
     canvas = {
         c = love.graphics.newCanvas(gameWW, gameWH),
         x = WW / 2,
         y = WH / 2,
         r = 0,
         scale = 0,
-        update = function(dt)
-            canvas.scale = canvas.scale < scale and canvas.scale + dt * 3 or canvas.scale
-            --canvas.r = canvas.scale < scale and canvas.r + dt or 0
-        end
     }
+    function canvas:update(dt)
+        self.scale = self.scale < scale and self.scale + dt * 3 or self.scale
+    end
+
 end
 
 function gameStartup()
