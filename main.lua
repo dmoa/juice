@@ -16,16 +16,15 @@ end
 function love.draw()
     love.graphics.setCanvas(canvas.c)
     love.graphics.clear()
+    love.graphics.setShader()
     
-    pixelatedShader:send("size", {WW, WH})
-    pixelatedShader:send("factor", scale / canvas.scale)
-    love.graphics.setShader(pixelatedShader)
     
     game:draw()
     
     love.graphics.setCanvas()
-    
-    love.graphics.setShader()
+    pixelatedShader:send("size", {gameWW, gameWH})
+    pixelatedShader:send("factor", scale / canvas.scale)
+    love.graphics.setShader(pixelatedShader)
     love.graphics.draw(canvas.c, canvas.x, canvas.y, canvas.r, canvas.scale, canvas.scale, gameWW / 2, gameWH / 2)
 end
 
@@ -54,7 +53,7 @@ function windowStartup()
         scale = 0,
     }
     function canvas:update(dt)
-        self.scale = self.scale < scale and self.scale + dt * 3 or self.scale
+        self.scale = self.scale < scale and self.scale + dt * 5 or self.scale
     end
 
 end

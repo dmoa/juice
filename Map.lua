@@ -1,9 +1,28 @@
 local Map = {
-    canvas = love.graphics.newCanvas()
 }
 
 function Map:draw()
-    love.graphics.draw(self.canvas)
+    for i, layer in ipairs(self.map.layers) do
+        for y = 0, layer.height - 1 do
+            for x = 0, layer.width - 1 do
+                local index = (x + y * layer.width) + 1
+                local tid = layer.data[index]
+
+                if tid ~= 0 then
+                    local quad = self.map.quads[tid]
+                    local xx = x * self.map.tileset.tilewidth
+                    local yy = y * self.map.tileset.tileheight
+
+                    love.graphics.draw(
+                        self.map.image,
+                        quad,
+                        xx,
+                        yy
+                    )
+                end
+            end
+        end
+    end
 end
 
 function Map:update(dt)
@@ -33,31 +52,8 @@ function Map:generateMap(path)
         end
     end
 
-    love.graphics.setCanvas(self.canvas)
 
-    for i, layer in ipairs(self.map.layers) do
-        for y = 0, layer.height - 1 do
-            for x = 0, layer.width - 1 do
-                local index = (x + y * layer.width) + 1
-                local tid = layer.data[index]
 
-                if tid ~= 0 then
-                    local quad = self.map.quads[tid]
-                    local xx = x * self.map.tileset.tilewidth
-                    local yy = y * self.map.tileset.tileheight
-
-                    love.graphics.draw(
-                        self.map.image,
-                        quad,
-                        xx,
-                        yy
-                    )
-                end
-            end
-        end
-    end
-
-    love.graphics.setCanvas()
 end
 
 return Map
