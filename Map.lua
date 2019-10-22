@@ -1,4 +1,5 @@
 local Map = {
+    mapData = require("mapData")
 }
 
 function Map:draw()
@@ -52,8 +53,37 @@ function Map:generateMap(path)
         end
     end
 
+end
 
+function Map:getTiles(layerIndex)
+    
+    local blocks = {}
 
+    layer = self.map.layers[layerIndex]
+    for y = 0, layer.height - 1 do
+        for x = 0, layer.width - 1 do
+            local index = (x + y * layer.width) + 1
+            local tid = layer.data[index]
+
+            if tid ~= 0 then
+                local quad = self.map.quads[tid]
+                local xx = x * self.map.tileset.tilewidth
+                local yy = y * self.map.tileset.tileheight
+                
+                local block = {
+                    x = xx + (self.mapData.xOffsets["_"..tostring(tid)] and self.mapData.xOffsets["_"..tostring(tid)] or 0), 
+                    y = yy + (self.mapData.yOffsets["_"..tostring(tid)] and self.mapData.yOffsets["_"..tostring(tid)] or 0),
+                    id = tid, 
+                    width = self.mapData.widths["_"..tostring(tid)] and self.mapData.xOffsets["_"..tostring(tid)] or self.map.tileset.tilewidth, 
+                    height = self.mapData.widths["_"..tostring(tid)] and self.mapData.xOffsets["_"..tostring(tid)] or self.map.tileset.tileheight
+                }
+
+                table.insert(blocks, block)
+            end
+        end
+    end
+
+    return blocks
 end
 
 return Map

@@ -1,6 +1,7 @@
 function love.load()
     windowStartup()
     gameStartup()
+
     pixelatedShader = love.graphics.newShader([[
 
         extern vec2 size;
@@ -11,6 +12,8 @@ function love.load()
         }
     
     ]])
+
+    require("AABB")
 end
 
 function love.draw()

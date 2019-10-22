@@ -2,6 +2,8 @@ local Player = {
     size = 1, -- 3 mushrooms sizes
     x = 50,
     y = 50,
+    oldX = nil,
+    oldY = nil,
     image = love.graphics.newImage("imgs/player.png"),
     quadsData = {
         {
@@ -40,7 +42,15 @@ local Player = {
     frameTimer = 0,
     currentQuad = nil,
     direction = "right",
-    walking = false
+    walking = false,
+    collisionData = {
+        {
+            width = 12,
+            height = 2,
+            offsetX = 2,
+            offsetY = 14
+        }
+    }
 }
 
 local frameCounter = 0
@@ -70,21 +80,29 @@ end
 
 function Player:draw()
     love.graphics.draw(self.image, self.currentQuad, self.x, self.y)
+    --love.graphics.rectangle("line", self.x, self.y, 16, 16)
 end
 
 function Player:update(dt)
+    self:animationTick(dt)
+    self:controlsUpdate(dt)
+    self:collisionUpdate(dt)
+end
+
+function Player:animationTick(dt)
     self.currentQuad = self.quadsData[self.size].frames[self.currentAnimation].quads[self.animationIndex]
     self.frameTimer = self.frameTimer - dt
     if self.frameTimer < 0 then
         self.frameTimer = self.quadsData[self.size].frames[self.currentAnimation].frame_speed
         self.animationIndex = (self.animationIndex % self.quadsData[self.size].frames[self.currentAnimation].n_frames) + 1
     end
-
-    self:controlsUpdate(dt)
-
 end
 
 function Player:controlsUpdate(dt)
+
+    self.oldX = self.x 
+    self.oldY = self.y 
+        
     -- do not react if pressing opposite buttons
     if not (love.keyboard.isDown("right") and love.keyboard.isDown("left")) and not (love.keyboard.isDown("up") and love.keyboard.isDown("down")) then
         -- there must be a better way to do this
@@ -151,6 +169,44 @@ function Player:changeAnimation(newAnimation)
     self.currentAnimation = newAnimation
     self.frameTimer = 0 
     self.animationIndex = 1
+end
+
+function Player:collisionUpdate()
+
+    local px = self.x + self.collisionData[self.size].offsetX
+    local py = self.y + self.collisionData[self.size].offsetY
+    local oldpx = self.oldX + self.collisionData[self.size].offsetX
+    local oldpy = self.oldY + self.collisionData[self.size].offsetY
+    local pw = self.collisionData[self.size].width
+    local ph = self.collisionData[self.size].height
+
+    print()
+
+    for k, tile in ipairs(game.map:getTiles(2)) do
+        if AABB(px, py, pw, ph, tile.x, tile.y, tile.width, tile.height) then
+            if oldpx + pw <= tile.x then
+                px = tile.x - pw
+            end
+        end
+        if AABB(px, py, pw, ph, tile.x, tile.y, tile.width, tile.height) then
+            if oldpx >= tile.x + tile.width then
+                px = tile.x + tile.width
+            end
+        end
+        if AABB(px, py, pw, ph, tile.x, tile.y, tile.width, tile.height) then
+            if oldpy + ph <= tile.y then
+                py = tile.y - ph
+            end
+        end
+        if AABB(px, py, pw, ph, tile.x, tile.y, tile.width, tile.height) then
+            if oldpy >= tile.y + tile.height then
+                py = tile.y + tile.height
+            end
+        end
+    end
+
+    self.x = px - self.collisionData[self.size].offsetX
+    self.y = py - self.collisionData[self.size].offsetY
 end
 
 return Player
