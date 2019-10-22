@@ -39,7 +39,8 @@ local Player = {
     frameRate = 0.10,
     frameTimer = 0,
     currentQuad = nil,
-    direction = "right"
+    direction = "right",
+    walking = false
 }
 
 local frameCounter = 0
@@ -88,68 +89,65 @@ function Player:controlsUpdate(dt)
     -- there must be a better way to do this
     if love.keyboard.isDown("right") then 
 
-        if not (self.currentAnimation == "walkingRight") then 
-            self.frameTimer = 0 
-            self.animationIndex = 1
-            self.currentAnimation = "walkingRight"
+        if (not self.walking) or (not (self.direction == "right")) then
+            self:changeAnimation("walkingRight")
             self.direction = "right"
+            self.walking = true
         end
 
         self.x = self.x + 50 * dt
     end
     if love.keyboard.isDown("left") then 
 
-        if not (self.direction == "left") then 
-            self.frameTimer = 0 
-            self.animationIndex = 1
-            self.currentAnimation = "walkingLeft"
+        if (not self.walking) or (not (self.direction == "left")) then 
+            self:changeAnimation("walkingLeft")
             self.direction = "left"
+            self.walking = true
         end
 
         self.x = self.x - 50 * dt
     end
     if love.keyboard.isDown("down") then
         self.y = self.y + 50 * dt
-        
-        if self.currentAnimation == "idleRight" then
-            self.currentAnimation = "walkingRight"
-            self.frameTimer = 0 
-            self.animationIndex = 1
-        end
-        if self.currentAnimation == "idleLeft" then
-            self.currentAnimation = "walkingLeft"
-            self.frameTimer = 0 
-            self.animationIndex = 1
+        if not self.walking then
+            self.walking = true
+            if self.direction == "left" then
+                self:changeAnimation("walkingLeft")
+            else
+                self:changeAnimation("walkingRight")
+            end            
         end
     end
     if love.keyboard.isDown("up") then
         self.y = self.y - 50 * dt
-
-        if self.currentAnimation == "idleRight" then
-            self.currentAnimation = "walkingRight"
-            self.frameTimer = 0 
-            self.animationIndex = 1
-        end
-        if self.currentAnimation == "idleLeft" then
-            self.currentAnimation = "walkingLeft"
-            self.frameTimer = 0 
-            self.animationIndex = 1
+        if not self.walking then
+            self.walking = true
+            if self.direction == "left" then
+                self:changeAnimation("walkingLeft")
+            else
+                self:changeAnimation("walkingRight")
+            end            
         end
     end
 
     
-    if (not love.keyboard.isDown("right")) and (not love.keyboard.isDown("left") and (not love.keyboard.isDown("down") and (not love.keyboard.isDown("up")))) 
-        and not (self.currentAnimation == "idleRight" or self.currentAnimation == "idleLeft") then
-        
-        if (self.currentAnimation == "walkingRight") then
-            self.currentAnimation = "idleRight"
-        else
-            self.currentAnimation = "idleLeft"
+    if (not love.keyboard.isDown("right")) and (not love.keyboard.isDown("left"))
+        and (not love.keyboard.isDown("down")) and (not love.keyboard.isDown("up")) then
+        if self.walking then
+            if self.direction == "right" then
+                self:changeAnimation("idleRight")
+            else
+                self:changeAnimation("idleLeft")
+            end
         end
-
-        self.animationIndex = 1
-        self.frameTimer = 0
+        self.walking = false
     end
+end
+
+function Player:changeAnimation(newAnimation)
+    self.currentAnimation = newAnimation
+    self.frameTimer = 0 
+    self.animationIndex = 1
 end
 
 return Player
