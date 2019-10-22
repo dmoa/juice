@@ -1,5 +1,7 @@
 local Map = {
-    mapData = require("mapData")
+    mapData = require("mapData"),
+    -- tiles drawn after the playing is drawn
+    afterTiles = {}
 }
 
 function Map:draw()
@@ -13,17 +15,35 @@ function Map:draw()
                     local quad = self.map.quads[tid]
                     local xx = x * self.map.tileset.tilewidth
                     local yy = y * self.map.tileset.tileheight
-
-                    love.graphics.draw(
-                        self.map.image,
-                        quad,
-                        xx,
-                        yy
-                    )
+    
+                        --table.insert(self.afterTiles, {x = xx, y = yy, quad = quad})
+                        love.graphics.draw(
+                            self.map.image,
+                            quad,
+                            xx,
+                            yy
+                        )
+                    love.graphics.print(game.player.x / self.map.tileset.tilewidth)
                 end
             end
         end
     end
+end
+
+function Map:finishDrawing()
+    love.graphics.setColor(1, 1, 1, 0.8)
+
+    for k, block in ipairs(self.afterTiles) do
+        love.graphics.draw(
+            self.map.image,
+            block.quad,
+            block.x,
+            block.y 
+        )
+    end
+    self.afterTiles = {}
+    
+    love.graphics.setColor(1, 1, 1, 1)
 end
 
 function Map:update(dt)
@@ -74,8 +94,8 @@ function Map:getTiles(layerIndex)
                     x = xx + (self.mapData.xOffsets["_"..tostring(tid)] and self.mapData.xOffsets["_"..tostring(tid)] or 0), 
                     y = yy + (self.mapData.yOffsets["_"..tostring(tid)] and self.mapData.yOffsets["_"..tostring(tid)] or 0),
                     id = tid, 
-                    width = self.mapData.widths["_"..tostring(tid)] and self.mapData.xOffsets["_"..tostring(tid)] or self.map.tileset.tilewidth, 
-                    height = self.mapData.widths["_"..tostring(tid)] and self.mapData.xOffsets["_"..tostring(tid)] or self.map.tileset.tileheight
+                    width = self.mapData.widths["_"..tostring(tid)] and self.mapData.widths["_"..tostring(tid)] or self.map.tileset.tilewidth, 
+                    height = self.mapData.heights["_"..tostring(tid)] and self.mapData.heights["_"..tostring(tid)] or self.map.tileset.tileheight
                 }
 
                 table.insert(blocks, block)

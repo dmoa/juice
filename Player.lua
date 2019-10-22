@@ -180,7 +180,6 @@ function Player:collisionUpdate()
     local pw = self.collisionData[self.size].width
     local ph = self.collisionData[self.size].height
 
-    print()
 
     for k, tile in ipairs(game.map:getTiles(2)) do
         if AABB(px, py, pw, ph, tile.x, tile.y, tile.width, tile.height) then
