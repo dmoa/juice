@@ -85,54 +85,57 @@ function Player:update(dt)
 end
 
 function Player:controlsUpdate(dt)
+    -- do not react if pressing opposite buttons
+    if not (love.keyboard.isDown("right") and love.keyboard.isDown("left")) and not (love.keyboard.isDown("up") and love.keyboard.isDown("down")) then
+        -- there must be a better way to do this
+        if love.keyboard.isDown("right") then 
 
-    -- there must be a better way to do this
-    if love.keyboard.isDown("right") then 
-
-        if (not self.walking) or (not (self.direction == "right")) then
-            self:changeAnimation("walkingRight")
-            self.direction = "right"
-            self.walking = true
-        end
-
-        self.x = self.x + 50 * dt
-    end
-    if love.keyboard.isDown("left") then 
-
-        if (not self.walking) or (not (self.direction == "left")) then 
-            self:changeAnimation("walkingLeft")
-            self.direction = "left"
-            self.walking = true
-        end
-
-        self.x = self.x - 50 * dt
-    end
-    if love.keyboard.isDown("down") then
-        self.y = self.y + 50 * dt
-        if not self.walking then
-            self.walking = true
-            if self.direction == "left" then
-                self:changeAnimation("walkingLeft")
-            else
+            if (not self.walking) or (not (self.direction == "right")) then
                 self:changeAnimation("walkingRight")
-            end            
+                self.direction = "right"
+                self.walking = true
+            end
+
+            self.x = self.x + 50 * dt
         end
-    end
-    if love.keyboard.isDown("up") then
-        self.y = self.y - 50 * dt
-        if not self.walking then
-            self.walking = true
-            if self.direction == "left" then
+        if love.keyboard.isDown("left") then 
+
+            if (not self.walking) or (not (self.direction == "left")) then 
                 self:changeAnimation("walkingLeft")
-            else
-                self:changeAnimation("walkingRight")
-            end            
+                self.direction = "left"
+                self.walking = true
+            end
+
+            self.x = self.x - 50 * dt
+        end
+        if love.keyboard.isDown("down") then
+            self.y = self.y + 50 * dt
+            if not self.walking then
+                self.walking = true
+                if self.direction == "left" then
+                    self:changeAnimation("walkingLeft")
+                else
+                    self:changeAnimation("walkingRight")
+                end            
+            end
+        end
+        if love.keyboard.isDown("up") then
+            self.y = self.y - 50 * dt
+            if not self.walking then
+                self.walking = true
+                if self.direction == "left" then
+                    self:changeAnimation("walkingLeft")
+                else
+                    self:changeAnimation("walkingRight")
+                end            
+            end
         end
     end
 
-    
     if (not love.keyboard.isDown("right")) and (not love.keyboard.isDown("left"))
-        and (not love.keyboard.isDown("down")) and (not love.keyboard.isDown("up")) then
+        and (not love.keyboard.isDown("down")) and (not love.keyboard.isDown("up")) 
+        or (love.keyboard.isDown("right") and love.keyboard.isDown("left")) or 
+        (love.keyboard.isDown("up") and love.keyboard.isDown("down")) then
         if self.walking then
             if self.direction == "right" then
                 self:changeAnimation("idleRight")
