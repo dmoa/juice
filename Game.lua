@@ -9,6 +9,7 @@ Game.map:generateMap("maps/map")
 function Game:draw()
     self.map:draw()
     self.player:draw()
+    self.map:finishDrawing()
 end
 
 function Game:update(dt)
