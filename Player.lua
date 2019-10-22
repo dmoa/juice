@@ -1,9 +1,155 @@
-local Player = {}
+local Player = {
+    size = 1, -- 3 mushrooms sizes
+    x = 50,
+    y = 50,
+    image = love.graphics.newImage("imgs/player.png"),
+    quadsData = {
+        {
+            offsetX = 0,
+            offsetY = 0,
+            width = 16,
+            height = 16,
+            frames = {
+                idleRight = {
+                    quads = {},
+                    n_frames = 4,
+                    frame_speed = 0.3
+                },
+                walkingRight = {
+                    quads = {},
+                    n_frames = 4,
+                    frame_speed = 0.1
+                },
+                idleLeft = {
+                    quads = {},
+                    n_frames = 4,
+                    frame_speed = 0.3
+                },
+                walkingLeft = {
+                    quads = {},
+                    n_frames = 4,
+                    frame_speed = 0.1
+                },
+            },
+            frameTypes = {"idleRight", "walkingRight", "idleLeft", "walkingLeft"}
+        }
+    },
+    currentAnimation = "idleRight",
+    animationIndex = 1,
+    frameRate = 0.10,
+    frameTimer = 0,
+    currentQuad = nil,
+    direction = "right"
+}
+
+local frameCounter = 0
+ 
+for k, frameT in ipairs(Player.quadsData[1].frameTypes) do
+    
+    if k > 1 then   
+        frameCounter = frameCounter + Player.quadsData[1].frames[Player.quadsData[1].frameTypes[k - 1]].n_frames
+    end
+
+    for i = 1, Player.quadsData[1].frames[frameT].n_frames do
+
+        local actualIndex = i + frameCounter
+
+        table.insert(Player.quadsData[1].frames[frameT].quads,
+            love.graphics.newQuad(
+                (actualIndex - 1) * Player.quadsData[1].width,
+                0,
+                Player.quadsData[1].width,
+                Player.quadsData[1].height,
+                Player.image:getDimensions() 
+            )
+        )
+    end
+end
+
 
 function Player:draw()
+    love.graphics.draw(self.image, self.currentQuad, self.x, self.y)
 end
 
 function Player:update(dt)
+    self.currentQuad = self.quadsData[self.size].frames[self.currentAnimation].quads[self.animationIndex]
+    self.frameTimer = self.frameTimer - dt
+    if self.frameTimer < 0 then
+        self.frameTimer = self.quadsData[self.size].frames[self.currentAnimation].frame_speed
+        self.animationIndex = (self.animationIndex % self.quadsData[self.size].frames[self.currentAnimation].n_frames) + 1
+    end
+
+    self:controlsUpdate(dt)
+
+end
+
+function Player:controlsUpdate(dt)
+
+    -- there must be a better way to do this
+    if love.keyboard.isDown("right") then 
+
+        if not (self.currentAnimation == "walkingRight") then 
+            self.frameTimer = 0 
+            self.animationIndex = 1
+            self.currentAnimation = "walkingRight"
+            self.direction = "right"
+        end
+
+        self.x = self.x + 50 * dt
+    end
+    if love.keyboard.isDown("left") then 
+
+        if not (self.direction == "left") then 
+            self.frameTimer = 0 
+            self.animationIndex = 1
+            self.currentAnimation = "walkingLeft"
+            self.direction = "left"
+        end
+
+        self.x = self.x - 50 * dt
+    end
+    if love.keyboard.isDown("down") then
+        self.y = self.y + 50 * dt
+        
+        if self.currentAnimation == "idleRight" then
+            self.currentAnimation = "walkingRight"
+            self.frameTimer = 0 
+            self.animationIndex = 1
+        end
+        if self.currentAnimation == "idleLeft" then
+            self.currentAnimation = "walkingLeft"
+            self.frameTimer = 0 
+            self.animationIndex = 1
+        end
+    end
+    if love.keyboard.isDown("up") then
+        self.y = self.y - 50 * dt
+
+        if self.currentAnimation == "idleRight" then
+            self.currentAnimation = "walkingRight"
+            self.frameTimer = 0 
+            self.animationIndex = 1
+        end
+        if self.currentAnimation == "idleLeft" then
+            self.currentAnimation = "walkingLeft"
+            self.frameTimer = 0 
+            self.animationIndex = 1
+        end
+    end
+
+    
+    if (not love.keyboard.isDown("right")) and (not love.keyboard.isDown("left") and (not love.keyboard.isDown("down") and (not love.keyboard.isDown("up")))) 
+        and not (self.currentAnimation == "idleRight" or self.currentAnimation == "idleLeft") then
+        
+        if (self.currentAnimation == "walkingRight") then
+            self.currentAnimation = "idleRight"
+        else
+            self.currentAnimation = "idleLeft"
+        end
+
+        self.animationIndex = 1
+        self.frameTimer = 0
+    end
 end
 
 return Player
