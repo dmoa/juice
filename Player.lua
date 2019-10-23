@@ -208,4 +208,16 @@ function Player:collisionUpdate()
     self.y = py - self.collisionData[self.size].offsetY
 end
 
+function Player:getBRIndex()
+    local indexX = math.floor((self.x + self.collisionData[self.size].width + self.collisionData[self.size].offsetX) / game.map.map.tileset.tilewidth) + 1
+    local indexY = math.floor((self.y + self.collisionData[self.size].height + self.collisionData[self.size].offsetY) / game.map.map.tileset.tileheight)
+    return indexY * (gameWW / game.map.map.tileset.tilewidth) + indexX
+end
+
+function Player:getBLIndex()
+    local indexX = math.floor((self.x + self.collisionData[self.size].offsetX) / game.map.map.tileset.tilewidth) + 1
+    local indexY = math.floor((self.y + self.collisionData[self.size].height + self.collisionData[self.size].offsetY) / game.map.map.tileset.tileheight)
+    return indexY * (gameWW / game.map.map.tileset.tilewidth) + indexX
+end
+
 return Player

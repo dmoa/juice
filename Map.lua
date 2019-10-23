@@ -5,29 +5,42 @@ local Map = {
 }
 
 function Map:draw()
+
+    local playerIndex1 = game.player:getBLIndex()
+    local playerIndex2 = game.player:getBRIndex()
+    
     for i, layer in ipairs(self.map.layers) do
         for y = 0, layer.height - 1 do
             for x = 0, layer.width - 1 do
+                
                 local index = (x + y * layer.width) + 1
                 local tid = layer.data[index]
-
+                
                 if tid ~= 0 then
                     local quad = self.map.quads[tid]
                     local xx = x * self.map.tileset.tilewidth
                     local yy = y * self.map.tileset.tileheight
-    
-                        --table.insert(self.afterTiles, {x = xx, y = yy, quad = quad})
+                    
+                    if (index == playerIndex1 or index == playerIndex2) and i == 2 and
+                         AABB(game.player.x, game.player.y, game.player.quadsData[game.player.size].width, game.player.quadsData[game.player.size].height,
+                            xx, yy, self.map.tileset.tilewidth, self.map.tileset.tileheight) then
+                                    
+                        table.insert(self.afterTiles, {x = xx, y = yy, quad = quad})
+                        
+                    else
                         love.graphics.draw(
                             self.map.image,
                             quad,
                             xx,
                             yy
                         )
-                    love.graphics.print(game.player.x / self.map.tileset.tilewidth)
+                    end
+                    
                 end
             end
         end
     end
+    love.graphics.print(playerIndex1)
 end
 
 function Map:finishDrawing()

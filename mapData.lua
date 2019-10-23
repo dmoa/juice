@@ -4,6 +4,12 @@ return {
     xOffsets = {
         -- signposts
         _49 = 5, _50 = 5, _57 = 5, _58 = 5,
+        -- right side wall
+        _75 = 11,
+        -- bottom + right side wall
+        _83 = 11,
+        -- top + right side wall
+        _67 = 5
     },
     yOffsets = {
         -- signposts
@@ -15,7 +21,17 @@ return {
         -- signposts
         _49 = 5, _50 = 5, _57 = 5, _58 = 5,
         -- left side wall
-        _73 = 5
+        _73 = 5,
+        -- right side wall
+        _75 = 5,
+        -- bottom + left side wall
+        _81 = 5,
+        -- bottom + right side wall
+        _83 = 11,
+        -- top + left side wall
+        _65 = 5,
+        -- top + right side wall
+        _67 = 5
     },
     heights = {
         -- signposts
