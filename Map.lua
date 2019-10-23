@@ -23,7 +23,8 @@ function Map:draw()
                     local xx = x * self.map.tileset.tilewidth
                     local yy = y * self.map.tileset.tileheight
                     
-                    if (index == playerIndex1 or index == playerIndex2) and i == 2 and
+                    if (index == playerIndex1 or index == playerIndex2) and i == 2 
+                        and not (self.mapDataGT.exceptions["_"..tostring(tid)]) and
                          AABB(game.player.x, 
                             game.player.y, 
                             game.player.quadsData[game.player.size].width, 

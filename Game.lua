@@ -1,7 +1,6 @@
 local Game = {
     map = require("Map"),
     player = require("Player"),
-    canvas = love.graphics.newCanvas()
 }
 
 Game.map:generateMap("maps/map")

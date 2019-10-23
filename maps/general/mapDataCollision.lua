@@ -10,7 +10,11 @@ return {
         -- bottom + right side wall
         _83 = 11,
         -- top + right side wall
-        _67 = 5
+        _67 = 5,
+        -- building
+        _15 = 3,
+        _23 = 3,
+        _31 = 3
     },
     yOffsets = {
         -- signposts
@@ -32,7 +36,11 @@ return {
         -- top + left side wall
         _65 = 5,
         -- top + right side wall
-        _67 = 5
+        _67 = 5,
+        -- building
+        _15 = 13,
+        _23 = 13,
+        _31 = 13
     },
     heights = {
         -- signposts
