@@ -1,5 +1,7 @@
 local Map = {
-    mapData = require("mapData"),
+    mapDataCollisions = require("maps/general/mapDataCollision"),
+    -- data about when the tiles should go transparent
+    mapDataGT = require("maps/general/mapDataGT"),
     -- tiles drawn after the playing is drawn
     afterTiles = {}
 }
@@ -22,8 +24,14 @@ function Map:draw()
                     local yy = y * self.map.tileset.tileheight
                     
                     if (index == playerIndex1 or index == playerIndex2) and i == 2 and
-                         AABB(game.player.x, game.player.y, game.player.quadsData[game.player.size].width, game.player.quadsData[game.player.size].height,
-                            xx, yy, self.map.tileset.tilewidth, self.map.tileset.tileheight) then
+                         AABB(game.player.x, 
+                            game.player.y, 
+                            game.player.quadsData[game.player.size].width, 
+                            game.player.quadsData[game.player.size].height,
+                            xx + (self.mapDataGT.xOffsets["_"..tostring(tid)] and self.mapDataGT.xOffsets["_"..tostring(tid)] or 0),
+                            yy + (self.mapDataGT.yOffsets["_"..tostring(tid)] and self.mapDataGT.yOffsets["_"..tostring(tid)] or 0), 
+                            (self.mapDataGT.widths["_"..tostring(tid)] and self.mapDataGT.widths["_"..tostring(tid)] or self.map.tileset.tilewidth),
+                            (self.mapDataGT.heights["_"..tostring(tid)] and self.mapDataGT.heights["_"..tostring(tid)] or self.map.tileset.tileheight)) then
                                     
                         table.insert(self.afterTiles, {x = xx, y = yy, quad = quad})
                         
@@ -40,7 +48,6 @@ function Map:draw()
             end
         end
     end
-    love.graphics.print(playerIndex1)
 end
 
 function Map:finishDrawing()
@@ -104,11 +111,11 @@ function Map:getTiles(layerIndex)
                 local yy = y * self.map.tileset.tileheight
                 
                 local block = {
-                    x = xx + (self.mapData.xOffsets["_"..tostring(tid)] and self.mapData.xOffsets["_"..tostring(tid)] or 0), 
-                    y = yy + (self.mapData.yOffsets["_"..tostring(tid)] and self.mapData.yOffsets["_"..tostring(tid)] or 0),
+                    x = xx + (self.mapDataCollisions.xOffsets["_"..tostring(tid)] and self.mapDataCollisions.xOffsets["_"..tostring(tid)] or 0), 
+                    y = yy + (self.mapDataCollisions.yOffsets["_"..tostring(tid)] and self.mapDataCollisions.yOffsets["_"..tostring(tid)] or 0),
                     id = tid, 
-                    width = self.mapData.widths["_"..tostring(tid)] and self.mapData.widths["_"..tostring(tid)] or self.map.tileset.tilewidth, 
-                    height = self.mapData.heights["_"..tostring(tid)] and self.mapData.heights["_"..tostring(tid)] or self.map.tileset.tileheight
+                    width = self.mapDataCollisions.widths["_"..tostring(tid)] and self.mapDataCollisions.widths["_"..tostring(tid)] or self.map.tileset.tilewidth, 
+                    height = self.mapDataCollisions.heights["_"..tostring(tid)] and self.mapDataCollisions.heights["_"..tostring(tid)] or self.map.tileset.tileheight
                 }
 
                 table.insert(blocks, block)
