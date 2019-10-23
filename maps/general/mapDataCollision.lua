@@ -1,4 +1,5 @@
 return {
+    
     -- offset / width / height only mentioned if required, i.e. tile doesn't fit
     -- proportions
     xOffsets = {
