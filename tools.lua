@@ -15,9 +15,19 @@ pixelatedShader = love.graphics.newShader([[
 ]])
 
 joystick = love.joystick.getJoysticks()[1]
+joystick:setVibration(1, 1, 0.5)
 
-isDown = {
+keyIsDown = {
     right = function()
-        return (love.keyboard.isDown("right") or love.keyboard.isDown("d") or )
+        return (love.keyboard.isDown("right") or love.keyboard.isDown("d") or joystick:getAxis(1) > 0.5)
+    end,
+    left = function()
+        return (love.keyboard.isDown("left") or love.keyboard.isDown("a") or joystick:getAxis(1) < -0.5)
+    end,
+    up = function()
+        return (love.keyboard.isDown("up") or love.keyboard.isDown("w") or joystick:getAxis(2) < -0.5)
+    end,
+    down = function()
+        return (love.keyboard.isDown("down") or love.keyboard.isDown("s") or joystick:getAxis(2) > 0.5)
     end
 }

@@ -2,6 +2,8 @@ local Player = {
     size = 1, -- 3 mushrooms sizes
     x = 50,
     y = 50,
+    v = 50,
+    directionV = math.pow(50 * 50 / 2, 0.5),
     oldX = nil,
     oldY = nil,
     image = love.graphics.newImage("imgs/player.png"),
@@ -104,9 +106,9 @@ function Player:controlsUpdate(dt)
     self.oldY = self.y 
         
     -- do not react if pressing opposite buttons
-    if not (love.keyboard.isDown("right") and love.keyboard.isDown("left")) and not (love.keyboard.isDown("up") and love.keyboard.isDown("down")) then
+    if not (keyIsDown.right() and keyIsDown.left()) and not (keyIsDown.up() and keyIsDown.down()) then
         -- there must be a better way to do this
-        if love.keyboard.isDown("right") then 
+        if keyIsDown.right() then 
 
             if (not self.walking) or (not (self.direction == "right")) then
                 self:changeAnimation("walkingRight")
@@ -114,9 +116,8 @@ function Player:controlsUpdate(dt)
                 self.walking = true
             end
 
-            self.x = self.x + 50 * dt
         end
-        if love.keyboard.isDown("left") then 
+        if keyIsDown.left() then 
 
             if (not self.walking) or (not (self.direction == "left")) then 
                 self:changeAnimation("walkingLeft")
@@ -124,10 +125,9 @@ function Player:controlsUpdate(dt)
                 self.walking = true
             end
 
-            self.x = self.x - 50 * dt
         end
-        if love.keyboard.isDown("down") then
-            self.y = self.y + 50 * dt
+        if keyIsDown.down() then
+
             if not self.walking then
                 self.walking = true
                 if self.direction == "left" then
@@ -136,9 +136,10 @@ function Player:controlsUpdate(dt)
                     self:changeAnimation("walkingRight")
                 end            
             end
+        
         end
-        if love.keyboard.isDown("up") then
-            self.y = self.y - 50 * dt
+        if keyIsDown.up() then
+            
             if not self.walking then
                 self.walking = true
                 if self.direction == "left" then
@@ -147,13 +148,42 @@ function Player:controlsUpdate(dt)
                     self:changeAnimation("walkingRight")
                 end            
             end
+
         end
+
+        -- complicated, because you have to make sure going diagonally is the same speed
+        if keyIsDown.down() then
+            if keyIsDown.right() then
+                self.x = self.x + self.directionV * dt
+                self.y = self.y + self.directionV * dt
+            elseif keyIsDown.left() then
+                self.x = self.x - self.directionV * dt
+                self.y = self.y + self.directionV * dt
+            else
+                self.y = self.y + self.v * dt
+            end
+        elseif keyIsDown.up() then
+            if keyIsDown.right() then
+                self.x = self.x + self.directionV * dt
+                self.y = self.y - self.directionV * dt
+            elseif keyIsDown.left() then
+                self.x = self.x - self.directionV * dt
+                self.y = self.y - self.directionV * dt
+            else
+                self.y = self.y - self.v * dt
+            end
+        elseif keyIsDown.right() then
+            self.x = self.x + self.v * dt
+        elseif keyIsDown.left() then
+            self.x = self.x - self.v * dt
+        end
+
     end
 
-    if (not love.keyboard.isDown("right")) and (not love.keyboard.isDown("left"))
-        and (not love.keyboard.isDown("down")) and (not love.keyboard.isDown("up")) 
-        or (love.keyboard.isDown("right") and love.keyboard.isDown("left")) or 
-        (love.keyboard.isDown("up") and love.keyboard.isDown("down")) then
+    if (not keyIsDown.right()) and (not keyIsDown.left())
+        and (not keyIsDown.down()) and (not keyIsDown.up()) 
+        or (keyIsDown.right() and keyIsDown.left()) or 
+        (keyIsDown.up() and keyIsDown.down()) then
         if self.walking then
             if self.direction == "right" then
                 self:changeAnimation("idleRight")
