@@ -213,29 +213,31 @@ function Player:collisionUpdate()
 
     for k, tile in ipairs(game.map:getTiles(2)) do
         if AABB(px, py, pw, ph, tile.x, tile.y, tile.width, tile.height) then
-            if oldpx + pw <= tile.x then
-                px = tile.x - pw
+
+            if AABBVertical(oldpy, ph, tile.y, tile.height) then
+                if px + pw / 2 < tile.x + pw / 2 then
+                    local pushback = px + pw - tile.x
+                    px = px - pushback
+                else
+                    local pushback = tile.x + tile.width - px
+                    px = px + pushback
+                end
+            elseif AABBHorizontal(oldpx, pw, tile.x, tile.width) then
+                if py + ph / 2 < tile.y + ph / 2 then
+                    local pushback = py + ph - tile.y
+                    py = py - pushback
+                else
+                    local pushback = tile.y + tile.height - py
+                    py = py + pushback
+                end
             end
-        end
-        if AABB(px, py, pw, ph, tile.x, tile.y, tile.width, tile.height) then
-            if oldpx >= tile.x + tile.width then
-                px = tile.x + tile.width
-            end
-        end
-        if AABB(px, py, pw, ph, tile.x, tile.y, tile.width, tile.height) then
-            if oldpy + ph <= tile.y then
-                py = tile.y - ph
-            end
-        end
-        if AABB(px, py, pw, ph, tile.x, tile.y, tile.width, tile.height) then
-            if oldpy >= tile.y + tile.height then
-                py = tile.y + tile.height
-            end
+            
         end
     end
 
     self.x = px - self.collisionData[self.size].offsetX
     self.y = py - self.collisionData[self.size].offsetY
+
 end
 
 function Player:getBRIndex()
