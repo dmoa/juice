@@ -52,7 +52,7 @@ function windowStartup()
         scale = 0,
     }
     function canvas:update(dt)
-        self.scale = self.scale < scale and self.scale + dt * 5 or self.scale
+        self.scale = self.scale < scale and self.scale + dt * 3 or self.scale
     end
 
 end
