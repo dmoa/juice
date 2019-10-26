@@ -7,9 +7,6 @@ local Map = {
 }
 
 function Map:draw()
-
-    local playerIndex1 = game.player:getBLIndex()
-    local playerIndex2 = game.player:getBRIndex()
     
     for i, layer in ipairs(self.map.layers) do
         for y = 0, layer.height - 1 do
@@ -23,8 +20,7 @@ function Map:draw()
                     local xx = x * self.map.tileset.tilewidth
                     local yy = y * self.map.tileset.tileheight
                     
-                    if (index == playerIndex1 or index == playerIndex2) and i == 2 
-                        and not (self.mapDataGT.exceptions["_"..tostring(tid)]) and
+                    if i > 1 and not (self.mapDataGT.exceptions["_"..tostring(tid)]) and
                          AABB(game.player.x, 
                             game.player.y, 
                             game.player.quadsData[game.player.size].width, 
@@ -49,6 +45,8 @@ function Map:draw()
             end
         end
     end
+
+    --love.graphics.rectangle("fill", game.player.x, game.player.y, game.player.quadsData[game.player.size].width, game.player.quadsData[game.player.size].height)
 end
 
 function Map:finishDrawing()
