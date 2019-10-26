@@ -89,6 +89,10 @@ function Player:update(dt)
     self:animationTick(dt)
     self:controlsUpdate(dt)
     self:collisionUpdate(dt)
+
+    if self.x + self.quadsData[self.size].width < 0 then
+        game.map:movedMap("left")
+    end
 end
 
 function Player:animationTick(dt)

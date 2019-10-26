@@ -125,4 +125,8 @@ function Map:getTiles(layerIndex)
     return blocks
 end
 
+function Map:movedMap(newL)
+    self:generateMap("maps/"..newL.."/1")
+end
+
 return Map
