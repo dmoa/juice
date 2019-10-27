@@ -53,6 +53,10 @@ local Player = {
             offsetY = 14
         }
     },
+    startingMapPos = {
+        x = 0,
+        y = 0
+    }
 }
 
 local frameCounter = 0
@@ -245,20 +249,26 @@ end
 function Player:mapUpdate()
     if self.x + self.quadsData[self.size].width < 0 then
         game.map:moveMap("left")
-        self.x = gameWW - self.quadsData[self.size].width
+        -- y position doesn't change
+        self.startingMapPos.y = self.y
+        self.startingMapPos.x = gameWW - self.quadsData[self.size].width 
     end
     if self.x > gameWW then
         game.map:moveMap("right")
-        self.x = 0
+        self.startingMapPos.y = self.y
+        self.startingMapPos.x = 0 
     end
     if self.y + self.quadsData[self.size].height < 0 then
         game.map:moveMap("up")
-        self.y = gameWH - self.quadsData[self.size].height
     end
     if self.y > gameWH then
         game.map:moveMap("down")
-        self.y = 0
     end
+end
+
+function Player:reloadPosition()
+    self.x = self.startingMapPos.x
+    self.y = self.startingMapPos.y
 end
 
 function Player:getBRIndex()

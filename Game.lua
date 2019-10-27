@@ -16,4 +16,9 @@ function Game:update(dt)
     self.player:update(dt)
 end
 
+function Game:reloadLevel()
+    self.map:reloadMap()
+    self.player:reloadPosition()
+end
+
 return Game

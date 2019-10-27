@@ -132,7 +132,7 @@ function Map:moveMap(direction)
     self.currentMapType = (self.currentMapType == "middle") and direction or "middle" 
 end
 
-function Map:updateMovedMap()
+function Map:reloadMap()
     self:generateMap("maps/"..self.currentMapType.."/1")
 end
 

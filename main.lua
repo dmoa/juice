@@ -54,10 +54,10 @@ function windowStartup()
     }
     function canvas:update(dt)
         if self.shrink then
-            self.scale = self.scale + dt * -6
+            self.scale = self.scale + dt * -10
             if self.scale < 0 then
                 self.shrink = false
-                game.map:updateMovedMap()
+                game:reloadLevel()
             end
         else
             self.scale = self.scale < scale and self.scale + dt * 4 or self.scale
