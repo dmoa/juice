@@ -3,7 +3,7 @@ local Game = {
     player = require("Player"),
 }
 
-Game.map:generateMap("maps/middle/map")
+Game.map:generateMap("maps/middle/1")
 
 function Game:draw()
     self.map:draw()

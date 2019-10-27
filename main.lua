@@ -50,9 +50,21 @@ function windowStartup()
         y = WH / 2,
         r = 0,
         scale = 0,
+        shrink = false
     }
     function canvas:update(dt)
-        self.scale = self.scale < scale and self.scale + dt * 3 or self.scale
+        if self.shrink then
+            self.scale = self.scale + dt * -6
+            if self.scale < 0 then
+                self.shrink = false
+                game.map:updateMovedMap()
+            end
+        else
+            self.scale = self.scale < scale and self.scale + dt * 4 or self.scale
+        end
+    end
+    function canvas:transition(dt)
+        self.shrink = true
     end
 
 end

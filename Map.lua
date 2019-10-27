@@ -3,7 +3,8 @@ local Map = {
     -- data about when the tiles should go transparent
     mapDataGT = require("maps/general/mapDataGT"),
     -- tiles drawn after the playing is drawn
-    afterTiles = {}
+    afterTiles = {},
+    currentMapType = "middle"
 }
 
 function Map:draw()
@@ -125,8 +126,14 @@ function Map:getTiles(layerIndex)
     return blocks
 end
 
-function Map:movedMap(newL)
-    self:generateMap("maps/"..newL.."/1")
+function Map:moveMap(direction)
+    canvas:transition()
+    -- black magic ternary statement
+    self.currentMapType = (self.currentMapType == "middle") and direction or "middle" 
+end
+
+function Map:updateMovedMap()
+    self:generateMap("maps/"..self.currentMapType.."/1")
 end
 
 return Map

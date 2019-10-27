@@ -1,3 +1,7 @@
+-- go over tiles
+-- tiles which have a collision box, 
+-- for when they should be drawn in lower opacity
+
 return {
     xOffsets = {
 
@@ -23,6 +27,15 @@ return {
         _23 = true,
         _24 = true,
         _31 = true,
-        _32 = true
+        _32 = true,
+        _12 = true,
+        _13 = true,
+        _14 = true,
+        _20 = true,
+        _21 = true,
+        _22 = true,
+        _28 = true,
+        _29 = true,
+        _30 = true
     }
 }

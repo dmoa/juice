@@ -52,7 +52,7 @@ local Player = {
             offsetX = 2,
             offsetY = 14
         }
-    }
+    },
 }
 
 local frameCounter = 0
@@ -89,10 +89,7 @@ function Player:update(dt)
     self:animationTick(dt)
     self:controlsUpdate(dt)
     self:collisionUpdate(dt)
-
-    if self.x + self.quadsData[self.size].width < 0 then
-        game.map:movedMap("left")
-    end
+    self:mapUpdate()
 end
 
 function Player:animationTick(dt)
@@ -155,7 +152,7 @@ function Player:controlsUpdate(dt)
 
         end
 
-        -- complicated, because you have to make sure going diagonally is the same speed
+        -- complicated, because you have to make sure going diagonally is the same speed as any other direction
         if keyIsDown.down() then
             if keyIsDown.right() then
                 self.x = self.x + self.directionV * dt
@@ -242,6 +239,26 @@ function Player:collisionUpdate()
     self.x = px - self.collisionData[self.size].offsetX
     self.y = py - self.collisionData[self.size].offsetY
 
+end
+
+-- changes map if out of bounds
+function Player:mapUpdate()
+    if self.x + self.quadsData[self.size].width < 0 then
+        game.map:moveMap("left")
+        self.x = gameWW - self.quadsData[self.size].width
+    end
+    if self.x > gameWW then
+        game.map:moveMap("right")
+        self.x = 0
+    end
+    if self.y + self.quadsData[self.size].height < 0 then
+        game.map:moveMap("up")
+        self.y = gameWH - self.quadsData[self.size].height
+    end
+    if self.y > gameWH then
+        game.map:moveMap("down")
+        self.y = 0
+    end
 end
 
 function Player:getBRIndex()
