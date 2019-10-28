@@ -27,6 +27,10 @@ pixelatedShader = love.graphics.newShader([[
 
 ]])
 
+function math.round(n)
+    return n % 1 >= 0.5 and math.ceil(n) or math.floor(n)
+end
+
 joystick = love.joystick.getJoysticks()[1]
 -- joystick:setVibration(1, 1, 0.5)
 

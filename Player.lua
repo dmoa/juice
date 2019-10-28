@@ -83,6 +83,8 @@ for k, frameT in ipairs(Player.quadsData[1].frameTypes) do
     end
 end
 
+Player.currentQuad = Player.quadsData[1].frames.idleRight.quads[1]
+
 
 function Player:draw()
     love.graphics.draw(self.image, self.currentQuad, self.x, self.y)

@@ -18,13 +18,15 @@ function love.draw()
     love.graphics.draw(canvas.c, canvas.x, canvas.y, canvas.r, canvas.scale, canvas.scale, gameWW / 2, gameWH / 2)
 
     love.graphics.print(love.timer.getFPS())
+    love.graphics.print(canvas.scale, 0, 15)
 end
 
 function love.update(dt)
     game:update(dt)
     canvas:update(dt)
     pixelatedShader:send("size", {gameWW, gameWH})
-    pixelatedShader:send("factor", scale / canvas.scale)
+    -- I honestly have no idea why or how it works when I added 0.0001, but it does, so...
+    pixelatedShader:send("factor", scale / (canvas.scale))
 end
 
 function love.keypressed(key)

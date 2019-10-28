@@ -21,6 +21,8 @@ return {
         _73 = true,
         -- right side wall
         _75 = true,
+        -- top wall
+        _66 = true,
         -- building
         _15 = true,
         _16 = true,
