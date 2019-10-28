@@ -7,8 +7,8 @@ end
 
 function love.draw()
     love.graphics.setCanvas(canvas.c)
-    love.graphics.clear()
     love.graphics.setShader()
+    love.graphics.clear()
     
     
     game:draw()
@@ -60,7 +60,7 @@ function windowStartup()
                 game:reloadLevel()
             end
         else
-            self.scale = self.scale < scale and self.scale + dt * 4 or self.scale
+            self.scale = self.scale < scale and self.scale + dt * 4 or scale
         end
     end
     function canvas:transition(dt)
