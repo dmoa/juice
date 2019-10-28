@@ -6,16 +6,20 @@ function love.load()
 end
 
 function love.draw()
+    love.graphics.push("all")
+    love.graphics.translate(gameWW/2, gameWH/2)
+    love.graphics.scale(canvas.scale)
+    love.graphics.translate(-gameWW/2, -gameWH/2)
+    
     love.graphics.setCanvas(canvas.c)
     love.graphics.setShader()
     love.graphics.clear()
     
-    
     game:draw()
     
-    love.graphics.setCanvas()
-    love.graphics.setShader(pixelatedShader)
-    love.graphics.draw(canvas.c, canvas.x, canvas.y, canvas.r, canvas.scale, canvas.scale, gameWW / 2, gameWH / 2)
+    love.graphics.pop()
+    
+    love.graphics.draw(canvas.c, 0, 0, 0, scale)
 
     love.graphics.print(love.timer.getFPS())
     love.graphics.print(canvas.scale, 0, 15)
@@ -26,7 +30,7 @@ function love.update(dt)
     canvas:update(dt)
     pixelatedShader:send("size", {gameWW, gameWH})
     -- I honestly have no idea why or how it works when I added 0.0001, but it does, so...
-    pixelatedShader:send("factor", scale / (canvas.scale))
+    pixelatedShader:send("factor", 1 / canvas.scale)
 end
 
 function love.keypressed(key)
@@ -44,8 +48,8 @@ function windowStartup()
     WW, WH = love.graphics.getDimensions()
     gameWW = 256
     gameWH = 144
-    scale = WH / gameWH
-
+    
+    
     canvas = {
         c = love.graphics.newCanvas(gameWW, gameWH),
         x = WW / 2,
@@ -62,13 +66,14 @@ function windowStartup()
                 game:reloadLevel()
             end
         else
-            self.scale = self.scale < scale and self.scale + dt * 4 or scale
+            self.scale = math.min(1, self.scale + dt)
         end
     end
     function canvas:transition(dt)
         self.shrink = true
     end
-
+    
+    scale = love.graphics.getWidth() / canvas.c:getWidth()
 end
 
 function gameStartup()
