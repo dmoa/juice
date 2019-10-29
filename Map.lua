@@ -34,8 +34,8 @@ function Map:draw()
                             (self.mapDataGT.widths["_"..tostring(tid)] and self.mapDataGT.widths["_"..tostring(tid)] or self.map.tileset.tilewidth),
                             (self.mapDataGT.heights["_"..tostring(tid)] and self.mapDataGT.heights["_"..tostring(tid)] or self.map.tileset.tileheight)) then
                         
-                        table.insert(((self.mapDataGT.widths["_"..tostring(tid)] or self.map.tileset.tilewidth) 
-                                    self.mapDataGT.exceptions["_"..tostring(tid)]), 
+                        table.insert(self.mapDataGT.withoutOpacity["_"..tostring(tid)] and self.afterTiles.withoutOpacity 
+                                     or self.afterTiles.withOpacity, 
                                      {x = xx, y = yy, quad = quad})
                         
                     else

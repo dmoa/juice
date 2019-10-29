@@ -7,13 +7,15 @@ return {
 
     },
     yOffsets = {
-
+        -- signposts
+        _49 = -3, _50 = -3, _57 = -3, _58 = -3
     },
     widths = {
 
     },
     heights = {
-
+        -- signposts
+        _49 = 2, _50 = 2, _57 = 2, _58 = 2
     },
     -- exceptions, tiles that should never go transparent
     exceptions = {
@@ -35,6 +37,10 @@ return {
         _20 = true, _21 = true, _22 = true, 
         _28 = true, _29 = true, _30 = true,
         -- tree
-        _59 = true, _60 = true, _61 = true
+        _59 = true, _60 = true, _61 = true,
     },
+    withoutOpacity = {
+        -- signposts
+        _49 = true, _50 = true, _57 = true, _58 = true
+    }
 }
