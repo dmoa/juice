@@ -3,7 +3,10 @@ local Map = {
     -- data about when the tiles should go transparent
     mapDataGT = require("maps/general/mapDataGT"),
     -- tiles drawn after the playing is drawn
-    afterTiles = {},
+    afterTiles = {
+        withOpacity = {},
+        withoutOpacity = {}
+    },
     currentMapType = "middle"
 }
 
@@ -22,7 +25,7 @@ function Map:draw()
                     local yy = y * self.map.tileset.tileheight
                     
                     if i > 1 and not (self.mapDataGT.exceptions["_"..tostring(tid)]) and
-                         AABB(game.player.x, 
+                       AABB(game.player.x, 
                             game.player.y, 
                             game.player.quadsData[game.player.size].width, 
                             game.player.quadsData[game.player.size].height,
@@ -30,8 +33,10 @@ function Map:draw()
                             yy + (self.mapDataGT.yOffsets["_"..tostring(tid)] and self.mapDataGT.yOffsets["_"..tostring(tid)] or 0), 
                             (self.mapDataGT.widths["_"..tostring(tid)] and self.mapDataGT.widths["_"..tostring(tid)] or self.map.tileset.tilewidth),
                             (self.mapDataGT.heights["_"..tostring(tid)] and self.mapDataGT.heights["_"..tostring(tid)] or self.map.tileset.tileheight)) then
-                                    
-                        table.insert(self.afterTiles, {x = xx, y = yy, quad = quad})
+                        
+                        table.insert(((self.mapDataGT.widths["_"..tostring(tid)] or self.map.tileset.tilewidth) 
+                                    self.mapDataGT.exceptions["_"..tostring(tid)]), 
+                                     {x = xx, y = yy, quad = quad})
                         
                     else
                         love.graphics.draw(
@@ -51,9 +56,9 @@ function Map:draw()
 end
 
 function Map:finishDrawing()
-    love.graphics.setColor(1, 1, 1, 0.8)
 
-    for k, block in ipairs(self.afterTiles) do
+    love.graphics.setColor(1, 1, 1, 0.8)
+    for k, block in ipairs(self.afterTiles.withOpacity) do
         love.graphics.draw(
             self.map.image,
             block.quad,
@@ -61,7 +66,21 @@ function Map:finishDrawing()
             block.y 
         )
     end
-    self.afterTiles = {}
+    
+    love.graphics.setColor(1, 1, 1, 1)
+    for k, block in ipairs(self.afterTiles.withoutOpacity) do
+        love.graphics.draw(
+            self.map.image,
+            block.quad,
+            block.x,
+            block.y 
+        )
+    end
+
+    self.afterTiles = {
+        withOpacity = {},
+        withoutOpacity = {}
+    }
     
     love.graphics.setColor(1, 1, 1, 1)
 end

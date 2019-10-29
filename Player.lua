@@ -218,7 +218,7 @@ function Player:collisionUpdate()
     local ph = self.collisionData[self.size].height
 
 
-    for k, tile in ipairs(game.map:getTiles(2)) do
+    for k, tile in ipairs(game.map:getTiles(3)) do
         if AABB(px, py, pw, ph, tile.x, tile.y, tile.width, tile.height) then
 
             if AABBVertical(oldpy, ph, tile.y, tile.height) then
