@@ -1,7 +1,19 @@
 local Map = {
+    tileset = {
+        image = love.graphics.newImage("imgs/tileset.png"),
+        quads = {},
+        tileLength = 16
+    },
     mapDataCollisions = require("maps/general/mapDataCollision"),
     -- data about when the tiles should go transparent
     mapDataGT = require("maps/general/mapDataGT"),
+    -- generic borders of any map loaded
+    borders = {
+        top = 16,
+        left = 5,
+        right = 5,
+        bottom = 5
+    },
     -- tiles drawn after the playing is drawn
     afterTiles = {
         withOpacity = {},
@@ -9,6 +21,19 @@ local Map = {
     },
     currentMapType = "middle"
 }
+
+for y = 0, (Map.tileset.image:getHeight() / Map.tileset.tileLength) - 1 do
+    for x = 0, (Map.tileset.image:getWidth() / Map.tileset.tileLength) - 1 do
+        local quad = love.graphics.newQuad(
+            x * Map.tileset.tileLength,
+            y * Map.tileset.tileLength,
+            Map.tileset.tileLength,
+            Map.tileset.tileLength,
+            Map.tileset.image:getDimensions()
+        )
+        table.insert(Map.tileset.quads, quad)
+    end
+end
 
 function Map:draw()
     
@@ -20,7 +45,7 @@ function Map:draw()
                 local tid = layer.data[index]
                 
                 if tid ~= 0 then
-                    local quad = self.map.quads[tid]
+                    local quad = self.tileset.quads[tid]
                     local xx = x * self.map.tileset.tilewidth
                     local yy = y * self.map.tileset.tileheight
                     
@@ -40,7 +65,7 @@ function Map:draw()
                         
                     else
                         love.graphics.draw(
-                            self.map.image,
+                            self.tileset.image,
                             quad,
                             xx,
                             yy
@@ -50,6 +75,11 @@ function Map:draw()
                 end
             end
         end
+
+        for _, block in ipairs(self.map.generatedTiles) do
+            love.graphics.draw(self.tileset.image, self.tileset.quads[block.id], block.x, block.y)
+        end
+        
     end
 
     --love.graphics.rectangle("fill", game.player.x, game.player.y, game.player.quadsData[game.player.size].width, game.player.quadsData[game.player.size].height)
@@ -60,7 +90,7 @@ function Map:finishDrawing()
     love.graphics.setColor(1, 1, 1, 0.8)
     for k, block in ipairs(self.afterTiles.withOpacity) do
         love.graphics.draw(
-            self.map.image,
+            self.tileset.image,
             block.quad,
             block.x,
             block.y 
@@ -70,7 +100,7 @@ function Map:finishDrawing()
     love.graphics.setColor(1, 1, 1, 1)
     for k, block in ipairs(self.afterTiles.withoutOpacity) do
         love.graphics.draw(
-            self.map.image,
+            self.tileset.image,
             block.quad,
             block.x,
             block.y 
@@ -91,26 +121,8 @@ end
 function Map:generateMap(path)
 
     self.map = require(path)
-
-    self.map.quads = {}
     local tileset = self.map.tilesets[1]
     self.map.tileset = tileset
-    -- hardcoded due to relative path of map file & image file
-    self.map.image = love.graphics.newImage("imgs/tileset.png")
-
-    for y = 0, (tileset.imageheight / tileset.tileheight) - 1 do
-        for x = 0, (tileset.imagewidth / tileset.tilewidth) - 1 do
-            local quad = love.graphics.newQuad(
-                x * tileset.tilewidth,
-                y * tileset.tileheight,
-                tileset.tilewidth,
-                tileset.tileheight,
-                tileset.imagewidth,
-                tileset.imageheight
-            )
-            table.insert(self.map.quads, quad)
-        end
-    end
 
     -- randomising grass tiles
     for i, layer in ipairs(self.map.layers) do
@@ -131,6 +143,12 @@ function Map:generateMap(path)
         end
     end
 
+    self.map.generatedTiles = {}
+    if not (self.currentMapType == "middle") then
+        local generate = require("maps/"..self.currentMapType.."/generation")
+        self.map.generatedTiles = generate(self. borders)
+    end
+
 end
 
 function Map:getTiles(layerIndex)
@@ -144,7 +162,7 @@ function Map:getTiles(layerIndex)
             local tid = layer.data[index]
 
             if tid ~= 0 then
-                local quad = self.map.quads[tid]
+                local quad = self.tileset.quads[tid]
                 local xx = x * self.map.tileset.tilewidth
                 local yy = y * self.map.tileset.tileheight
                 
@@ -165,7 +183,7 @@ function Map:getTiles(layerIndex)
 end
 
 function Map:moveMap(direction)
-    canvas:transition()
+    canvas:startTransition()
     -- black magic ternary statement
     self.currentMapType = (self.currentMapType == "middle") and direction or "middle" 
 end
