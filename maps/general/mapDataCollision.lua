@@ -18,7 +18,7 @@ return {
         -- signposts
         _49 = 10, _50 = 10, _57 = 10, _58 = 10,
         -- bottom wall
-        _82 = 11,
+        _82 = 11, _70 = 11, _68 = 11,
         -- building
         _15 = 4, _16 = 4
     },
@@ -26,7 +26,7 @@ return {
         -- signposts
         _49 = 5, _50 = 5, _57 = 5, _58 = 5,
         -- left side wall
-        _73 = 5,
+        _73 = 5, _86 = 5, _78 = 5,
         -- right side walls
         _75 = 5, _88 = 5, _72 = 5,
         -- bottom + left side wall
@@ -45,7 +45,7 @@ return {
         -- signposts
         _49 = 4, _50 = 4, _57 = 4, _58 = 4,
         -- bottom wall
-        _82 = 5,
+        _82 = 5, _70 = 11, _68 = 11,
         -- building
         _15 = 12, _16 = 12,
         _31 = 12, _32 = 12

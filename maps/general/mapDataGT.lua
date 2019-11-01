@@ -4,23 +4,27 @@
 
 return {
     xOffsets = {
-
+        -- tree
+        _35 = 7, _43 = 7, _51 = 7
     },
     yOffsets = {
         -- signposts
         _49 = -3, _50 = -3, _57 = -3, _58 = -3
     },
     widths = {
-
+        -- tree
+        _37 = 9, _45 = 9, _53 = 9
     },
     heights = {
         -- signposts
-        _49 = 2, _50 = 2, _57 = 2, _58 = 2
+        _49 = 2, _50 = 2, _57 = 2, _58 = 2,
+        -- tree
+        _51 = 12, _52 = 14, _53 = 12
     },
     -- exceptions, tiles that should never go transparent
     exceptions = {
         -- left side wall
-        _73 = true,
+        _73 = true, _86 = true, _78 = true,
         -- right side walls
         _75 = true, _88 = true, _72 = true,
         -- top wall

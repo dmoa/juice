@@ -112,6 +112,25 @@ function Map:generateMap(path)
         end
     end
 
+    -- randomising grass tiles
+    for i, layer in ipairs(self.map.layers) do
+        for y = 0, layer.height - 1 do
+            for x = 0, layer.width - 1 do
+                
+                local index = (x + y * layer.width) + 1
+                local tid = layer.data[index]
+                
+                if tid ~= 0 then
+
+                    if tid < 6 then
+                        layer.data[index] = love.math.random(5)
+                    end
+                    
+                end
+            end
+        end
+    end
+
 end
 
 function Map:getTiles(layerIndex)
