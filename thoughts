@@ -1,0 +1,10 @@
+trying to make a generation algorithm
+
+first ideas are doing one like spelunky, i.e. digger algorithm.
+start with plain area, follow set of rules until you can no longer follow rules, guarenteed path a-b.
+e.g. spelunky, 4x4 grid. start anywhere at the top (spawnpoint), go either down, right, or left 
+(if not possible ignore option i.e. cannot go right if already on the furthest right tile), 
+then stop once you can no longer go anywhere (endpoint).
+always guarentees path.
+
+it's going to be hard if it's only 16x9 tiles, but I'll have a go
