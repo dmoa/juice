@@ -66,7 +66,7 @@ function windowStartup()
                 game:reloadLevel()
             end
         else
-            self.scale = math.min(1, self.scale + dt / 1.5)
+            self.scale = math.min(1, self.scale + dt)
         end
     end
     function canvas:startTransition(dt)
