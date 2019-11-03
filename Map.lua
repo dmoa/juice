@@ -146,7 +146,7 @@ function Map:generateMap(path)
     self.map.generatedTiles = {}
     if not (self.currentMapType == "middle") then
         local generate = require("maps/"..self.currentMapType.."/generation")
-        self.map.generatedTiles = generate(self. borders)
+        self.map.generatedTiles = generate(self.borders, self.tileset.tileLength)
     end
 
 end

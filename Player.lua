@@ -249,22 +249,24 @@ end
 
 -- changes map if out of bounds
 function Player:mapUpdate()
-    if self.x + self.quadsData[self.size].width < 0 then
-        game.map:moveMap("left")
-        -- y position doesn't change
-        self.startingMapPos.y = self.y
-        self.startingMapPos.x = gameWW - self.quadsData[self.size].width 
-    end
-    if self.x > gameWW then
-        game.map:moveMap("right")
-        self.startingMapPos.y = self.y
-        self.startingMapPos.x = 0 
-    end
-    if self.y + self.quadsData[self.size].height < 0 then
-        game.map:moveMap("up")
-    end
-    if self.y > gameWH then
-        game.map:moveMap("down")
+    if canvas.scale == 1 then
+        if self.x + self.quadsData[self.size].width < 0 then
+            game.map:moveMap("left")
+            -- y position doesn't change
+            self.startingMapPos.y = self.y
+            self.startingMapPos.x = gameWW - self.quadsData[self.size].width - 10
+        end
+        if self.x > gameWW then
+            game.map:moveMap("right")
+            self.startingMapPos.y = self.y
+            self.startingMapPos.x = 20
+        end
+        if self.y + self.quadsData[self.size].height < 0 then
+            game.map:moveMap("up")
+        end
+        if self.y > gameWH then
+            game.map:moveMap("down")
+        end
     end
 end
 
