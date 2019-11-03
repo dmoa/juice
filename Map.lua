@@ -41,32 +41,8 @@ function Map:draw()
 
         -- draw generated blocks right after ground
         if i == 2 then
-            for _, block in ipairs(self.map.generatedTiles) do
-                if i > 1 and not (self.mapDataGT.exceptions["_"..tostring(block.id)]) and
-                AABB(game.player.x, 
-                     game.player.y, 
-                     game.player.quadsData[game.player.size].width, 
-                     game.player.quadsData[game.player.size].height,
-                     block.x + (self.mapDataGT.xOffsets["_"..tostring(block.id)] and self.mapDataGT.xOffsets["_"..tostring(block.id)] or 0),
-                     block.y + (self.mapDataGT.yOffsets["_"..tostring(block.id)] and self.mapDataGT.yOffsets["_"..tostring(block.id)] or 0), 
-                     (self.mapDataGT.widths["_"..tostring(block.id)] and self.mapDataGT.widths["_"..tostring(block.id)] or self.map.tileset.tilewidth),
-                     (self.mapDataGT.heights["_"..tostring(block.id)] and self.mapDataGT.heights["_"..tostring(block.id)] or self.map.tileset.tileheight)) 
-                     then
-                 
-                 table.insert(self.mapDataGT.withoutOpacity["_"..tostring(block.id)] and self.afterTiles.withoutOpacity 
-                              or self.afterTiles.withOpacity, 
-                              {x = block.x, y = block.y, quad = self.tileset.quads[block.id]})
-
-                            print("OOF")
-                 
-                else
-                 love.graphics.draw(
-                    self.tileset.image,
-                    self.tileset.quads[block.id],
-                    block.x,
-                    block.y
-                 )
-                end
+            for _, block in ipairs(self.map.generatedTiles.blocks) do
+                self:handleBlock(block)
             end
         end
 
@@ -81,27 +57,8 @@ function Map:draw()
                     local xx = x * self.map.tileset.tilewidth
                     local yy = y * self.map.tileset.tileheight
                     
-                    if i > 1 and not (self.mapDataGT.exceptions["_"..tostring(tid)]) and
-                       AABB(game.player.x, 
-                            game.player.y, 
-                            game.player.quadsData[game.player.size].width, 
-                            game.player.quadsData[game.player.size].height,
-                            xx + (self.mapDataGT.xOffsets["_"..tostring(tid)] and self.mapDataGT.xOffsets["_"..tostring(tid)] or 0),
-                            yy + (self.mapDataGT.yOffsets["_"..tostring(tid)] and self.mapDataGT.yOffsets["_"..tostring(tid)] or 0), 
-                            (self.mapDataGT.widths["_"..tostring(tid)] and self.mapDataGT.widths["_"..tostring(tid)] or self.map.tileset.tilewidth),
-                            (self.mapDataGT.heights["_"..tostring(tid)] and self.mapDataGT.heights["_"..tostring(tid)] or self.map.tileset.tileheight)) then
-                        
-                        table.insert(self.mapDataGT.withoutOpacity["_"..tostring(tid)] and self.afterTiles.withoutOpacity 
-                                     or self.afterTiles.withOpacity, 
-                                     {x = xx, y = yy, quad = quad})
-                        
-                    else
-                        love.graphics.draw(
-                            self.tileset.image,
-                            quad,
-                            xx,
-                            yy
-                        )
+                    if i > 1 then
+                        self:handleBlock(block)
                     end
                     
                 end
@@ -111,6 +68,32 @@ function Map:draw()
     end
 
     --love.graphics.rectangle("fill", game.player.x, game.player.y, game.player.quadsData[game.player.size].width, game.player.quadsData[game.player.size].height)
+end
+
+function Map:handleBlock(block)
+    if not (self.mapDataGT.exceptions["_"..tostring(block.id)]) and
+    AABB(game.player.x, 
+         game.player.y, 
+         game.player.quadsData[game.player.size].width, 
+         game.player.quadsData[game.player.size].height,
+         block.x + (self.mapDataGT.xOffsets["_"..tostring(block.id)] and self.mapDataGT.xOffsets["_"..tostring(block.id)] or 0),
+         block.y + (self.mapDataGT.yOffsets["_"..tostring(block.id)] and self.mapDataGT.yOffsets["_"..tostring(block.id)] or 0), 
+        (self.mapDataGT.widths["_"..tostring(block.id)] and self.mapDataGT.widths["_"..tostring(block.id)] or self.map.tileset.tilewidth),
+        (self.mapDataGT.heights["_"..tostring(block.id)] and self.mapDataGT.heights["_"..tostring(block.id)] or self.map.tileset.tileheight)) 
+         then
+     
+     table.insert(self.mapDataGT.withoutOpacity["_"..tostring(block.id)] and self.afterTiles.withoutOpacity 
+                  or self.afterTiles.withOpacity, 
+                 {x = block.x, y = block.y, quad = self.tileset.quads[block.id]})
+     
+    else
+     love.graphics.draw(
+        self.tileset.image,
+        self.tileset.quads[block.id],
+        block.x,
+        block.y
+     )
+    end
 end
 
 function Map:finishDrawing()
@@ -171,7 +154,10 @@ function Map:generateMap(path)
         end
     end
 
-    self.map.generatedTiles = {}
+    self.map.generatedTiles = {
+        blocks = {},
+        addons = {}
+    }
     if not (self.currentMapType == "middle") then
         local generate = require("maps/"..self.currentMapType.."/generation")
         self.map.generatedTiles = generate(self.borders, self.tileset.tileLength)
