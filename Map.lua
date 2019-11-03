@@ -185,7 +185,7 @@ end
 function Map:moveMap(direction)
     canvas:startTransition()
     -- black magic ternary statement
-    self.currentMapType = (self.currentMapType == "middle") and direction or "middle" 
+    self.currentMapType = (self.currentMapType == "middle") and direction or "middle"
 end
 
 function Map:reloadMap()
