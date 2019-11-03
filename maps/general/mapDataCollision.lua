@@ -20,7 +20,9 @@ return {
         -- bottom wall
         _82 = 11, _70 = 11, _68 = 11,
         -- building
-        _15 = 4, _16 = 4
+        _15 = 4, _16 = 4,
+        -- generated blocks
+        _91 = 4, _92 = 4
     },
     widths = {
         -- signposts
@@ -48,6 +50,8 @@ return {
         _82 = 5, _70 = 11, _68 = 11,
         -- building
         _15 = 12, _16 = 12,
-        _31 = 12, _32 = 12
+        _31 = 12, _32 = 12,
+        -- generated blocks
+        _91 = 12, _92 = 12
     }
 }

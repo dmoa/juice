@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.5" orientation="orthogonal" renderorder="right-down" width="16" height="9" tilewidth="16" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="1">
+<map version="1.2" tiledversion="2019.10.18" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="16" height="9" tilewidth="16" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="1">
+ <editorsettings>
+  <export target="1.lua" format="lua"/>
+ </editorsettings>
  <tileset firstgid="1" source="../../imgs/tileset.tsx"/>
  <layer id="1" name="ground" width="16" height="9">
   <data encoding="csv">
@@ -33,7 +36,7 @@
 73,0,0,0,0,0,0,23,24,0,0,0,0,0,0,75,
 73,0,0,0,0,0,0,31,32,49,0,0,0,0,0,75,
 86,0,60,0,0,0,0,0,0,0,0,0,0,0,0,88,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,91,0,0,0,0,0,0,0,0,0,0,0,0,
 78,0,0,0,0,0,0,0,58,0,0,0,0,0,0,72,
 73,0,0,0,0,0,0,0,0,0,0,0,0,0,0,75,
 73,0,0,0,0,0,0,0,0,0,0,0,0,0,0,75,

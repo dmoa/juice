@@ -42,7 +42,31 @@ function Map:draw()
         -- draw generated blocks right after ground
         if i == 2 then
             for _, block in ipairs(self.map.generatedTiles) do
-                love.graphics.draw(self.tileset.image, self.tileset.quads[block.id], block.x, block.y)
+                if i > 1 and not (self.mapDataGT.exceptions["_"..tostring(block.id)]) and
+                AABB(game.player.x, 
+                     game.player.y, 
+                     game.player.quadsData[game.player.size].width, 
+                     game.player.quadsData[game.player.size].height,
+                     block.x + (self.mapDataGT.xOffsets["_"..tostring(block.id)] and self.mapDataGT.xOffsets["_"..tostring(block.id)] or 0),
+                     block.y + (self.mapDataGT.yOffsets["_"..tostring(block.id)] and self.mapDataGT.yOffsets["_"..tostring(block.id)] or 0), 
+                     (self.mapDataGT.widths["_"..tostring(block.id)] and self.mapDataGT.widths["_"..tostring(block.id)] or self.map.tileset.tilewidth),
+                     (self.mapDataGT.heights["_"..tostring(block.id)] and self.mapDataGT.heights["_"..tostring(block.id)] or self.map.tileset.tileheight)) 
+                     then
+                 
+                 table.insert(self.mapDataGT.withoutOpacity["_"..tostring(block.id)] and self.afterTiles.withoutOpacity 
+                              or self.afterTiles.withOpacity, 
+                              {x = block.x, y = block.y, quad = self.tileset.quads[block.id]})
+
+                            print("OOF")
+                 
+                else
+                 love.graphics.draw(
+                    self.tileset.image,
+                    self.tileset.quads[block.id],
+                    block.x,
+                    block.y
+                 )
+                end
             end
         end
 
@@ -183,9 +207,16 @@ function Map:getTiles(layerIndex)
         end
     end
 
-    for _, block in ipairs(self.map.generatedTiles) do
-        table.insert(blocks, {id = self.tileset.quads[block.id], 
-                              x = block.x, y = block.y, width = self.tileset.tileLength, height = self.tileset.tileLength})
+    for _, _block in ipairs(self.map.generatedTiles) do
+        local block = {
+            x = _block.x + (self.mapDataCollisions.xOffsets["_"..tostring(_block.id)] and self.mapDataCollisions.xOffsets["_"..tostring(_block.id)] or 0), 
+            y = _block.y + (self.mapDataCollisions.yOffsets["_"..tostring(_block.id)] and self.mapDataCollisions.yOffsets["_"..tostring(_block.id)] or 0),
+            id = _block.id, 
+            width = self.mapDataCollisions.widths["_"..tostring(_block.id)] and self.mapDataCollisions.widths["_"..tostring(_block.id)] or self.map.tileset.tilewidth, 
+            height = self.mapDataCollisions.heights["_"..tostring(_block.id)] and self.mapDataCollisions.heights["_"..tostring(_block.id)] or self.map.tileset.tileheight
+        }
+
+        table.insert(blocks, block)
     end
 
     return blocks
