@@ -21,7 +21,7 @@ return {
         -- tree
         _51 = 12, _52 = 14, _53 = 12,
         -- generated blocks
-        _91 = 1, _92 = 1
+        _89 = 1, _90 = 1, _91 = 1, _93 = 1, _97 = 1, _98 = 1, _99 = 1, _102 = 1, _103 = 1, _104 = 1
     },
     -- exceptions, tiles that should never go transparent
     exceptions = {
@@ -49,6 +49,6 @@ return {
         -- signposts
         _49 = true, _50 = true, _57 = true, _58 = true,
         -- generated blocks
-        _91 = true, _92 = true
+        _89 = true, _90 = true, _91 = true, _93 = true, _97 = true, _98 = true, _99 = true, _102 = true, _103 = true, _104 = true
     }
 }
