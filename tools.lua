@@ -48,3 +48,5 @@ keyIsDown = {
         return (love.keyboard.isDown("down") or love.keyboard.isDown("s") or (joystick and joystick:getAxis(2) > 0.5))
     end
 }
+
+noiseM = require("libs/noise")

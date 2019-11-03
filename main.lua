@@ -23,6 +23,7 @@ function love.draw()
 
     love.graphics.print(love.timer.getFPS())
     love.graphics.print(canvas.scale, 0, 15)
+    love.graphics.print(game.map.currentMapType, 0, 30)
 end
 
 function love.update(dt)
