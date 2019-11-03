@@ -38,6 +38,14 @@ end
 function Map:draw()
     
     for i, layer in ipairs(self.map.layers) do
+
+        -- draw generated blocks right after ground
+        if i == 2 then
+            for _, block in ipairs(self.map.generatedTiles) do
+                love.graphics.draw(self.tileset.image, self.tileset.quads[block.id], block.x, block.y)
+            end
+        end
+
         for y = 0, layer.height - 1 do
             for x = 0, layer.width - 1 do
                 
@@ -74,10 +82,6 @@ function Map:draw()
                     
                 end
             end
-        end
-
-        for _, block in ipairs(self.map.generatedTiles) do
-            love.graphics.draw(self.tileset.image, self.tileset.quads[block.id], block.x, block.y)
         end
         
     end
@@ -177,6 +181,11 @@ function Map:getTiles(layerIndex)
                 table.insert(blocks, block)
             end
         end
+    end
+
+    for _, block in ipairs(self.map.generatedTiles) do
+        table.insert(blocks, {id = self.tileset.quads[block.id], 
+                              x = block.x, y = block.y, width = self.tileset.tileLength, height = self.tileset.tileLength})
     end
 
     return blocks
