@@ -56,8 +56,6 @@ function Map:draw()
                  table.insert(self.mapDataGT.withoutOpacity["_"..tostring(block.id)] and self.afterTiles.withoutOpacity 
                               or self.afterTiles.withOpacity, 
                               {x = block.x, y = block.y, quad = self.tileset.quads[block.id]})
-
-                            print("OOF")
                  
                 else
                  love.graphics.draw(
@@ -66,6 +64,7 @@ function Map:draw()
                     block.x,
                     block.y
                  )
+                 love.graphics.print(block.id, block.x, block.y)
                 end
             end
         end
