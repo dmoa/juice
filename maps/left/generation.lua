@@ -42,19 +42,29 @@ local generation = function(borders, tileLength)
         local upC = (not (y == 1) and grid[x][y - 1] == 1) and 1 or 0
         local rightC = (not (x == #grid) and grid[x + 1][y] == 1) and 1 or 0
 
-        return specialIDs["_"..bottomC..leftC..upC..rightC]
+        return {89}
     end
 
-    local blocks = {}
+    local blocks = {
+        blocks = {},
+        addons = {}
+    }
     -- if value is 1 add lava block
     for _x = 1, #grid do
         for _y = 1, #grid[_x] do
             if grid[_x][_y] == 1 then
                 
-                local _id = calculateID(_x, _y)
+                
+                table.insert(blocks.blocks, {x = (_x - 1) * tileLength + borders.left, y = (_y - 1) * tileLength + borders.top, 
+                id = 89})
+                
+                local cornerTiles = calculateID(_x, _y)
 
-                table.insert(blocks, {x = (_x - 1) * tileLength + borders.left, y = (_y - 1) * tileLength + borders.top, 
-                                      id = _id})
+                for _, id in ipairs(cornerTiles) do
+                    table.insert(blocks.addons, {x = (_x - 1) * tileLength + borders.left, y = (_y - 1) * tileLength + borders.top, 
+                    id = id})
+                end
+
             end
         end
     end
