@@ -40,11 +40,11 @@ function Map:draw()
     for i, layer in ipairs(self.map.layers) do
 
         -- draw generated blocks right after ground
-        if i == 2 then
-            for _, block in ipairs(self.map.generatedTiles.blocks) do
-                self:handleBlock(block)
-            end
-        end
+        -- if i == 2 then
+        --     for _, block in ipairs(self.map.generatedTiles.blocks) do
+        --         self:handleBlock(block)
+        --     end
+        -- end
 
         for y = 0, layer.height - 1 do
             for x = 0, layer.width - 1 do
@@ -58,7 +58,7 @@ function Map:draw()
                     local yy = y * self.map.tileset.tileheight
                     
                     if i > 1 then
-                        self:handleBlock(block)
+                        --self:handleBlock(block)
                     end
                     
                 end
