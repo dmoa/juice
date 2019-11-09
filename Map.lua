@@ -46,20 +46,22 @@ function Map:draw()
         --     end
         -- end
 
-        for y = 0, layer.height - 1 do
-            for x = 0, layer.width - 1 do
+        for _y = 0, layer.height - 1 do
+            for _x = 0, layer.width - 1 do
                 
-                local index = (x + y * layer.width) + 1
+                local index = (_x + _y * layer.width) + 1
                 local tid = layer.data[index]
                 
                 if tid ~= 0 then
-                    local quad = self.tileset.quads[tid]
-                    local xx = x * self.map.tileset.tilewidth
-                    local yy = y * self.map.tileset.tileheight
+
+                    local block = {
+                        x = _x * self.map.tileset.tilewidth,
+                        y = _y * self.map.tileset.tileheight,
+                        id = tid
+                    }
+
                     
-                    if i > 1 then
-                        --self:handleBlock(block)
-                    end
+                    self:handleBlock(block, i)
                     
                 end
             end
@@ -70,8 +72,8 @@ function Map:draw()
     --love.graphics.rectangle("fill", game.player.x, game.player.y, game.player.quadsData[game.player.size].width, game.player.quadsData[game.player.size].height)
 end
 
-function Map:handleBlock(block)
-    if not (self.mapDataGT.exceptions["_"..tostring(block.id)]) and
+function Map:handleBlock(block, layer)
+    if layer > 1 and not (self.mapDataGT.exceptions["_"..tostring(block.id)]) and
     AABB(game.player.x, 
          game.player.y, 
          game.player.quadsData[game.player.size].width, 
@@ -81,18 +83,18 @@ function Map:handleBlock(block)
         (self.mapDataGT.widths["_"..tostring(block.id)] and self.mapDataGT.widths["_"..tostring(block.id)] or self.map.tileset.tilewidth),
         (self.mapDataGT.heights["_"..tostring(block.id)] and self.mapDataGT.heights["_"..tostring(block.id)] or self.map.tileset.tileheight)) 
          then
-     
-     table.insert(self.mapDataGT.withoutOpacity["_"..tostring(block.id)] and self.afterTiles.withoutOpacity 
+
+    table.insert(self.mapDataGT.withoutOpacity["_"..tostring(block.id)] and self.afterTiles.withoutOpacity 
                   or self.afterTiles.withOpacity, 
                  {x = block.x, y = block.y, quad = self.tileset.quads[block.id]})
-     
+
     else
-     love.graphics.draw(
-        self.tileset.image,
-        self.tileset.quads[block.id],
-        block.x,
-        block.y
-     )
+        love.graphics.draw(
+            self.tileset.image,
+            self.tileset.quads[block.id],
+            block.x,
+            block.y
+        )
     end
 end
 
