@@ -44,6 +44,9 @@ function Map:draw()
             for _, block in ipairs(self.map.generatedTiles.blocks) do
                 self:handleBlock(block, i)
             end
+            for _, block in ipairs(self.map.generatedTiles.addons) do
+                self:handleBlock(block, i)
+            end
         end
 
         for _y = 0, layer.height - 1 do

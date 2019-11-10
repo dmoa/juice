@@ -6,10 +6,10 @@ function love.load()
 end
 
 function love.draw()
-    love.graphics.push("all")
-    love.graphics.translate(gameWW/2, gameWH/2)
-    love.graphics.scale(canvas.scale)
-    love.graphics.translate(-gameWW/2, -gameWH/2)
+    -- love.graphics.push("all")
+    -- love.graphics.translate(gameWW/2, gameWH/2)
+    -- love.graphics.scale(canvas.scale)
+    -- love.graphics.translate(-gameWW/2, -gameWH/2)
     
     love.graphics.setCanvas(canvas.c)
     love.graphics.setShader()
@@ -17,8 +17,8 @@ function love.draw()
     
     game:draw()
     
-    love.graphics.pop()
-    
+    love.graphics.setCanvas()
+
     love.graphics.draw(canvas.c, 0, 0, 0, scale)
 
     love.graphics.print(love.timer.getFPS())

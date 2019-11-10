@@ -4,11 +4,11 @@ local generation = function(borders, tileLength)
     local grid = {}
     -- Fill each pixel in our grid with simplex noise.
     local function noise()
-        for x = 1, 15 do
-            for y = 1, 8 do
+        for x = 1, 32 do
+            for y = 1, 18 do
                 grid[x] = grid[x] or {}
                 local seed = love.math.random()
-                grid[x][y] = noiseM.Simplex2D( x + seed, y + seed) > 0.2 and 1 or 0
+                grid[x][y] = noiseM.Simplex2D( x + seed * 0.17, y + seed * 0.17) > 0.2 and 1 or 0
             end
         end
     end
@@ -35,34 +35,51 @@ local generation = function(borders, tileLength)
     --     _1111 = 104,
     -- }
 
-    -- local function calculateID(x, y)
+    local function calculateID(xIndex, yIndex)
     --     -- bottom connected, left connected etc...
     --     local bottomC = (not (y == #grid[x]) and grid[x][y + 1] == 1) and 1 or 0
     --     local leftC = (not (x == 1) and grid[x - 1][y] == 1) and 1 or 0
     --     local upC = (not (y == 1) and grid[x][y - 1] == 1) and 1 or 0
     --     local rightC = (not (x == #grid) and grid[x + 1][y] == 1) and 1 or 0
+        local extras = {}
+        if not (xIndex == 1) and (grid[xIndex - 1][yIndex] == 0) then
+            table.insert(extras, 92)
+        end
+        if not (xIndex == #grid) and (grid[xIndex + 1][yIndex] == 0) then
+            table.insert(extras, 94)
+        end
+        if not (yIndex == 1) and (grid[xIndex][yIndex - 1] == 0) then
+            table.insert(extras, 93)
+        end
+        if not (yIndex == #grid[xIndex]) and (grid[xIndex][yIndex + 1] == 0) then
+            table.insert(extras, 91)
+        end
 
-    --     return {89}
-    -- end
+        -- if not (xIndex == #grid[xIndex]) and (grid[xIndex][yIndex + 1] == 0) then
+        --     table.insert(extras, 91)
+        -- end
+
+        return extras
+    end
 
     local blocks = {
         blocks = {},
         addons = {}
     }
     -- if value is 1 add lava block
-    for _x = 1, #grid do
-        for _y = 1, #grid[_x] do
-            if grid[_x][_y] == 1 then
+    for xIndex = 1, #grid - 1 do
+        for yIndex = 1, #grid[xIndex] - 1 do
+            if grid[xIndex][yIndex] == 1 then
                 
-                table.insert(blocks.blocks, {x = (_x - 1) * tileLength + borders.left, y = (_y - 1) * tileLength + borders.top, 
+                table.insert(blocks.blocks, {x = (xIndex - 1) * tileLength + borders.left, y = (yIndex - 1) * tileLength + borders.top, 
                 id = 89})
                 
-                --local cornerTiles = calculateID(_x, _y)
+                local cornerTiles = calculateID(xIndex, yIndex)
 
-                -- for _, id in ipairs(cornerTiles) do
-                --     table.insert(blocks.addons, {x = (_x - 1) * tileLength + borders.left, y = (_y - 1) * tileLength + borders.top, 
-                --     id = id})
-                -- end
+                for _, id in ipairs(cornerTiles) do
+                    table.insert(blocks.addons, {x = (xIndex - 1) * tileLength + borders.left, y = (yIndex - 1) * tileLength + borders.top, 
+                    id = id})
+                end
 
             end
         end
