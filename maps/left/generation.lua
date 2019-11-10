@@ -2,17 +2,17 @@
 local generation = function(borders, tileLength)
 
     local grid = {}
-    -- -- Fill each pixel in our grid with simplex noise.
-    -- local function noise()
-    --     for x = 1, 15 do
-    --         for y = 1, 8 do
-    --             grid[x] = grid[x] or {}
-    --             local seed = love.math.random()
-    --             grid[x][y] = noiseM.Simplex2D( x + seed, y + seed) > 0.2 and 1 or 0
-    --         end
-    --     end
-    -- end
-    -- noise()
+    -- Fill each pixel in our grid with simplex noise.
+    local function noise()
+        for x = 1, 15 do
+            for y = 1, 8 do
+                grid[x] = grid[x] or {}
+                local seed = love.math.random()
+                grid[x][y] = noiseM.Simplex2D( x + seed, y + seed) > 0.2 and 1 or 0
+            end
+        end
+    end
+    noise()
 
     -- local specialIDs = {
     --     -- numbers represent (in order) down left up right
@@ -49,30 +49,30 @@ local generation = function(borders, tileLength)
         blocks = {},
         addons = {}
     }
-    -- -- if value is 1 add lava block
-    -- for _x = 1, #grid do
-    --     for _y = 1, #grid[_x] do
-    --         if grid[_x][_y] == 1 then
+    -- if value is 1 add lava block
+    for _x = 1, #grid do
+        for _y = 1, #grid[_x] do
+            if grid[_x][_y] == 1 then
                 
+                table.insert(blocks.blocks, {x = (_x - 1) * tileLength + borders.left, y = (_y - 1) * tileLength + borders.top, 
+                id = 89})
                 
-    --             table.insert(blocks.blocks, {x = (_x - 1) * tileLength + borders.left, y = (_y - 1) * tileLength + borders.top, 
-    --             id = 89})
-                
-    --             local cornerTiles = calculateID(_x, _y)
+                --local cornerTiles = calculateID(_x, _y)
 
-    --             for _, id in ipairs(cornerTiles) do
-    --                 table.insert(blocks.addons, {x = (_x - 1) * tileLength + borders.left, y = (_y - 1) * tileLength + borders.top, 
-    --                 id = id})
-    --             end
+                -- for _, id in ipairs(cornerTiles) do
+                --     table.insert(blocks.addons, {x = (_x - 1) * tileLength + borders.left, y = (_y - 1) * tileLength + borders.top, 
+                --     id = id})
+                -- end
 
-    --         end
-    --     end
-    -- end
+            end
+        end
+    end
 
 
 
 
     return blocks  
+
 end
 
 return generation
