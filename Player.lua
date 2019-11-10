@@ -87,7 +87,7 @@ Player.currentQuad = Player.quadsData[1].frames.idleRight.quads[1]
 
 
 function Player:draw()
-    love.graphics.draw(self.image, self.currentQuad, self.x, self.y)
+    love.graphics.draw(self.image, self.currentQuad, math.round(self.x), self.y)
     --love.graphics.rectangle("line", self.x, self.y, 16, 16)
 end
 

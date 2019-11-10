@@ -18,7 +18,7 @@ function love.draw()
     game:draw()
     
     love.graphics.setCanvas()
-
+    love.graphics.setShader(crtShader)
     love.graphics.draw(canvas.c, 0, 0, 0, scale)
 
     love.graphics.print(love.timer.getFPS())
@@ -73,6 +73,8 @@ function windowStartup()
     function canvas:startTransition(dt)
         self.shrink = true
     end
+
+    canvas.c:setWrap("clampzero")
     
     scale = love.graphics.getWidth() / canvas.c:getWidth()
 end

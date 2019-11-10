@@ -41,8 +41,8 @@ crtShader = love.graphics.newShader([[
         vec2 tcg = radialDistortion(tc, .20);
         vec2 tcb = radialDistortion(tc, .18) - vec2(.001, 0);
         vec4 res = vec4(Texel(tex, tcr).r, Texel(tex, tcg).g, Texel(tex, tcb).b, 1)
-        - cos(tcg.y * 128. * 3.142 * 2) * .03
-        - sin(tcg.x * 128. * 3.142 * 2) * .03;
+        - cos(tcg.y * 128. * 3.142 * 2) * .01
+        - sin(tcg.x * 128. * 3.142 * 2) * .01;
         return res * Texel(tex, tcg).a;
     }
 ]])
