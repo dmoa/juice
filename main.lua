@@ -47,8 +47,8 @@ function windowStartup()
     love.mouse.setVisible(false)
     love.graphics.setDefaultFilter("nearest", "nearest", 1, 1)
     WW, WH = love.graphics.getDimensions()
-    gameWW = 256
-    gameWH = 144
+    gameWW = 512
+    gameWH = 288
     
     
     canvas = {
