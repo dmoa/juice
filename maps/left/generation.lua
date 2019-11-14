@@ -42,16 +42,16 @@ local generation = function(borders, tileLength)
     --     local upC = (not (y == 1) and grid[x][y - 1] == 1) and 1 or 0
     --     local rightC = (not (x == #grid) and grid[x + 1][y] == 1) and 1 or 0
         local extras = {}
-        if not (xIndex == 1) and (grid[xIndex - 1][yIndex] == 0) then
+        if (xIndex ~= 1) and (grid[xIndex - 1][yIndex] == 0) then
             table.insert(extras, 92)
         end
-        if not (xIndex == #grid) and (grid[xIndex + 1][yIndex] == 0) then
+        if (xIndex ~= #grid) and (grid[xIndex + 1][yIndex] == 0) then
             table.insert(extras, 94)
         end
-        if not (yIndex == 1) and (grid[xIndex][yIndex - 1] == 0) then
+        if (yIndex ~= 1) and (grid[xIndex][yIndex - 1] == 0) then
             table.insert(extras, 93)
         end
-        if not (yIndex == #grid[xIndex]) and (grid[xIndex][yIndex + 1] == 0) then
+        if (yIndex ~= #grid[xIndex]) and (grid[xIndex][yIndex + 1] == 0) then
             table.insert(extras, 91)
         end
 
@@ -70,22 +70,31 @@ local generation = function(borders, tileLength)
     for xIndex = 1, #grid - 1 do
         for yIndex = 1, #grid[xIndex] - 1 do
             if grid[xIndex][yIndex] == 1 then
-                
-                table.insert(blocks.blocks, {x = (xIndex - 1) * tileLength + borders.left, y = (yIndex - 1) * tileLength + borders.top, 
-                id = 89})
-                
+                if (xIndex == 1) or (yIndex == 1) or (xIndex < #grid - 1 and 
+                   (grid[xIndex - 1][yIndex - 1] ~= 1 and grid[xIndex + 1][yIndex - 1] ~= 1)) then
+
+                    table.insert(blocks.blocks, {x = (xIndex - 1) * tileLength + borders.left, y = (yIndex - 1) * tileLength + borders.top, 
+                    id = 89})
+                    
+                else
+                    grid[xIndex][yIndex] = 0
+                end
+            end
+        end
+    end
+
+    for xIndex = 1, #grid - 1 do
+        for yIndex = 1, #grid[xIndex] - 1 do
+            if grid[xIndex][yIndex] == 1 then
                 local cornerTiles = calculateID(xIndex, yIndex)
 
                 for _, id in ipairs(cornerTiles) do
                     table.insert(blocks.addons, {x = (xIndex - 1) * tileLength + borders.left, y = (yIndex - 1) * tileLength + borders.top, 
                     id = id})
                 end
-
             end
         end
     end
-
-
 
 
     return blocks  
