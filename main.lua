@@ -29,9 +29,9 @@ end
 function love.update(dt)
     game:update(dt)
     canvas:update(dt)
-    pixelatedShader:send("size", {gameWW, gameWH})
-    -- I honestly have no idea why or how it works when I added 0.0001, but it does, so...
-    pixelatedShader:send("factor", 1 / canvas.scale)
+    -- pixelatedShader:send("size", {gameWW, gameWH})
+    -- pixelatedShader:send("factor", 1 / canvas.scale)
+    crtShader:send("colorI", 0.03 / canvas.scale)
 end
 
 function love.keypressed(key)
@@ -59,10 +59,11 @@ function windowStartup()
         scale = 0,
         shrink = false
     }
+
     function canvas:update(dt)
         if self.shrink then
             self.scale = self.scale + dt * -10
-            if self.scale < 0 then
+            if self.scale < 0.1 then
                 self.shrink = false
                 game:reloadLevel()
             end
