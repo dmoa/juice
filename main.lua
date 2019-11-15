@@ -27,7 +27,7 @@ function love.draw()
 end
 
 function love.update(dt)
-    game:update(dt)
+    game:update(dt )
     canvas:update(dt)
     -- pixelatedShader:send("size", {gameWW, gameWH})
     -- pixelatedShader:send("factor", 1 / canvas.scale)

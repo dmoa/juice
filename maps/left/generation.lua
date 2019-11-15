@@ -73,8 +73,10 @@ local generation = function(borders, tileLength)
                 if (xIndex == 1) or (yIndex == 1) or (xIndex < #grid - 1 and 
                    (grid[xIndex - 1][yIndex - 1] ~= 1 and grid[xIndex + 1][yIndex - 1] ~= 1)) then
 
+                    local _id = grid[xIndex][yIndex - 1] == 1 and 90 or 89
+
                     table.insert(blocks.blocks, {x = (xIndex - 1) * tileLength + borders.left, y = (yIndex - 1) * tileLength + borders.top, 
-                    id = 89})
+                    id = _id})
                     
                 else
                     grid[xIndex][yIndex] = 0
