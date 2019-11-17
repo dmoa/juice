@@ -21,7 +21,7 @@ return {
         -- tree
         _51 = 12, _52 = 14, _53 = 12,
         -- generated blocks
-        _89 = 1, _90 = 1, _91 = 1, _93 = 1, _97 = 1, _98 = 1, _99 = 1, _102 = 1, _103 = 1, _104 = 1,
+        _97 = 1, _98 = 1, _99 = 1, _100 = 1, _101 = 1, _102 = 1, _103 = 1, _104 = 1, _105 = 1, _106 = 1, _107 = 1, _108 = 1,
         -- bottom wall
         _82 = 1, _70 = 1, _68 = 1, _81 = 1, _83 = 1
     },
@@ -45,12 +45,13 @@ return {
         _20 = true, _21 = true, _22 = true, 
         _28 = true, _29 = true, _30 = true,
         -- tree
-        _59 = true, _60 = true, _61 = true
+        _59 = true, _60 = true, _61 = true,
+
     },
     withoutOpacity = {
         -- signposts
         _49 = true, _50 = true, _57 = true, _58 = true,
         -- generated blocks
-        _89 = true, _90 = true, _91 = true, _93 = true, _97 = true, _98 = true, _99 = true, _102 = true, _103 = true, _104 = true
+        _97 = true, _98 = true, _99 = true, _100 = true, _101 = true, _102 = true, _103 = true, _104 = true, _105 = true, _106 = true, _107 = true, _108 = true
     }
 }

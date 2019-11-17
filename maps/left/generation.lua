@@ -43,16 +43,16 @@ local generation = function(borders, tileLength)
     --     local rightC = (not (x == #grid) and grid[x + 1][y] == 1) and 1 or 0
         local extras = {}
         if (xIndex ~= 1) and (grid[xIndex - 1][yIndex] == 0) then
-            table.insert(extras, 92)
+            table.insert(extras, 100)
         end
         if (xIndex ~= #grid) and (grid[xIndex + 1][yIndex] == 0) then
-            table.insert(extras, 94)
+            table.insert(extras, 102)
         end
         if (yIndex ~= 1) and (grid[xIndex][yIndex - 1] == 0) then
-            table.insert(extras, 93)
+            table.insert(extras, 101)
         end
         if (yIndex ~= #grid[xIndex]) and (grid[xIndex][yIndex + 1] == 0) then
-            table.insert(extras, 91)
+            table.insert(extras, 99)
         end
 
         -- if not (xIndex == #grid[xIndex]) and (grid[xIndex][yIndex + 1] == 0) then
@@ -73,7 +73,7 @@ local generation = function(borders, tileLength)
                 if (xIndex == 1) or (yIndex == 1) or (xIndex < #grid - 1 and 
                    (grid[xIndex - 1][yIndex - 1] ~= 1 and grid[xIndex + 1][yIndex - 1] ~= 1)) then
 
-                    local _id = grid[xIndex][yIndex - 1] == 1 and 90 or 89
+                    local _id = grid[xIndex][yIndex - 1] == 1 and 98 or 97
 
                     table.insert(blocks.blocks, {x = (xIndex - 1) * tileLength + borders.left, y = (yIndex - 1) * tileLength + borders.top, 
                     id = _id})

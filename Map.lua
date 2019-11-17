@@ -63,7 +63,6 @@ function Map:draw()
                         id = tid
                     }
 
-                    
                     self:handleBlock(block, i)
                     
                 end
@@ -198,7 +197,7 @@ function Map:getTiles(layerIndex)
         end
     end
 
-    for _, _block in ipairs(self.map.generatedTiles) do
+    for _, _block in ipairs(self.map.generatedTiles.blocks) do
         local block = {
             x = _block.x + (self.mapDataCollisions.xOffsets["_"..tostring(_block.id)] and self.mapDataCollisions.xOffsets["_"..tostring(_block.id)] or 0), 
             y = _block.y + (self.mapDataCollisions.yOffsets["_"..tostring(_block.id)] and self.mapDataCollisions.yOffsets["_"..tostring(_block.id)] or 0),
