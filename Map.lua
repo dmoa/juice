@@ -9,7 +9,7 @@ local Map = {
     mapDataGT = require("maps/general/mapDataGT"),
     -- generic borders of any map loaded
     borders = {
-        top = 16,
+        top = 5,
         left = 5,
         right = 5,
         bottom = 5

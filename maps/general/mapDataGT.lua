@@ -10,6 +10,8 @@ return {
     yOffsets = {
         -- signposts
         _49 = -3, _50 = -3, _57 = -3, _58 = -3,
+        -- short high walls
+        
     },
     widths = {
         -- tree
@@ -37,6 +39,8 @@ return {
         _67 = true,
         -- top left wall
         _65 = true,
+        -- thin bottom and top walls
+        _90 = true, _84 = true, _73 = true, _92 = true, _75 = true, _77 = true,
         -- building
         _15 = true, _16 = true, _23 = true, 
         _24 = true, _31 = true, _32 = true,
