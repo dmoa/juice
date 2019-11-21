@@ -45,7 +45,7 @@ local generation = function(borders, tileLength)
         if (xIndex ~= 1) and (grid[xIndex - 1][yIndex] == 0) then
             table.insert(extras, 100)
         end
-        if (xIndex ~= #grid) and (grid[xIndex + 1][yIndex] == 0) then
+        if ((xIndex ~= #grid) and (grid[xIndex + 1][yIndex] == 0) or xIndex == #grid - 1) then
             table.insert(extras, 102)
         end
         if (yIndex ~= 1) and (grid[xIndex][yIndex - 1] == 0) then
