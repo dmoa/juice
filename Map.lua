@@ -42,10 +42,12 @@ function Map:draw()
         -- draw generated blocks right after ground
         if i == 2 then
             for _, block in ipairs(self.map.generatedTiles.blocks) do
-                self:handleBlock(block, i)
+                local overide = block.y == self.borders.top - 1
+                self:handleBlock(block, i, overide)
             end
             for _, block in ipairs(self.map.generatedTiles.addons) do
-                self:handleBlock(block, i)
+                local overide = block.y == self.borders.top - 1
+                self:handleBlock(block, i, overide)
             end
         end
 
@@ -74,8 +76,9 @@ function Map:draw()
     --love.graphics.rectangle("fill", game.player.x, game.player.y, game.player.quadsData[game.player.size].width, game.player.quadsData[game.player.size].height)
 end
 
-function Map:handleBlock(block, layer)
-    if layer > 1 and not (self.mapDataGT.exceptions["_"..tostring(block.id)]) and
+function Map:handleBlock(block, layer, overide)
+    -- overide overides this function and makes the tile become an after tile
+    if overide or (layer > 1 and not (self.mapDataGT.exceptions["_"..tostring(block.id)]) and
     AABB(game.player.x, 
          game.player.y, 
          game.player.quadsData[game.player.size].width, 
@@ -83,7 +86,7 @@ function Map:handleBlock(block, layer)
          block.x + (self.mapDataGT.xOffsets["_"..tostring(block.id)] and self.mapDataGT.xOffsets["_"..tostring(block.id)] or 0),
          block.y + (self.mapDataGT.yOffsets["_"..tostring(block.id)] and self.mapDataGT.yOffsets["_"..tostring(block.id)] or 0), 
         (self.mapDataGT.widths["_"..tostring(block.id)] and self.mapDataGT.widths["_"..tostring(block.id)] or self.map.tileset.tilewidth),
-        (self.mapDataGT.heights["_"..tostring(block.id)] and self.mapDataGT.heights["_"..tostring(block.id)] or self.map.tileset.tileheight)) 
+        (self.mapDataGT.heights["_"..tostring(block.id)] and self.mapDataGT.heights["_"..tostring(block.id)] or self.map.tileset.tileheight)))
          then
 
     table.insert(self.mapDataGT.withoutOpacity["_"..tostring(block.id)] and self.afterTiles.withoutOpacity 

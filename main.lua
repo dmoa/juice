@@ -9,7 +9,7 @@ function love.draw()
     -- love.graphics.push("all")
     -- love.graphics.translate(gameWW/2, gameWH/2)
     -- love.graphics.scale(canvas.scale)
-    -- love.graphics.translate(-gameWW/2, -gameWH/2)
+    -- love.graphics.translawate(-gameWW/2, -gameWH/2)
     
     love.graphics.setCanvas(canvas.c)
     love.graphics.setShader()
