@@ -75,7 +75,7 @@ local generation = function(borders, tileLength)
 
                     local _id = (grid[xIndex][yIndex - 1] == 1) and 98 or 97
                     
-                    table.insert(blocks.blocks, {x = (xIndex - 1) * tileLength + borders.left, y = (yIndex - 1) * tileLength + borders.top - 1, 
+                    table.insert(blocks.blocks, {x = (xIndex - 1) * tileLength + borders.left, y = (yIndex - 1) * tileLength, 
                     id = _id})
                     
                 else
@@ -91,7 +91,7 @@ local generation = function(borders, tileLength)
                 local cornerTiles = calculateID(xIndex, yIndex)
 
                 for _, id in ipairs(cornerTiles) do
-                    table.insert(blocks.addons, {x = (xIndex - 1) * tileLength + borders.left, y = (yIndex - 1) * tileLength + borders.top - 1, 
+                    table.insert(blocks.addons, {x = (xIndex - 1) * tileLength + borders.left, y = (yIndex - 1) * tileLength, 
                     id = id})
                 end
             end
