@@ -6,7 +6,7 @@ local Player = {
     directionV = math.pow(50 * 50 / 2, 0.5),
     oldX = nil,
     oldY = nil,
-    image = love.graphics.newImage("imgs/player.png"),
+    image = lg.newImage("imgs/player.png"),
     quadsData = {
         {
             offsetX = 0,
@@ -72,7 +72,7 @@ for k, frameT in ipairs(Player.quadsData[1].frameTypes) do
         local actualIndex = i + frameCounter
 
         table.insert(Player.quadsData[1].frames[frameT].quads,
-            love.graphics.newQuad(
+            lg.newQuad(
                 (actualIndex - 1) * Player.quadsData[1].width,
                 0,
                 Player.quadsData[1].width,
@@ -87,8 +87,8 @@ Player.currentQuad = Player.quadsData[1].frames.idleRight.quads[1]
 
 
 function Player:draw()
-    love.graphics.draw(self.image, self.currentQuad, math.round(self.x), self.y)
-    --love.graphics.rectangle("line", self.x, self.y, 16, 16)
+    lg.draw(self.image, self.currentQuad, math.round(self.x), self.y)
+    --lg.rectangle("line", self.x, self.y, 16, 16)
 end
 
 function Player:update(dt)

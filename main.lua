@@ -1,4 +1,6 @@
 function love.load()
+    lg = love.graphics
+    
     windowStartup()
     gameStartup()
 
@@ -6,24 +8,24 @@ function love.load()
 end
 
 function love.draw()
-    -- love.graphics.push("all")
-    -- love.graphics.translate(gameWW/2, gameWH/2)
-    -- love.graphics.scale(canvas.scale)
-    -- love.graphics.translawate(-gameWW/2, -gameWH/2)
+    -- lg.push("all")
+    -- lg.translate(gameWW/2, gameWH/2)
+    -- lg.scale(canvas.scale)
+    -- lg.translawate(-gameWW/2, -gameWH/2)
     
-    love.graphics.setCanvas(canvas.c)
-    love.graphics.setShader()
-    love.graphics.clear()
+    lg.setCanvas(canvas.c)
+    lg.setShader()
+    lg.clear()
     
     game:draw()
     
-    love.graphics.setCanvas()
-    --love.graphics.setShader(crtShader)
-    love.graphics.draw(canvas.c, 0, 0, 0, scale)
+    lg.setCanvas()
+    -- lg.setShader(crtShader)
+    lg.draw(canvas.c, 0, 0, 0, scale)
 
-    love.graphics.print(love.timer.getFPS())
-    love.graphics.print(canvas.scale, 0, 15)
-    love.graphics.print(game.map.currentMapType, 0, 30)
+    lg.print(love.timer.getFPS())
+    lg.print(canvas.scale, 0, 15)
+    lg.print(game.map.currentMapType, 0, 30)
 end
 
 function love.update(dt)
@@ -45,14 +47,14 @@ end
 
 function windowStartup()
     love.mouse.setVisible(false)
-    love.graphics.setDefaultFilter("nearest", "nearest", 1, 1)
-    WW, WH = love.graphics.getDimensions()
+    lg.setDefaultFilter("nearest", "nearest", 1, 1)
+    WW, WH = lg.getDimensions()
     gameWW = 512
     gameWH = 288
     
     
     canvas = {
-        c = love.graphics.newCanvas(gameWW, gameWH),
+        c = lg.newCanvas(gameWW, gameWH),
         x = WW / 2,
         y = WH / 2,
         r = 0,
@@ -77,7 +79,7 @@ function windowStartup()
 
     canvas.c:setWrap("clampzero")
     
-    scale = love.graphics.getWidth() / canvas.c:getWidth()
+    scale = lg.getWidth() / canvas.c:getWidth()
 end
 
 function gameStartup()

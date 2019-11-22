@@ -1,6 +1,6 @@
 local Map = {
     tileset = {
-        image = love.graphics.newImage("imgs/tileset.png"),
+        image = lg.newImage("imgs/tileset.png"),
         quads = {},
         tileLength = 16
     },
@@ -24,7 +24,7 @@ local Map = {
 
 for y = 0, (Map.tileset.image:getHeight() / Map.tileset.tileLength) - 1 do
     for x = 0, (Map.tileset.image:getWidth() / Map.tileset.tileLength) - 1 do
-        local quad = love.graphics.newQuad(
+        local quad = lg.newQuad(
             x * Map.tileset.tileLength,
             y * Map.tileset.tileLength,
             Map.tileset.tileLength,
@@ -72,7 +72,7 @@ function Map:draw()
         
     end
 
-    --love.graphics.rectangle("fill", game.player.x, game.player.y, game.player.quadsData[game.player.size].width, game.player.quadsData[game.player.size].height)
+    --lg.rectangle("fill", game.player.x, game.player.y, game.player.quadsData[game.player.size].width, game.player.quadsData[game.player.size].height)
 end
 
 function Map:handleBlock(block, layer)
@@ -92,7 +92,7 @@ function Map:handleBlock(block, layer)
                  {x = block.x, y = block.y, quad = self.tileset.quads[block.id]})
 
     else
-        love.graphics.draw(
+        lg.draw(
             self.tileset.image,
             self.tileset.quads[block.id],
             block.x,
@@ -103,9 +103,9 @@ end
 
 function Map:finishDrawing()
 
-    love.graphics.setColor(1, 1, 1, 0.8)
+    lg.setColor(1, 1, 1, 0.8)
     for k, block in ipairs(self.afterTiles.withOpacity) do
-        love.graphics.draw(
+        lg.draw(
             self.tileset.image,
             block.quad,
             block.x,
@@ -113,9 +113,9 @@ function Map:finishDrawing()
         )
     end
     
-    love.graphics.setColor(1, 1, 1, 1)
+    lg.setColor(1, 1, 1, 1)
     for k, block in ipairs(self.afterTiles.withoutOpacity) do
-        love.graphics.draw(
+        lg.draw(
             self.tileset.image,
             block.quad,
             block.x,
@@ -128,7 +128,7 @@ function Map:finishDrawing()
         withoutOpacity = {}
     }
     
-    love.graphics.setColor(1, 1, 1, 1)
+    lg.setColor(1, 1, 1, 1)
 end
 
 function Map:update(dt)

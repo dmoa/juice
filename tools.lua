@@ -16,7 +16,7 @@ function AABBVertical(y1, h1, y2, h2)
     return y1 + h1 > y2 and y1 < y2 + h2 
 end
 
-pixelatedShader = love.graphics.newShader([[
+pixelatedShader = lg.newShader([[
 
     extern vec2 size;
     extern number factor;
@@ -27,7 +27,7 @@ pixelatedShader = love.graphics.newShader([[
 
 ]])
 
-crtShader = love.graphics.newShader([[
+crtShader = lg.newShader([[
     extern float elapsed;
     extern float colorI;
     
