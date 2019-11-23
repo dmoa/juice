@@ -57,16 +57,16 @@ joystick = love.joystick.getJoysticks()[1]
 
 keyIsDown = {
     right = function()
-        return (love.keyboard.isDown("right") or love.keyboard.isDown("d") or (joystick and joystick:getAxis(1) > 0.5))
+        return (lk.isDown("right") or lk.isDown("d") or (joystick and joystick:getAxis(1) > 0.5))
     end,
     left = function()
-        return (love.keyboard.isDown("left") or love.keyboard.isDown("a") or (joystick and joystick:getAxis(1) < -0.5))
+        return (lk.isDown("left") or lk.isDown("a") or (joystick and joystick:getAxis(1) < -0.5))
     end,
     up = function()
-        return (love.keyboard.isDown("up") or love.keyboard.isDown("w") or (joystick and joystick:getAxis(2) < -0.5))
+        return (lk.isDown("up") or lk.isDown("w") or (joystick and joystick:getAxis(2) < -0.5))
     end,
     down = function()
-        return (love.keyboard.isDown("down") or love.keyboard.isDown("s") or (joystick and joystick:getAxis(2) > 0.5))
+        return (lk.isDown("down") or lk.isDown("s") or (joystick and joystick:getAxis(2) > 0.5))
     end
 }
 

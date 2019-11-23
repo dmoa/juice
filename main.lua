@@ -1,5 +1,8 @@
 function love.load()
     lg = love.graphics
+    lk = love.keyboard
+    lm = love.math
+    lj = love.joystick
     
     windowStartup()
     gameStartup()
@@ -20,7 +23,7 @@ function love.draw()
     game:draw()
     
     lg.setCanvas()
-    -- lg.setShader(crtShader)
+    lg.setShader(crtShader)
     lg.draw(canvas.c, 0, 0, 0, scale)
 
     lg.print(love.timer.getFPS())
