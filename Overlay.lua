@@ -20,6 +20,10 @@ function Overlay:draw()
     lg.rectangle("fill", 0, gameWH - game.map.tileset.tileLength,
                             gameWW, game.map.tileset.tileLength)
     lg.setColor(1, 1, 1)
+
+    for i = 1, game.player.hp do 
+        love.graphics.draw(self.tilesetImage, self.quads[1], (i - 1) * 18, gameWH - game.map.tileset.tileLength)
+    end
 end
 
 return Overlay

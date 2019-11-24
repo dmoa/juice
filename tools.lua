@@ -1,3 +1,6 @@
+noiseM = require "libs/noise"
+ss3dEngine = require "libs/ss3d"
+
 function AABB(x1, y1, w1, h1, x2, y2, w2, h2)
     return x1 + w1 > x2 and x1 < x2 + w2 
        and y1 + h1 > y2 and y1 < y2 + h2
@@ -69,5 +72,3 @@ keyIsDown = {
         return (lk.isDown("down") or lk.isDown("s") or (joystick and joystick:getAxis(2) > 0.5))
     end
 }
-
-noiseM = require("libs/noise")

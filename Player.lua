@@ -3,6 +3,7 @@ local Player = {
     x = 50,
     y = 50,
     v = 50,
+    hp = 3,
     directionV = math.pow(50 * 50 / 2, 0.5),
     oldX = nil,
     oldY = nil,
