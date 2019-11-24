@@ -9,6 +9,10 @@ function love.load()
     windowStartup()
     gameStartup()
     ss3dEngineStartup()
+
+    lg.setBackgroundColor(0.52,0.57,0.69)
+
+    scene3d = require("3d")
 end
 
 function love.draw()
@@ -17,21 +21,20 @@ function love.draw()
     -- lg.scale(canvas.scale)
     -- lg.translawate(-gameWW/2, -gameWH/2)
     
-    -- lg.setCanvas(canvas.c)
-    -- lg.setShader()
-    -- lg.clear()
+    lg.setCanvas(canvas.c)
+    lg.setShader()
+    lg.clear()
     
-    -- game:draw()
+    game:draw()
+    scene3d:draw()
     
-    -- lg.setCanvas()
-    -- if shaderOn then lg.setShader(crtShader) end
-    -- lg.draw(canvas.c, 0, 0, 0, scale)
-
-    -- lg.print(love.timer.getFPS())
-    -- lg.print(canvas.scale, 0, 15)
-    -- lg.print(game.map.currentMapType, 0, 30)
-    love.graphics.setColor(1,1,1)
-    ss3dScene:render()
+    lg.setCanvas()
+    if shaderOn then lg.setShader(crtShader) end
+    lg.draw(canvas.c, 0, 0, 0, scale)
+    
+    lg.print(love.timer.getFPS())
+    lg.print(canvas.scale, 0, 15)
+    lg.print(game.map.currentMapType, 0, 30)
 end
 
 function love.update(dt)
@@ -40,8 +43,8 @@ function love.update(dt)
     -- pixelatedShader:send("size", {gameWW, gameWH})
     -- pixelatedShader:send("factor", 1 / canvas.scale)
     crtShader:send("colorI", 0.03 / canvas.scale)
-    Timer = dt / 4
-    TetrahedronModel:setTransform({math.cos(Timer + math.pi*0.5)*12, math.sin(Timer)*0.75 +1, math.sin(Timer *math.pi*0.5)*12}, {Timer, cpml.vec3.unit_y, Timer, cpml.vec3.unit_z, Timer, cpml.vec3.unit_x})
+
+    scene3d:update(dt)
 end
 
 function love.keypressed(key)
@@ -99,27 +102,4 @@ function gameStartup()
 end
 
 function ss3dEngineStartup()
-    ss3dScene = ss3dEngine.newScene(love.graphics.getWidth(), love.graphics.getHeight())
-    ss3dScene.camera.pos.x = 0
-    ss3dScene.camera.pos.z = 5
-
-    local tetrahedron = {
-        {-1,-1,-1},
-        {-1,1,1},
-        {1,1,-1},
-    
-        {-1,1,1},
-        {1,1,-1},
-        {1,-1,1},
-    
-        {-1,-1,-1},
-        {1,1,-1},
-        {1,-1,1},
-    
-        {-1,-1,-1},
-        {-1,1,1},
-        {1,-1,1},
-    }
-    TetrahedronModel = ss3dEngine.newModel(tetrahedron, lg.newImage("imgs/3Dtexture.png"))
-    ss3dScene:addModel(TetrahedronModel)
 end
