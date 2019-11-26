@@ -6,7 +6,11 @@ local Timer = 0
 local canvas = lg.newCanvas()
 
 scene.camera.pos.x = 0
+scene.camera.pos.y = 0
 scene.camera.pos.z = 8
+
+scene.ambientLight = 1
+scene.ambientVector = {0, -3, 0}
 
 -- local pyramidVerts = {}
 -- pyramidVerts[#pyramidVerts+1] = {-1,-1,-1}
@@ -32,7 +36,7 @@ scene.camera.pos.z = 8
 --     scene:addModel(Pyramids[i])
 -- end
 
-local square = ss3dEngine.newModel(ss3dEngine.loadObj("3dObjects/square.obj"), lg.newImage("imgs/3Dtexture.png"))
+local square = ss3dEngine.newModel(ss3dEngine.loadObj("3dObjects/square.obj"), lg.newImage("imgs/texture3.png"))
 scene:addModel(square)
 
 function ss3dScene:draw()
@@ -40,7 +44,7 @@ function ss3dScene:draw()
 
     lg.setCanvas(canvas)
     lg.clear()
-    lg.setShader(pixelatedShader)
+    --clg.setShader(pixelatedShader)
 
     lg.draw(engineCanvas, x, y, width, height, rotation, scaleX, scaleY, offsetX, offsetY)
     
@@ -58,7 +62,7 @@ function ss3dScene:update(dt)
     -- for i=1, #Pyramids do
     --     Pyramids[i]:setTransform({}, {Timer, cpml.vec3.unit_y, Timer, cpml.vec3.unit_z, Timer, cpml.vec3.unit_x})
     -- end
-    square:setTransform({}, {Timer, cpml.vec3.unit_y, 2, cpml.vec3.unit_z, 0, cpml.vec3.unit_x})
+    square:setTransform({-2, 0, 0}, {Timer, cpml.vec3.unit_y, 2, cpml.vec3.unit_z, 0, cpml.vec3.unit_x})
 end
 
 return ss3dScene
