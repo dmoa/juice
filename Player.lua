@@ -7,13 +7,13 @@ local Player = {
     directionV = math.pow(50 * 50 / 2, 0.5),
     oldX = nil,
     oldY = nil,
-    image = lg.newImage("imgs/player.png"),
+    image = lg.newImage("imgs/player/green.png"),
     quadsData = {
         {
             offsetX = 0,
             offsetY = 0,
-            width = 16,
-            height = 16,
+            width = 24,
+            height = 24,
             frames = {
                 idleRight = {
                     quads = {},
@@ -22,7 +22,7 @@ local Player = {
                 },
                 walkingRight = {
                     quads = {},
-                    n_frames = 4,
+                    n_frames = 6,
                     frame_speed = 0.1
                 },
                 idleLeft = {
@@ -32,7 +32,7 @@ local Player = {
                 },
                 walkingLeft = {
                     quads = {},
-                    n_frames = 4,
+                    n_frames = 6,
                     frame_speed = 0.1
                 },
             },
@@ -48,10 +48,10 @@ local Player = {
     walking = false,
     collisionData = {
         {
-            width = 12,
+            width = 8,
             height = 2,
-            offsetX = 2,
-            offsetY = 14
+            offsetX = 8,
+            offsetY = 19
         }
     },
     startingMapPos = {

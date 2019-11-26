@@ -36,7 +36,7 @@ scene.ambientVector = {0, -3, 0}
 --     scene:addModel(Pyramids[i])
 -- end
 
--- local square = ss3dEngine.newModel(ss3dEngine.loadObj("3dObjects/square.obj"), lg.newImage("imgs/texture3.png"))
+-- local square = ss3dEngine.newModel(ss 3dEngine.loadObj("3dObjects/square.obj"), lg.newImage("imgs/texture3.png"))
 -- scene:addModel(square)
 
 function ss3dScene:draw()
