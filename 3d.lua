@@ -38,14 +38,18 @@ scene:addModel(square)
 function ss3dScene:draw()
     local engineCanvas, x, y, width, height, rotation, scaleX, scaleY, offsetX, offsetY = scene:getRender()
 
-    --lg.setShader(pixelatedShader)
     lg.setCanvas(canvas)
     lg.clear()
+    lg.setShader(pixelatedShader)
+
     lg.draw(engineCanvas, x, y, width, height, rotation, scaleX, scaleY, offsetX, offsetY)
+    
     lg.setCanvas()
 
-    --if shaderOn then lg.setShader(crtShader) end
+    if shaderOn then lg.setShader(crtShader) end
     lg.draw(canvas)
+    
+    lg.setShader()
 end
 
 function ss3dScene:update(dt)

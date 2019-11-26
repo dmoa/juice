@@ -40,11 +40,14 @@ end
 function love.update(dt)
     game:update(dt )
     canvas:update(dt)
-    -- pixelatedShader:send("size", {gameWW, gameWH})
-    -- pixelatedShader:send("factor", 1 / canvas.scale)
+    
+    pixelatedShader:send("size", {gameWW, gameWH})
+    pixelatedShader:send("factor", 1)
     crtShader:send("colorI", 0.03 / canvas.scale)
-
+    
     scene3d:update(dt)
+
+    print(dt * 360)
 end
 
 function love.keypressed(key)
