@@ -331,6 +331,52 @@ function engine.newScene(renderWidth,renderHeight)
         end
     end
 
+    -- specialised function for this project so the tv effect works
+    scene.getRender = function (self, drawArg)
+        love.graphics.setColor(1,1,1)
+        love.graphics.setCanvas({self.threeCanvas, depth=true})
+        love.graphics.clear(0,0,0,0)
+        love.graphics.setShader(self.threeShader)
+
+        -- compile camera data into usable view to send to threeShader
+        local Camera = self.camera
+        local camTransform = cpml.mat4()
+        camTransform:rotate(camTransform, Camera.angle.y, cpml.vec3.unit_x)
+        camTransform:rotate(camTransform, Camera.angle.x, cpml.vec3.unit_y)
+        camTransform:rotate(camTransform, Camera.angle.z, cpml.vec3.unit_z)
+        camTransform:translate(camTransform, Camera.pos*-1)
+        self.threeShader:send("view", Camera.perspective * TransposeMatrix(camTransform))
+        self.threeShader:send("ambientLight", self.ambientLight)
+        self.threeShader:send("ambientVector", self.ambientVector)
+
+        -- go through all models in modelList and draw them
+        for i=1, #self.modelList do
+            local model = self.modelList[i]
+            if model ~= nil and model.visible and #model.verts > 0 then
+                self.threeShader:send("model_matrix", model.transform)
+                self.threeShader:send("model_matrix_inverse", TransposeMatrix(InvertMatrix(model.transform)))
+
+                love.graphics.setWireframe(model.wireframe)
+                if model.culling then
+                    love.graphics.setMeshCullMode("back")
+                end
+
+                love.graphics.draw(model.mesh, -self.renderWidth/2, -self.renderHeight/2)
+
+                love.graphics.setMeshCullMode("none")
+                love.graphics.setWireframe(false)
+            end
+        end
+
+        love.graphics.setShader()
+        love.graphics.setCanvas()
+
+        love.graphics.setColor(1,1,1)
+        if drawArg == nil or drawArg == true then
+            return self.threeCanvas, self.renderWidth/2, self.renderHeight/2, 0, 1,-1, self.renderWidth/2, self.renderHeight/2
+        end
+    end
+
     -- renders the given func to the twoCanvas
     -- this is useful for drawing 2d HUDS and information on the screen in front of the 3d scene
     -- will draw threeCanvas if drawArg is not given or is true (use if you want to scale the game canvas to window)

@@ -10,7 +10,7 @@ function love.load()
     gameStartup()
     ss3dEngineStartup()
 
-    lg.setBackgroundColor(0.52,0.57,0.69)
+    --lg.setBackgroundColor(0.52,0.57,0.69)
 
     scene3d = require("3d")
 end
@@ -26,11 +26,11 @@ function love.draw()
     lg.clear()
     
     game:draw()
-    scene3d:draw()
     
     lg.setCanvas()
     if shaderOn then lg.setShader(crtShader) end
     lg.draw(canvas.c, 0, 0, 0, scale)
+    scene3d:draw()
     
     lg.print(love.timer.getFPS())
     lg.print(canvas.scale, 0, 15)
@@ -62,8 +62,8 @@ function windowStartup()
     love.mouse.setVisible(false)
     lg.setDefaultFilter("nearest", "nearest", 1, 1)
     WW, WH = lg.getDimensions()
-    gameWW = 512
-    gameWH = 288
+    gameWW = 256
+    gameWH = 144
     
     
     canvas = {
