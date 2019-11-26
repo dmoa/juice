@@ -4,8 +4,8 @@ local generation = function(borders, tileLength)
     local grid = {}
     -- Fill each pixel in our grid with simplex noise.
     local function noise()
-        for x = 1, 32 do
-            for y = 1, 18 do
+        for x = 1, 16 do
+            for y = 1, 9 do
                 grid[x] = grid[x] or {}
                 local seed = love.math.random()
                 grid[x][y] = noiseM.Simplex2D( x + seed * 0.17, y + seed * 0.17) > 0.2 and 1 or 0
