@@ -97,7 +97,7 @@ function windowStartup()
     
     scale = lg.getWidth() / canvas.c:getWidth()
 
-    shaderOn = false
+    shaderOn = true
 end
 
 function gameStartup()
