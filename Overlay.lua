@@ -21,8 +21,12 @@ function Overlay:draw()
                             gameWW, game.map.tileset.tileLength)
     lg.setColor(1, 1, 1)
 
+    lg.setColor(0, 0, 0)
+    lg.print("by Stan O | stan.xyz", gameWW - game.map.tileset.tileLength * 8, gameWH - game.map.tileset.tileLength)
+
+    lg.setColor(1, 1, 1)
     for i = 1, game.player.hp do 
-        love.graphics.draw(self.tilesetImage, self.quads[1], (i - 1) * 18, gameWH - game.map.tileset.tileLength)
+        lg.draw(self.tilesetImage, self.quads[1], (i - 1) * 18, gameWH - game.map.tileset.tileLength)
     end
 end
 
