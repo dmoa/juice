@@ -22,7 +22,8 @@ function Overlay:draw()
     lg.setColor(1, 1, 1)
 
     lg.setColor(0, 0, 0)
-    lg.print("by Stan O | stan.xyz", gameWW - game.map.tileset.tileLength * 8, gameWH - game.map.tileset.tileLength)
+    --lg.print("by Stan O | stan.xyz", gameWW - game.map.tileset.tileLength * 8, 
+      --                               gameWH - game.map.tileset.tileLength)
 
     lg.setColor(1, 1, 1)
     for i = 1, game.player.hp do 
