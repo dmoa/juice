@@ -217,6 +217,9 @@ function Map:moveMap(direction)
     canvas:startTransition()
     -- black magic ternary statement
     self.currentMapType = (self.currentMapType == "middle") and direction or "middle"
+    if self.currentMapType == "left" then
+        game.enemy:spawnEnemy(1)
+    end
 end
 
 function Map:reloadMap()
