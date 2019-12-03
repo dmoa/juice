@@ -27,6 +27,10 @@ local Enemy = {
     },
     currentImage = nil,
     currentQuad = nil,
+    currentAnimation = nil,
+    currentDirection = nil,
+    currentAnimationIndex = nil,
+    animationTick = 0,
     x = 50,
     y = 50,
     drawEnemy = false
@@ -48,7 +52,12 @@ function Enemy:spawnEnemy(currentLevel)
         table.insert(self.frames.idle.left,  lg.newQuad((i - 1 + self.frames.idle.n_frames) * width, 0,
                                                          width, height, self.currentImage:getDimensions()))
     end
-    self.currentQuad = self.frames.idle.left[1]
+
+    self.currentAnimation = "idle"
+    self.currentDirection = "left"
+    self.currentAnimationIndex = 1
+    self.currentQuad = self.frames[self.currentAnimation][self.currentDirection][self.currentAnimationIndex]
+
     self.drawEnemy = true
 end
 
@@ -59,6 +68,15 @@ function Enemy:draw()
 end
 
 function Enemy:update(dt)
+    if self.drawEnemy then
+        self.currentQuad = self.frames[self.currentAnimation][self.currentDirection][self.currentAnimationIndex]
+
+        self.animationTick = self.animationTick - dt
+        if self.animationTick < 0 then
+            self.animationTick = self.frames[self.currentAnimation].speed
+            self.currentAnimationIndex = (self.currentAnimationIndex % self.frames[self.currentAnimation].n_frames) + 1
+        end
+    end
 end
 
 return Enemy
