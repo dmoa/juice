@@ -36,8 +36,8 @@ scene.ambientVector = {0, -3, 0}
 --     scene:addModel(Pyramids[i])
 -- end
 
--- local square = ss3dEngine.newModel(ss 3dEngine.loadObj("3dObjects/square.obj"), lg.newImage("imgs/texture3.png"))
--- scene:addModel(square)
+local square = ss3dEngine.newModel(ss3dEngine.loadObj("3dObjects/square.obj"), lg.newImage("imgs/texture3.png"))
+scene:addModel(square)
 
 function ss3dScene:draw()
     local engineCanvas, x, y, width, height, rotation, scaleX, scaleY, offsetX, offsetY = scene:getRender()
@@ -62,7 +62,7 @@ function ss3dScene:update(dt)
     -- for i=1, #Pyramids do
     --     Pyramids[i]:setTransform({}, {Timer, cpml.vec3.unit_y, Timer, cpml.vec3.unit_z, Timer, cpml.vec3.unit_x})
     -- end
-    --square:setTransform({0, 3, 0}, {Timer, cpml.vec3.unit_y, 0, cpml.vec3.unit_z, 0, cpml.vec3.unit_x})
+    square:setTransform({0, 3, 0}, {Timer, cpml.vec3.unit_y, 0, cpml.vec3.unit_z, 0, cpml.vec3.unit_x})
 end
 
 return ss3dScene

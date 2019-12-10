@@ -61,7 +61,7 @@ function Enemy:spawnEnemy(currentLevel)
     self.drawEnemy = true
 end
 
-function Enemy:draw()
+function Enemy:draw()   
     if self.drawEnemy then
         lg.draw(self.currentImage, self.currentQuad, math.round(self.x), math.round(self.y))
     end
@@ -69,12 +69,12 @@ end
 
 function Enemy:update(dt)
     if self.drawEnemy then
-        self.currentQuad = self.frames[self.currentAnimation][self.currentDirection][self.currentAnimationIndex]
-
         self.animationTick = self.animationTick - dt
+        
         if self.animationTick < 0 then
             self.animationTick = self.frames[self.currentAnimation].speed
             self.currentAnimationIndex = (self.currentAnimationIndex % self.frames[self.currentAnimation].n_frames) + 1
+            self.currentQuad = self.frames[self.currentAnimation][self.currentDirection][self.currentAnimationIndex] 
         end
     end
 end

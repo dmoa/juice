@@ -20,14 +20,12 @@ function AABBVertical(y1, h1, y2, h2)
 end
 
 pixelatedShader = lg.newShader([[
-
     extern vec2 size;
     extern number factor;
     vec4 effect(vec4 color, Image img, vec2 texture_coords, vec2 pixel_coords){
        vec2 tc = floor(texture_coords * size / factor) * factor / size;
        return Texel(img, tc);
     }
-
 ]])
 
 crtShader = lg.newShader([[
@@ -55,7 +53,7 @@ function math.round(n)
     return n % 1 >= 0.5 and math.ceil(n) or math.floor(n)
 end
 
-joystick = love.joystick.getJoysticks()[1]
+joystick = lj.getJoysticks()[1]
 -- joystick:setVibration(1, 1, 0.5)
 
 keyIsDown = {
