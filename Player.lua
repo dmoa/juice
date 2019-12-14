@@ -57,6 +57,18 @@ local Player = {
     startingMapPos = {
         x = 0,
         y = 0
+    },
+    -- the trailing flowers behind the dinosaur
+    flowers = {
+        images = {
+            lg.newImage("imgs/player/flower1.png"), 
+            lg.newImage("imgs/player/flower2.png"),
+            lg.newImage("imgs/player/flower3.png")
+        },
+        coords = {{x = -50, y = -50, index = 1}},
+        maxN = 100,
+        width = 3,
+        height = 3
     }
 }
 
@@ -88,8 +100,14 @@ Player.currentQuad = Player.quadsData[1].frames.idleRight.quads[1]
 
 
 function Player:draw()
-    lg.draw(self.image, self.currentQuad, math.round(self.x), self.y)
-    --lg.rectangle("line", self.x, self.y, 16, 16)
+    lg.draw(self.image, self.currentQuad, self.x, self.y)
+end
+
+-- run in draw function in Map.lua (makes it easier to figure out draw order)
+function Player:drawFlowers()
+    for k, flower in ipairs(self.flowers.coords) do
+        lg.draw(self.flowers.images[flower.index], flower.x, flower.y)
+    end
 end
 
 function Player:update(dt)
@@ -97,6 +115,7 @@ function Player:update(dt)
     self:controlsUpdate(dt)
     self:collisionUpdate(dt)
     self:mapUpdate()
+    self:flowerTrailUpdate()
 end
 
 function Player:animationTick(dt)
@@ -256,17 +275,40 @@ function Player:mapUpdate()
             -- y position doesn't change
             self.startingMapPos.y = self.y
             self.startingMapPos.x = gameWW - self.quadsData[self.size].width - 10
+            
+            self.flowers.coords = {{x = -50, y = -50, index = 1}}
         end
         if self.x > gameWW then
             game.map:moveMap("right")
             self.startingMapPos.y = self.y
             self.startingMapPos.x = 20
+
+            self.flowers.coords = {{x = -50, y = -50, index = 1}}
         end
         if self.y + self.quadsData[self.size].height < 0 then
             game.map:moveMap("up")
+            self.flowers.coords = {{x = -50, y = -50, index = 1}}
         end
         if self.y > gameWH then
             game.map:moveMap("down")
+            self.flowers.coords = {{x = -50, y = -50, index = 1}}
+        end
+    end
+end
+
+function Player:flowerTrailUpdate()
+    local pXMiddle = self.x + self.quadsData[1].width / 2
+
+    if (self.x ~= self.oldX or self.y ~= self.oldY) and 
+       (math.abs(pXMiddle - self.flowers.coords[#self.flowers.coords].x) > 5 or math.abs(self.y - self.flowers.coords[#self.flowers.coords].y) > 5) then
+
+        xRandom = math.abs(self.y - self.flowers.coords[#self.flowers.coords].y) > 5 and lm.random(-3, 3) or 0
+        yRandom = math.abs(self.x - self.flowers.coords[#self.flowers.coords].x) > 5 and lm.random(-3, 3) or 0
+
+        table.insert(self.flowers.coords, {x = pXMiddle + xRandom, y = self.y + 12 + yRandom, index = lm.random(3)})
+        
+        if #self.flowers.coords > self.flowers.maxN then
+            table.remove(self.flowers.coords, 1)
         end
     end
 end

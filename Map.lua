@@ -60,6 +60,11 @@ function Map:draw()
             end
         end
 
+        -- draw player's flowers right after ground
+        if i == 1 then
+            game.player:drawFlowers()
+        end
+
         -- draw generated blocks right after ground & first layer blocks
         if i == 3 then
             for _, block in ipairs(self.map.generatedTiles.blocks) do
@@ -149,9 +154,9 @@ function Map:generateMap(path)
                 local tid = layer.data[index]
                 
                 if tid ~= 0 then
-
+                    -- generating grass tiles
                     if tid < 6 then
-                        layer.data[index] = love.math.random(5)
+                        layer.data[index] = lm.random(5)
                     end
                     
                 end

@@ -46,7 +46,7 @@ function ss3dScene:draw()
     lg.clear()
     lg.setShader(pixelatedShader)
 
-    lg.draw(engineCanvas, x, y, width, height, rotation, scaleX, scaleY, offsetX, offsetY)
+    -- lg.draw(engineCanvas, x, y, width, height, rotation, scaleX, scaleY, offsetX, offsetY)
     
     lg.setCanvas()
 

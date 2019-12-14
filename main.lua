@@ -46,8 +46,7 @@ function love.update(dt)
     crtShader:send("colorI", 0.03 / canvas.scale)
     
     scene3d:update(dt)
-
-    print(dt * 360)
+    
 end
 
 function love.keypressed(key)
