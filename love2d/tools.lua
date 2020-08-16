@@ -16,7 +16,7 @@ function AABBHorizontal(x1, w1, x2, w2)
 end
 
 function AABBVertical(y1, h1, y2, h2)
-    return y1 + h1 > y2 and y1 < y2 + h2 
+    return y1 + h1 > y2 and y1 < y2 + h2
 end
 
 pixelatedShader = lg.newShader([[
@@ -31,13 +31,13 @@ pixelatedShader = lg.newShader([[
 crtShader = lg.newShader([[
     extern float elapsed;
     extern float colorI;
-    
+
     vec2 radialDistortion(vec2 coord, float dist) {
         vec2 cc = coord - 0.5;
         dist = dot(cc, cc) * dist + cos(elapsed * .3) * .01;
         return (coord + cc * (1.0 + dist) * dist);
     }
-    
+
     vec4 effect(vec4 color, Image tex, vec2 tc, vec2 pc) {
         vec2 tcr = radialDistortion(tc, .24)  + vec2(.001, 0);
         vec2 tcg = radialDistortion(tc, .20);
