@@ -9,6 +9,6 @@ struct CurrentAnimationData {
     float timer;
     int index;
     int offset;
-    int* num_frames;
-    float* speed;
+    int num_frames;
+    float speed;
 };

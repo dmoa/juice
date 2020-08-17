@@ -4,7 +4,7 @@ void Player::LoadTexture() {
     texture = IMG_LoadTexture(global_window_data.rdr, "assets/player/red.png");
     if (!texture) SDL_Log("red.png not found");
 
-    current_quad.x = current_quad.y = positional_quad.x = positional_quad.y = 0;
+    x = y = current_quad.x = current_quad.y = positional_quad.x = positional_quad.y = 0;
     current_quad.w = current_quad.h = positional_quad.w = positional_quad.h = 24;
     // SDL_QueryTexture(texture, NULL, NULL, & current_quad.w, & current_quad.h); SDL_TEXTUREACCESS_STATIC
     is_flipped = SDL_FLIP_HORIZONTAL;
@@ -19,43 +19,64 @@ void Player::Draw() {
 }
 
 void Player::Update() {
+
+    current_xv = 0;
+    current_yv = 0;
+    if (global_window_data.keys_down[SDL_SCANCODE_RIGHT]) {
+        current_xv = v;
+        is_flipped = SDL_FLIP_NONE;
+
+        positional_quad.x = x;
+    }
+    if (global_window_data.keys_down[SDL_SCANCODE_LEFT]) {
+        current_xv = -v;
+        is_flipped = SDL_FLIP_HORIZONTAL;
+
+        positional_quad.x = x;
+    }
+    if (global_window_data.keys_down[SDL_SCANCODE_UP]) {
+        current_yv = -v;
+
+        positional_quad.y = y;
+    }
+    if (global_window_data.keys_down[SDL_SCANCODE_DOWN]) {
+        current_yv = v;
+
+        positional_quad.y = y;
+    }
+
+    if (current_xv && current_yv) {
+        current_xv /= ROOT2;
+        current_yv /= ROOT2;
+    }
+
+    x += current_xv * (*dt);
+    y += current_yv * (*dt);
+
     current_animation.timer -= *dt;
     if (current_animation.timer < 0) {
-        current_animation.timer = *current_animation.speed;
-        current_animation.index = (current_animation.index + 1) % *current_animation.num_frames + current_animation.offset;
 
-        current_quad.x = current_animation.index * current_quad.w;
+
+        current_animation.timer = current_animation.speed;
+        current_animation.index = (current_animation.index + 1) % current_animation.num_frames;
+
+        current_quad.x = (current_animation.index + current_animation.offset) * current_quad.w;
     }
 
-    if (!(global_window_data.keys_down[SDL_SCANCODE_LEFT] && global_window_data.keys_down[SDL_SCANCODE_RIGHT]) && (global_window_data.keys_down[SDL_SCANCODE_RIGHT] || global_window_data.keys_down[SDL_SCANCODE_LEFT])) {
-        if (global_window_data.keys_down[SDL_SCANCODE_RIGHT]) {
-            x += xv * (*dt);
-            is_flipped = SDL_FLIP_NONE;
-        }
-        if (global_window_data.keys_down[SDL_SCANCODE_LEFT]) {
-            x -= xv * (*dt);
-            is_flipped = SDL_FLIP_HORIZONTAL;
-        }
-        positional_quad.x = x;
-    
-        SetAnimationIfShould("running");
-    } else {
-        SetAnimationIfShould("idle");
-    }
+    if (current_xv || current_yv) SetAnimationIfShould("running");
+    else                          SetAnimationIfShould("idle");
 }
 
 void Player::SetAnimationIfShould(std::string name) {
 
     if (name != current_animation.name) {
         current_animation.name = name;
+        int index = animations_data.names[name];
 
-        int index = 0;
-        if (current_animation.name == "running") {
-            index = 1;
-        }
         current_animation.timer = 0;
-        current_animation.speed = & animations_data.speeds[index];
-        current_animation.num_frames = & animations_data.num_frames[index];
+        current_animation.speed      = animations_data.speeds[index];
+        current_animation.num_frames = animations_data.num_frames[index];
+        current_animation.offset     = animations_data.offsets[index];
 
     }
 }
