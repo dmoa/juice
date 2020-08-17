@@ -9,7 +9,7 @@ Window::Window() {
     if (!icon) SDL_Log("icon.png not loaded");
     SDL_SetWindowIcon(window, icon);
 
-    SDL_RenderSetScale(global_window_data.rdr, 4, 4);
+    SDL_RenderSetScale(global_window_data.rdr, global_window_data.scale, global_window_data.scale);
 }
 
 void Window::Clear() {

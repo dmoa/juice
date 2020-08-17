@@ -2,6 +2,8 @@
 
 #include <iostream>
 #include <vector>
+#include <stdlib.h>
+#include <time.h>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
@@ -13,19 +15,26 @@
 #include "Clock.cpp"
 
 #include "Player.hpp"
+#include "Map.hpp"
 
-GlobalWindowData global_window_data = {500, 500, NULL, SDL_GetKeyboardState(NULL)};
+GlobalWindowData global_window_data = {640, 640, 4, NULL, SDL_GetKeyboardState(NULL)};
 
 int main(int argc, char* argv[]) {
     IMG_Init(IMG_INIT_PNG);
     TTF_Init();
     Text::LoadFont();
+    srand(time(0));
 
     Window window;
     Clock clock;
     Player player;
+    Map map;
+
     player.LoadTexture();
     player.GiveDT(& clock.dt);
+
+    map.LoadTexture();
+    map.CreateMapTexture();
 
     SDL_Event event;
     bool quit = false;
@@ -54,10 +63,14 @@ int main(int argc, char* argv[]) {
 
         window.Clear();
 
+        map.Draw();
         player.Draw();
 
         SDL_RenderPresent(global_window_data.rdr);
     }
+
+    player.DestroyTexture();
+    map.DestroyTextures();
 
     Text::DestroyFont();
     TTF_Quit();

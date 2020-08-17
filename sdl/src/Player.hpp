@@ -19,6 +19,7 @@ public:
     void Draw();
     void Update();
     void SetAnimationIfShould(std::string name);
+    void DestroyTexture();
 private:
     float* dt;
 

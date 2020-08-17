@@ -5,6 +5,7 @@
 struct GlobalWindowData {
     int w;
     int h;
+    int scale;
     SDL_Renderer* rdr;
     const Uint8* keys_down;
 };

@@ -84,3 +84,7 @@ void Player::SetAnimationIfShould(std::string name) {
 
     }
 }
+
+void Player::DestroyTexture() {
+    SDL_DestroyTexture(texture);
+}
