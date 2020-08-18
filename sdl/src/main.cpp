@@ -51,6 +51,12 @@ int main(int argc, char* argv[]) {
                     if (event.key.keysym.sym == SDLK_ESCAPE)
                         quit = true;
                     break;
+                case SDL_WINDOWEVENT:
+                    if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
+                        global_window_data.w = event.window.data1;
+                        global_window_data.h = event.window.data2;
+                    }
+                    break;
                 default: break;
             }
         }
@@ -66,6 +72,8 @@ int main(int argc, char* argv[]) {
         map.Draw();
         player.Draw();
 
+        //SDL_Log("%i", global_window_data.w);
+
         SDL_RenderPresent(global_window_data.rdr);
     }
 
@@ -74,8 +82,8 @@ int main(int argc, char* argv[]) {
 
     Text::DestroyFont();
     TTF_Quit();
-    IMG_Quit();
-    window.Shutdown();
+        IMG_Quit();
+        window.Shutdown();
     SDL_Quit();
     return 0;
 }
