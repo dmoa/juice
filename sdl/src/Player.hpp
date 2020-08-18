@@ -18,6 +18,7 @@ public:
     void GiveDT(float* _dt);
     void Draw();
     void Update();
+    void AnimationUpdate();
     void SetAnimationIfShould(std::string name);
     void DestroyTexture();
 private:

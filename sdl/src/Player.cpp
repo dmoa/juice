@@ -49,7 +49,7 @@ void Player::Update() {
         }
     }
 
-    if (current_xv && current_yv) {
+    if (current_xv && current_yv) { // ensures player doesn't go faster when moving diagonally
         current_xv /= ROOT2;
         current_yv /= ROOT2;
     }
@@ -57,9 +57,12 @@ void Player::Update() {
     x += current_xv * (*dt);
     y += current_yv * (*dt);
 
+    AnimationUpdate();
+}
+
+void Player::AnimationUpdate() {
     current_animation.timer -= *dt;
     if (current_animation.timer < 0) {
-
 
         current_animation.timer = current_animation.speed;
         current_animation.index = (current_animation.index + 1) % current_animation.num_frames;
