@@ -3,21 +3,34 @@
 #include <vector>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
 #include "GlobalWindowData.hpp"
+#include "AABB.hpp"
+#include "CollisionBoxes.hpp"
+
+// #include "Player.hpp"
 
 class Map {
 public:
+    // void GivePlayer(Pl);
     void LoadTexture();
     void CreateMapTexture();
+    void CreateCollisionBoxes();
+    CollisionBoxes* GetCollisionBoxes();
     void Draw();
     void DestroyTextures();
 private:
-    int tiles_wide = 40;
-    int tiles_high = 40;
+    // Player* player;
+
+    const int tile_length = 16;
+    const int tiles_wide = 40;
+    const int tiles_high = 40;
+
+    CollisionBoxes collision_boxes;
 
     std::vector<int> tiles;
     SDL_Texture* texture;

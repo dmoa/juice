@@ -32,9 +32,11 @@ int main(int argc, char* argv[]) {
 
     player.LoadTexture();
     player.GiveDT(& clock.dt);
+    player.GiveMapCollisionBoxes(map.GetCollisionBoxes());
 
     map.LoadTexture();
     map.CreateMapTexture();
+    map.CreateCollisionBoxes();
 
     SDL_Event event;
     bool quit = false;

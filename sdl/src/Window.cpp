@@ -1,15 +1,13 @@
 #include "Window.hpp"
 
 Window::Window() {
-    window = SDL_CreateWindow("pong", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, global_window_data.w, global_window_data.h, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+    window = SDL_CreateWindow("juice", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, global_window_data.w, global_window_data.h, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
     SDL_UpdateWindowSurface(window);
     global_window_data.rdr = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC);
 
-    icon = IMG_Load("assets/icon.png");
+    icon = IMG_Load("assets/player/red.png");
     if (!icon) SDL_Log("icon.png not loaded");
     SDL_SetWindowIcon(window, icon);
-
-    SDL_RenderSetScale(global_window_data.rdr, global_window_data.scale, global_window_data.scale);
 }
 
 void Window::Clear() {
