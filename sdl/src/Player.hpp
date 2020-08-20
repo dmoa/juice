@@ -13,6 +13,8 @@
 #include "CurrentAnimationData.hpp"
 #include "AnimationsData.hpp"
 
+#include "Map.hpp"
+
 // This is used when the quad dimensions of the spritesheet are not the same as collision boxes we want,
 // e.g. big quad of a player, but we only want the feet to be the collision box.
 struct ExtraCollisionInfo {
@@ -25,8 +27,11 @@ struct ExtraCollisionInfo {
 class Player {
 public:
     void LoadTexture();
-    void GiveDT(float* _dt);
-    void GiveMapCollisionBoxes(CollisionBoxes* collision_boxes) { map_cb = collision_boxes; };
+    void GiveDT(float* _dt) { dt = _dt; }
+    void GiveMap(Map* _map) {
+        map = _map;
+        map_cb = map->GetCollisionBoxes();
+    };
     void Draw();
     void Update();
     void CollisionUpdate();
@@ -38,6 +43,7 @@ public:
     float GetY() { return y; }
 private:
     float* dt;
+    Map* map;
 
     float x = 50;
     float old_x = 50;
@@ -61,7 +67,7 @@ private:
     CurrentAnimationData current_animation = {"idle", 0, 0, 0, animations_data.num_frames[0], animations_data.speeds[0]};
 
     SDL_Rect     current_spritesheet_quad = {0, 0, 24, 18};
-    SDL_Rect     rendering_quad = {x, y, 24 * global_window_data.scale, 18 * global_window_data.scale};
+    SDL_Rect     rendering_quad = {x, y, 24, 18};
     SDL_Texture* texture;
     SDL_RendererFlip is_flipped = SDL_FLIP_NONE;
 };

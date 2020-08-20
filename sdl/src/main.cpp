@@ -13,6 +13,7 @@
 #include "GlobalWindowData.hpp"
 #include "Text.hpp"
 #include "Clock.cpp"
+#include "Camera.hpp"
 
 #include "Player.hpp"
 #include "Map.hpp"
@@ -25,14 +26,16 @@ int main(int argc, char* argv[]) {
     Text::LoadFont();
     srand(time(0));
 
+
     Window window;
     Clock clock;
+    Camera camera;
     Player player;
     Map map;
 
     player.LoadTexture();
     player.GiveDT(& clock.dt);
-    player.GiveMapCollisionBoxes(map.GetCollisionBoxes());
+    player.GiveMap(& map);
 
     map.LoadTexture();
     map.CreateMapTexture();
@@ -63,20 +66,25 @@ int main(int argc, char* argv[]) {
             }
         }
         clock.tick();
-
         player.Update();
+        camera.UpdateViewport(player.GetX(), player.GetY(), global_window_data.w / global_window_data.scale, global_window_data.h / global_window_data.scale);
 
 
         // DRAW
 
         window.Clear();
 
+
+
+        window.SetDrawGameplay();
         map.Draw();
         player.Draw();
 
-        //SDL_Log("%i", global_window_data.w);
+        window.SetDrawOther();
 
-        SDL_RenderPresent(global_window_data.rdr);
+
+
+        window.Present(camera.GetViewport());
     }
 
     player.DestroyTexture();
@@ -84,8 +92,8 @@ int main(int argc, char* argv[]) {
 
     Text::DestroyFont();
     TTF_Quit();
-        IMG_Quit();
-        window.Shutdown();
+    IMG_Quit();
+    window.Shutdown();
     SDL_Quit();
     return 0;
 }

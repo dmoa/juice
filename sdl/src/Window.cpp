@@ -5,16 +5,37 @@ Window::Window() {
     SDL_UpdateWindowSurface(window);
     global_window_data.rdr = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC);
 
+
+    gameplay_texture = SDL_CreateTexture(global_window_data.rdr, SDL_GetWindowPixelFormat(window), SDL_TEXTUREACCESS_TARGET, 768, 768);
+    other_texture = SDL_CreateTexture(global_window_data.rdr, SDL_GetWindowPixelFormat(window), SDL_TEXTUREACCESS_TARGET, global_window_data.w / global_window_data.scale, global_window_data.h / global_window_data.scale);
+    SDL_SetTextureBlendMode(other_texture, SDL_BLENDMODE_BLEND);
+
     icon = IMG_Load("assets/player/red.png");
     if (!icon) SDL_Log("icon.png not loaded");
     SDL_SetWindowIcon(window, icon);
 }
 
 void Window::Clear() {
-    SDL_SetRenderDrawColor(global_window_data.rdr, 0, 0, 0, 0);
+    SDL_SetRenderDrawColor(global_window_data.rdr, 100, 100, 0, 0);
     SDL_RenderClear(global_window_data.rdr);
     SDL_SetRenderDrawColor(global_window_data.rdr, 255, 255, 255, 255);
 }
+
+void Window::SetDrawGameplay() {
+    SDL_SetRenderTarget(global_window_data.rdr, gameplay_texture);
+}
+
+void Window::SetDrawOther() {
+    SDL_SetRenderTarget(global_window_data.rdr, other_texture);
+}
+
+void Window::Present(SDL_Rect* gameplay_viewport) {
+    SDL_SetRenderTarget(global_window_data.rdr, NULL);
+    SDL_RenderCopy(global_window_data.rdr, gameplay_texture, gameplay_viewport, NULL);
+    SDL_RenderCopy(global_window_data.rdr, other_texture, NULL, NULL);
+    SDL_RenderPresent(global_window_data.rdr);
+}
+
 
 void Window::Shutdown() {
     SDL_Log("Shutting down window");

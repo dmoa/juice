@@ -16,25 +16,20 @@
 
 class Map {
 public:
-    // void GivePlayer(Pl);
     void LoadTexture();
     void CreateMapTexture();
     void CreateCollisionBoxes();
-    CollisionBoxes* GetCollisionBoxes();
+    CollisionBoxes* GetCollisionBoxes() { return & collision_boxes; }
     void Draw();
     void DestroyTextures();
 private:
-    // Player* player;
-
     const int tile_length = 16;
-    const int tiles_wide = 40;
-    const int tiles_high = 40;
+    const int tiles_wide = 48;
+    const int tiles_high = 48;
 
     CollisionBoxes collision_boxes;
 
     std::vector<int> tiles;
     SDL_Texture* texture;
-    SDL_Texture* saved_drawn_data = SDL_CreateTexture(global_window_data.rdr, NULL, SDL_TEXTUREACCESS_TARGET, 640, 640);
-    SDL_Rect map_position_quad = {0, 0, global_window_data.w / global_window_data.scale, 100};
-    SDL_Rect map_rendering_quad = {0, 0, global_window_data.w / global_window_data.scale, global_window_data.h / global_window_data.scale};
+    SDL_Texture* saved_drawn_data = SDL_CreateTexture(global_window_data.rdr, NULL, SDL_TEXTUREACCESS_TARGET, tiles_wide * tile_length, tiles_high * tile_length);
 };

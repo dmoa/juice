@@ -9,8 +9,13 @@ class Window {
 public:
     Window();
     void Clear();
+    void SetDrawGameplay();
+    void SetDrawOther();
+    void Present(SDL_Rect* gameplay_viewport);
     void Shutdown();
 private:
+    SDL_Texture* gameplay_texture;
+    SDL_Texture* other_texture;
     SDL_Window* window;
     SDL_Surface* icon;
 };

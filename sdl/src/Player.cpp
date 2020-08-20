@@ -6,10 +6,6 @@ void Player::LoadTexture() {
     is_flipped = SDL_FLIP_HORIZONTAL;
 }
 
-void Player::GiveDT(float* _dt) {
-    dt = _dt;
-}
-
 void Player::Draw() {
     SDL_RenderCopyEx(global_window_data.rdr, texture, & current_spritesheet_quad, & rendering_quad, NULL, NULL, is_flipped);
 }
@@ -50,7 +46,7 @@ void Player::Update() {
     y += current_yv * (*dt);
 
     CollisionUpdate();
-    rendering_quad = {x * global_window_data.scale, y * global_window_data.scale, 24 * global_window_data.scale, 18 * global_window_data.scale};
+    rendering_quad = {x, y, 24, 18};
     AnimationUpdate();
 }
 

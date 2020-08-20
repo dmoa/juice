@@ -1,9 +1,5 @@
 #include "Map.hpp"
 
-// void Map::GivePlayer(Player* _player) {
-//     player = _player;
-// }
-
 void Map::LoadTexture() {
     texture = IMG_LoadTexture(global_window_data.rdr, "assets/tileset.png");
     if (!texture) SDL_Log("tileset.png not found");
@@ -11,7 +7,6 @@ void Map::LoadTexture() {
 
 void Map::CreateMapTexture() {
     SDL_SetRenderTarget(global_window_data.rdr, saved_drawn_data);
-    SDL_RenderSetScale(global_window_data.rdr, 1, 1);
 
     SDL_Rect iter_quad = {0, 0, tile_length, tile_length};
     SDL_Rect iter_pos  = {0, 0, tile_length, tile_length};
@@ -83,13 +78,8 @@ void Map::CreateCollisionBoxes() {
     collision_boxes.hs.push_back(tiles_high * tile_length);
 }
 
-CollisionBoxes* Map::GetCollisionBoxes() {
-    return & collision_boxes;
-}
-
 void Map::Draw() {
-    map_rendering_quad = {0, 0, global_window_data.w / global_window_data.scale, global_window_data.h / global_window_data.scale};
-    SDL_RenderCopy(global_window_data.rdr, saved_drawn_data, & map_rendering_quad, NULL);
+    SDL_RenderCopy(global_window_data.rdr, saved_drawn_data, NULL, NULL);
 }
 
 void Map::DestroyTextures() {
