@@ -26,12 +26,15 @@ int main(int argc, char* argv[]) {
     Text::LoadFont();
     srand(time(0));
 
+    bool DEV_PAUSED = false;
 
     Window window;
     Clock clock;
-    Camera camera;
+    Camera gameplay_camera;
     Player player;
     Map map;
+
+    gameplay_camera.UpdateSize(global_window_data.w / global_window_data.scale, global_window_data.h / global_window_data.scale);
 
     player.LoadTexture();
     player.GiveDT(& clock.dt);
@@ -55,26 +58,43 @@ int main(int argc, char* argv[]) {
                 case SDL_KEYDOWN:
                     if (event.key.keysym.sym == SDLK_ESCAPE)
                         quit = true;
+                    if (event.key.keysym.sym == SDLK_LCTRL)
+                        DEV_PAUSED = ! DEV_PAUSED;
                     break;
                 case SDL_WINDOWEVENT:
                     if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
                         global_window_data.w = event.window.data1;
                         global_window_data.h = event.window.data2;
+                        gameplay_camera.UpdateSize(global_window_data.w / global_window_data.scale, global_window_data.h / global_window_data.scale);
                     }
                     break;
                 default: break;
             }
         }
+
         clock.tick();
-        player.Update();
-        camera.UpdateViewport(player.GetX(), player.GetY(), global_window_data.w / global_window_data.scale, global_window_data.h / global_window_data.scale);
+
+        if (DEV_PAUSED) {
+            if (global_window_data.keys_down[SDL_SCANCODE_D]) {
+                gameplay_camera.ChangePosX(400 * clock.dt);
+            }
+            if (global_window_data.keys_down[SDL_SCANCODE_A]) {
+                gameplay_camera.ChangePosX(- 400 * clock.dt);
+            }
+            if (global_window_data.keys_down[SDL_SCANCODE_S]) {
+                gameplay_camera.ChangePosY(400 * clock.dt);
+            }
+            if (global_window_data.keys_down[SDL_SCANCODE_W]) {
+                gameplay_camera.ChangePosY(- 400 * clock.dt);
+            }
+        } else {
+            player.Update();
+        }
 
 
         // DRAW
 
         window.Clear();
-
-
 
         window.SetDrawGameplay();
         map.Draw();
@@ -82,9 +102,7 @@ int main(int argc, char* argv[]) {
 
         window.SetDrawOther();
 
-
-
-        window.Present(camera.GetViewport());
+        window.Present(gameplay_camera.GetViewport());
     }
 
     player.DestroyTexture();

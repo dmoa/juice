@@ -24,8 +24,8 @@ public:
     void DestroyTextures();
 private:
     const int tile_length = 16;
-    const int tiles_wide = 48;
-    const int tiles_high = 48;
+    const int tiles_wide = 50;
+    const int tiles_high = 50;
 
     CollisionBoxes collision_boxes;
 
