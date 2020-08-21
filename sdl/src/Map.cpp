@@ -69,13 +69,23 @@ void Map::CreateMapTexture() {
 void Map::CreateCollisionBoxes() {
     collision_boxes.xs.push_back(0);
     collision_boxes.ys.push_back(0);
-    collision_boxes.ws.push_back(tiles_wide * tile_length);
+    collision_boxes.ws.push_back(tile_length);
+    collision_boxes.hs.push_back((tiles_high - 1) * tile_length);
+
+    collision_boxes.xs.push_back(tile_length);
+    collision_boxes.ys.push_back(0);
+    collision_boxes.ws.push_back((tiles_wide - 1) * tile_length);
     collision_boxes.hs.push_back(tile_length);
 
-    collision_boxes.xs.push_back(0);
+    collision_boxes.xs.push_back((tiles_wide - 1) * tile_length);
     collision_boxes.ys.push_back(tile_length);
     collision_boxes.ws.push_back(tile_length);
-    collision_boxes.hs.push_back(tiles_high * tile_length);
+    collision_boxes.hs.push_back((tiles_high - 1) * tile_length);
+
+    collision_boxes.xs.push_back(0);
+    collision_boxes.ys.push_back((tiles_high - 1) * tile_length);
+    collision_boxes.ws.push_back((tiles_wide - 1) * tile_length);
+    collision_boxes.hs.push_back(tile_length);
 }
 
 void Map::Draw() {

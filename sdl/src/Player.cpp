@@ -70,7 +70,7 @@ void Player::CollisionUpdate() {
                 collided_y = true;
             }
             if (old_x + extra_collision_info.offset_x + extra_collision_info.w <= map_cb->xs[i]) {
-                y = map_cb->xs[i] - extra_collision_info.offset_x - extra_collision_info.w;
+                x = map_cb->xs[i] - extra_collision_info.offset_x - extra_collision_info.w;
                 collided_x = true;
             }
         }
@@ -85,8 +85,7 @@ void Player::CollisionUpdate() {
             x += ((current_xv > 0 ? v : - v) - current_xv) * (*dt);
             current_yv = 0;
             CollisionUpdate();
-        }
-        if (collided_x) {
+        } else if (collided_x) {
             y += ((current_yv > 0 ? v: - v) - current_yv) * (*dt);
             current_xv = 0;
             CollisionUpdate();

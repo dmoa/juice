@@ -41,6 +41,8 @@ public:
 
     float GetX() { return x; }
     float GetY() { return y; }
+    float GetCenterX() { return x + rendering_quad.w / 2; };
+    float GetCenterY() { return y + rendering_quad.h / 2; };
 private:
     float* dt;
     Map* map;
@@ -51,7 +53,7 @@ private:
     float old_y = 50;
     float current_xv = 0;
     float current_yv = 0;
-    int   v = 80;
+    int   v = 180;
 
     CollisionBoxes* map_cb;
     ExtraCollisionInfo extra_collision_info = {8, 16, 8, 2};

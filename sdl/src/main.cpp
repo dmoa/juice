@@ -5,6 +5,11 @@
 #include <stdlib.h>
 #include <time.h>
 
+inline float max(float a, float b) {
+    if (a > b) return a;
+    return b;
+}
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>
@@ -34,7 +39,7 @@ int main(int argc, char* argv[]) {
     Player player;
     Map map;
 
-    gameplay_camera.UpdateSize(global_window_data.w / global_window_data.scale, global_window_data.h / global_window_data.scale);
+    gameplay_camera.GivePlayerMapDelta(& player, & map, & clock.dt);
 
     player.LoadTexture();
     player.GiveDT(& clock.dt);
@@ -65,7 +70,6 @@ int main(int argc, char* argv[]) {
                     if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
                         global_window_data.w = event.window.data1;
                         global_window_data.h = event.window.data2;
-                        gameplay_camera.UpdateSize(global_window_data.w / global_window_data.scale, global_window_data.h / global_window_data.scale);
                     }
                     break;
                 default: break;
@@ -75,20 +79,10 @@ int main(int argc, char* argv[]) {
         clock.tick();
 
         if (DEV_PAUSED) {
-            if (global_window_data.keys_down[SDL_SCANCODE_D]) {
-                gameplay_camera.ChangePosX(400 * clock.dt);
-            }
-            if (global_window_data.keys_down[SDL_SCANCODE_A]) {
-                gameplay_camera.ChangePosX(- 400 * clock.dt);
-            }
-            if (global_window_data.keys_down[SDL_SCANCODE_S]) {
-                gameplay_camera.ChangePosY(400 * clock.dt);
-            }
-            if (global_window_data.keys_down[SDL_SCANCODE_W]) {
-                gameplay_camera.ChangePosY(- 400 * clock.dt);
-            }
+            gameplay_camera.DevUpdate();
         } else {
             player.Update();
+            gameplay_camera.Update();
         }
 
 
