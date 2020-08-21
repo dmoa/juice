@@ -12,8 +12,6 @@
 #include "AABB.hpp"
 #include "CollisionBoxes.hpp"
 
-// #include "Player.hpp"
-
 class Map {
 public:
     void LoadTexture();

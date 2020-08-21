@@ -6,24 +6,6 @@ void Camera::GivePlayerMapDelta(Player* _player, Map* _map, float* _dt) {
     dt = _dt;
 }
 
-// void Camera::SetPos(float x, float y) {
-//     viewport.x = real_x = x;
-//     viewport.y = real_y = y;
-// }
-
-// void Camera::ChangePosX(float x) {
-//     real_x += x;
-// }
-
-// void Camera::ChangePosY(float y) {
-//     real_y += y;
-// }
-
-// void Camera::UpdateSize(int w, int h) {
-//     viewport.w = w;
-//     viewport.h = h;
-// }
-
 SDL_Rect* Camera::GetViewport() {
     return & viewport;
 }
@@ -57,4 +39,5 @@ void Camera::DevUpdate() {
     if (global_window_data.keys_down[SDL_SCANCODE_W]) {
         real_y -= pan_v * (*dt);
     }
+    viewport = {real_x, real_y, global_window_data.w / global_window_data.scale, global_window_data.h / global_window_data.scale};
 }
