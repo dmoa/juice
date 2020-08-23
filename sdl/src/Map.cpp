@@ -6,10 +6,12 @@ void Map::LoadTexture() {
 }
 
 void Map::CreateMapTexture() {
-    SDL_SetRenderTarget(global_window_data.rdr, saved_drawn_data);
+    SDL_SetRenderTarget(global_window_data.rdr, static_saved_drawn_data);
 
-    SDL_Rect iter_quad = {0, 0, tile_length, tile_length};
-    SDL_Rect iter_pos  = {0, 0, tile_length, tile_length};
+    iter_quad = {0, 0, tile_length, tile_length};
+    iter_pos  = {0, 0, tile_length, tile_length};
+
+    // GRASS TILES
 
     for (int i = 1; i < tiles_wide - 1; i++) {
         for (int j = 1; j < tiles_high - 1; j++) {
@@ -19,6 +21,8 @@ void Map::CreateMapTexture() {
             SDL_RenderCopy(global_window_data.rdr, texture, & iter_quad, & iter_pos);
         }
     }
+
+    // EDGE WATER TILES
 
     iter_quad.y = 16; // switching to row of water quads
     iter_quad.x = 48;
@@ -40,9 +44,7 @@ void Map::CreateMapTexture() {
         SDL_RenderCopy(global_window_data.rdr, texture, & iter_quad, & iter_pos);
     }
 
-
     iter_quad.x = 32;
-
     iter_pos.x = 0;
     for (int i = 1; i < tiles_high - 1; i++) {
         iter_pos.y = i * tile_length;
@@ -63,10 +65,24 @@ void Map::CreateMapTexture() {
     }
 
 
+    // CREATING QUADS FOR NON-GROUND TILES / OBJECTS
+
+    AddQuad(0, tile_length * 2, tile_length, tile_length * 2);
+
+
+    // TREES
+
+    //for (int i = 0; i < 1; i++) {
+        AddObject(150, 150, 0);
+    //}
+
     SDL_SetRenderTarget(global_window_data.rdr, NULL);
 }
 
 void Map::CreateCollisionBoxes() {
+
+    // EDGE WATER TILES
+
     collision_boxes.xs.push_back(0);
     collision_boxes.ys.push_back(0);
     collision_boxes.ws.push_back(tile_length);
@@ -89,10 +105,15 @@ void Map::CreateCollisionBoxes() {
 }
 
 void Map::Draw() {
-    SDL_RenderCopy(global_window_data.rdr, saved_drawn_data, NULL, NULL);
+    SDL_RenderCopy(global_window_data.rdr, static_saved_drawn_data, NULL, NULL);
+    for (unsigned int i = 0; i < objects.xs.size(); i++) {
+        iter_quad = {object_quads.xs[i], object_quads.ys[i], object_quads.ws[objects.quad_indexes[i]], object_quads.hs[objects.quad_indexes[i]]};
+        iter_pos  = {objects.xs[i], objects.ys[i], object_quads.ws[objects.quad_indexes[i]], object_quads.hs[objects.quad_indexes[i]]};
+        SDL_RenderCopy(global_window_data.rdr, texture, & iter_quad, & iter_pos);
+    }
 }
 
 void Map::DestroyTextures() {
-    SDL_DestroyTexture(saved_drawn_data);
+    SDL_DestroyTexture(static_saved_drawn_data);
     SDL_DestroyTexture(texture);
 }
