@@ -5,11 +5,6 @@
 #include <stdlib.h>
 #include <time.h>
 
-inline float max(float a, float b) {
-    if (a > b) return a;
-    return b;
-}
-
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>
