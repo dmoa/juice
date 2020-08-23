@@ -37,10 +37,10 @@ int main(int argc, char* argv[]) {
     gameplay_camera.GivePlayerMapDelta(& player, & map, & clock.dt);
 
     player.LoadTexture();
-    player.GiveDT(& clock.dt);
-    player.GiveMap(& map);
+    player.GiveMapDelta(& map, & clock.dt);
 
     map.LoadTexture();
+    map.GivePlayerDelta(& player, & clock.dt);
     map.CreateMapTexture();
     map.CreateCollisionBoxes();
 
@@ -77,6 +77,7 @@ int main(int argc, char* argv[]) {
             gameplay_camera.DevUpdate();
         } else {
             player.Update();
+            map.Update();
             gameplay_camera.Update();
         }
 
@@ -86,8 +87,10 @@ int main(int argc, char* argv[]) {
         window.Clear();
 
         window.SetDrawGameplay();
-        map.Draw();
+
+        map.DrawFirst();
         player.Draw();
+        map.DrawSecond();
 
         window.SetDrawOther();
 

@@ -8,46 +8,62 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
-#include "GlobalWindowData.hpp"
+#include "utils/min.hpp"
+#include "utils/max.hpp"
+#include "utils/pyth.hpp"
 #include "AABB.hpp"
+#include "GlobalWindowData.hpp"
 #include "CollisionBoxes.hpp"
 
-struct ObjectQuads {
+class Player;
+
+struct ObjectQuadsInfo {
     std::vector<int> xs;
     std::vector<int> ys;
     std::vector<int> ws;
     std::vector<int> hs;
+    std::vector<int> draw_order_offset_y;
 };
 
 struct Objects {
     std::vector<int> xs;
     std::vector<int> ys;
     std::vector<int> quad_indexes;
+    std::vector<float> opacities;
+    std::vector<bool> draw_after_player;
 };
 
 class Map {
 public:
     void LoadTexture();
+    void GivePlayerDelta(Player* _player, float* _dt) { player = _player; dt = _dt; };
     void CreateMapTexture();
     void CreateCollisionBoxes();
     CollisionBoxes* GetCollisionBoxes() { return & collision_boxes; }
     int GetMapWidth () { return tiles_wide * tile_length; };
     int GetMapHeight() { return tiles_high * tile_length; };
-    void Draw();
+    void DrawFirst();
+    void DrawSecond();
+    void Update();
     void DestroyTextures();
 private:
+    float* dt;
+    Player* player;
+
     const int tile_length = 16;
     const int tiles_wide = 48;
     const int tiles_high = 48;
+    const int opacity_distance = 50; // minimum distance from player before objects become transparent
 
     CollisionBoxes collision_boxes;
 
-    ObjectQuads object_quads;
-    inline void AddQuad(int x, int y, int w, int h) {
-        object_quads.xs.push_back(x);
-        object_quads.ys.push_back(y);
-        object_quads.ws.push_back(w);
-        object_quads.hs.push_back(h);
+    ObjectQuadsInfo object_quads_info;
+    inline void AddQuad(int x, int y, int w, int h, int offset_y) {
+        object_quads_info.xs.push_back(x);
+        object_quads_info.ys.push_back(y);
+        object_quads_info.ws.push_back(w);
+        object_quads_info.hs.push_back(h);
+        object_quads_info.draw_order_offset_y.push_back(offset_y);
     }
 
     Objects objects;
@@ -55,6 +71,8 @@ private:
         objects.xs.push_back(x);
         objects.ys.push_back(y);
         objects.quad_indexes.push_back(quad_index);
+        objects.opacities.push_back(255);
+        objects.draw_after_player.push_back(true);
     }
 
     SDL_Rect iter_quad;

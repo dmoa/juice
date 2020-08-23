@@ -1,9 +1,16 @@
 #include "Player.hpp"
+#include "Map.hpp"
 
 void Player::LoadTexture() {
     texture = IMG_LoadTexture(global_window_data.rdr, "assets/player/red.png");
     if (!texture) SDL_Log("red.png not found");
     is_flipped = SDL_FLIP_HORIZONTAL;
+}
+
+void Player::GiveMapDelta(Map* _map, float* _dt) {
+    dt = _dt;
+    map = _map;
+    map_cb = map->GetCollisionBoxes();
 }
 
 void Player::Draw() {

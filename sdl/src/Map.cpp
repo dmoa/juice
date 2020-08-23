@@ -1,4 +1,5 @@
 #include "Map.hpp"
+#include "Player.hpp"
 
 void Map::LoadTexture() {
     texture = IMG_LoadTexture(global_window_data.rdr, "assets/tileset.png");
@@ -67,14 +68,12 @@ void Map::CreateMapTexture() {
 
     // CREATING QUADS FOR NON-GROUND TILES / OBJECTS
 
-    AddQuad(0, tile_length * 2, tile_length, tile_length * 2);
+    AddQuad(0, tile_length * 2, tile_length, tile_length * 2, 30);
 
 
     // TREES
 
-    //for (int i = 0; i < 1; i++) {
-        AddObject(150, 150, 0);
-    //}
+    AddObject(150, 150, 0);
 
     SDL_SetRenderTarget(global_window_data.rdr, NULL);
 }
@@ -104,12 +103,37 @@ void Map::CreateCollisionBoxes() {
     collision_boxes.hs.push_back(tile_length);
 }
 
-void Map::Draw() {
+void Map::DrawFirst() {
     SDL_RenderCopy(global_window_data.rdr, static_saved_drawn_data, NULL, NULL);
     for (unsigned int i = 0; i < objects.xs.size(); i++) {
-        iter_quad = {object_quads.xs[i], object_quads.ys[i], object_quads.ws[objects.quad_indexes[i]], object_quads.hs[objects.quad_indexes[i]]};
-        iter_pos  = {objects.xs[i], objects.ys[i], object_quads.ws[objects.quad_indexes[i]], object_quads.hs[objects.quad_indexes[i]]};
-        SDL_RenderCopy(global_window_data.rdr, texture, & iter_quad, & iter_pos);
+        if (! objects.draw_after_player[i]) {
+            iter_quad = {object_quads_info.xs[i], object_quads_info.ys[i], object_quads_info.ws[objects.quad_indexes[i]], object_quads_info.hs[objects.quad_indexes[i]]};
+            iter_pos  = {objects.xs[i], objects.ys[i], object_quads_info.ws[objects.quad_indexes[i]], object_quads_info.hs[objects.quad_indexes[i]]};
+            SDL_SetTextureAlphaMod(texture, (int) objects.opacities[i]);
+            SDL_RenderCopy(global_window_data.rdr, texture, & iter_quad, & iter_pos);
+        }
+    }
+}
+
+void Map::DrawSecond() {
+    for (unsigned int i = 0; i < objects.xs.size(); i++) {
+        if (objects.draw_after_player[i]) {
+            iter_quad = {object_quads_info.xs[i], object_quads_info.ys[i], object_quads_info.ws[objects.quad_indexes[i]], object_quads_info.hs[objects.quad_indexes[i]]};
+            iter_pos  = {objects.xs[i], objects.ys[i], object_quads_info.ws[objects.quad_indexes[i]], object_quads_info.hs[objects.quad_indexes[i]]};
+            SDL_SetTextureAlphaMod(texture, (int) objects.opacities[i]);
+            SDL_RenderCopy(global_window_data.rdr, texture, & iter_quad, & iter_pos);
+        }
+    }
+}
+
+void Map::Update() {
+    for (unsigned int i = 0; i < objects.xs.size(); i++) {
+        if (pyth(objects.xs[i] + object_quads_info.ws[objects.quad_indexes[i]] / 2, objects.ys[i] + object_quads_info.hs[objects.quad_indexes[i]] / 2, player->GetCenterX(), player->GetCenterY()) < opacity_distance) {
+            objects.opacities[i] = max(objects.opacities[i] - (*dt) * 500, 130.f);
+            objects.draw_after_player[i] = player->GetBottomCollisionY() < objects.ys[i] + object_quads_info.draw_order_offset_y[objects.quad_indexes[i]];
+        } else {
+            objects.opacities[i] = min(objects.opacities[i] + (*dt) * 200, 255.f);
+        }
     }
 }
 

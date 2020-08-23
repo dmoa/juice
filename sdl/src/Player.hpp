@@ -13,7 +13,7 @@
 #include "CurrentAnimationData.hpp"
 #include "AnimationsData.hpp"
 
-#include "Map.hpp"
+class Map;
 
 // This is used when the quad dimensions of the spritesheet are not the same as collision boxes we want,
 // e.g. big quad of a player, but we only want the feet to be the collision box.
@@ -27,11 +27,7 @@ struct ExtraCollisionInfo {
 class Player {
 public:
     void LoadTexture();
-    void GiveDT(float* _dt) { dt = _dt; }
-    void GiveMap(Map* _map) {
-        map = _map;
-        map_cb = map->GetCollisionBoxes();
-    };
+    void GiveMapDelta(Map* _map, float* _dt);
     void Draw();
     void Update();
     void CollisionUpdate();
@@ -43,6 +39,7 @@ public:
     float GetY() { return y; }
     float GetCenterX() { return x + rendering_quad.w / 2; };
     float GetCenterY() { return y + rendering_quad.h / 2; };
+    float GetBottomCollisionY() { return y + rendering_quad.h + extra_collision_info.h; };
 private:
     float* dt;
     Map* map;
