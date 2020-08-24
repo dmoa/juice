@@ -6,6 +6,11 @@ void Map::LoadTexture() {
     if (!texture) SDL_Log("tileset.png not found");
 }
 
+void Map::ReloadTilesetTexture() {
+    SDL_DestroyTexture(texture);
+    LoadTexture();
+}
+
 void Map::CreateMapTexture() {
     SDL_SetRenderTarget(global_window_data.rdr, static_saved_drawn_data);
 
@@ -68,12 +73,21 @@ void Map::CreateMapTexture() {
 
     // CREATING QUADS FOR NON-GROUND TILES / OBJECTS
 
-    AddQuad(0, tile_length * 2, tile_length, tile_length * 2, 30);
+    AddQuad(0, tile_length * 2, tile_length, tile_length * 2, 32);
+    AddQuad(tile_length, tile_length * 2, tile_length, tile_length * 2, 32);
+    AddQuad(tile_length * 2, tile_length * 2, tile_length, tile_length, 15);
+    AddQuad(tile_length * 2, tile_length * 3, tile_length, tile_length, 15);
 
 
-    // TREES
+    // TREES, LOGS AND STONES
 
-    AddObject(150, 150, 0);
+    int x;
+    int y;
+    for (int i = 0; i < 500; i++) {
+        x = random(tile_length, GetMapWidth() - tile_length * 2);
+        y = random(tile_length, GetMapHeight() - tile_length * 3);
+        AddObject(x, y, rand() % 4);
+    }
 
     SDL_SetRenderTarget(global_window_data.rdr, NULL);
 }
@@ -105,9 +119,10 @@ void Map::CreateCollisionBoxes() {
 
 void Map::DrawFirst() {
     SDL_RenderCopy(global_window_data.rdr, static_saved_drawn_data, NULL, NULL);
+
     for (unsigned int i = 0; i < objects.xs.size(); i++) {
         if (! objects.draw_after_player[i]) {
-            iter_quad = {object_quads_info.xs[i], object_quads_info.ys[i], object_quads_info.ws[objects.quad_indexes[i]], object_quads_info.hs[objects.quad_indexes[i]]};
+            iter_quad = {object_quads_info.xs[objects.quad_indexes[i]], object_quads_info.ys[objects.quad_indexes[i]], object_quads_info.ws[objects.quad_indexes[i]], object_quads_info.hs[objects.quad_indexes[i]]};
             iter_pos  = {objects.xs[i], objects.ys[i], object_quads_info.ws[objects.quad_indexes[i]], object_quads_info.hs[objects.quad_indexes[i]]};
             SDL_SetTextureAlphaMod(texture, (int) objects.opacities[i]);
             SDL_RenderCopy(global_window_data.rdr, texture, & iter_quad, & iter_pos);
@@ -118,7 +133,7 @@ void Map::DrawFirst() {
 void Map::DrawSecond() {
     for (unsigned int i = 0; i < objects.xs.size(); i++) {
         if (objects.draw_after_player[i]) {
-            iter_quad = {object_quads_info.xs[i], object_quads_info.ys[i], object_quads_info.ws[objects.quad_indexes[i]], object_quads_info.hs[objects.quad_indexes[i]]};
+            iter_quad = {object_quads_info.xs[objects.quad_indexes[i]], object_quads_info.ys[objects.quad_indexes[i]], object_quads_info.ws[objects.quad_indexes[i]], object_quads_info.hs[objects.quad_indexes[i]]};
             iter_pos  = {objects.xs[i], objects.ys[i], object_quads_info.ws[objects.quad_indexes[i]], object_quads_info.hs[objects.quad_indexes[i]]};
             SDL_SetTextureAlphaMod(texture, (int) objects.opacities[i]);
             SDL_RenderCopy(global_window_data.rdr, texture, & iter_quad, & iter_pos);

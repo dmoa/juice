@@ -50,7 +50,7 @@ private:
     float old_y = 50;
     float current_xv = 0;
     float current_yv = 0;
-    int   v = 180;
+    int   v = 130;
 
     CollisionBoxes* map_cb;
     ExtraCollisionInfo extra_collision_info = {8, 16, 8, 2};

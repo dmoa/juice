@@ -60,6 +60,9 @@ int main(int argc, char* argv[]) {
                         quit = true;
                     if (event.key.keysym.sym == SDLK_LCTRL)
                         DEV_PAUSED = ! DEV_PAUSED;
+                    if (event.key.keysym.sym == SDLK_r) {
+                        map.ReloadTilesetTexture();
+                    }
                     break;
                 case SDL_WINDOWEVENT:
                     if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
