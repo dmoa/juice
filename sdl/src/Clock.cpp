@@ -1,3 +1,5 @@
+#include <SDL2/SDL.h>
+
 struct Clock {
 private:
     float last_tick_time = 0;
