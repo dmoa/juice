@@ -3,6 +3,7 @@
 #include "SDL2/SDL_rect.h"
 
 #include "GlobalWindowData.hpp"
+#include "utils/Controls.hpp"
 
 #include "Player.hpp"
 #include "Map.hpp"

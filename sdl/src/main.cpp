@@ -10,6 +10,7 @@
 #include <SDL2/SDL_image.h>
 
 #include "Window.hpp"
+#include "utils/Controls.hpp"
 #include "GlobalWindowData.hpp"
 #include "Text.hpp"
 #include "Clock.cpp"
@@ -19,12 +20,14 @@
 #include "Map.hpp"
 #include "Enemies.hpp"
 
-GlobalWindowData global_window_data = {640, 640, 4, NULL, SDL_GetKeyboardState(NULL)};
+GlobalWindowData global_window_data = {640, 640, 4, NULL};
 
 int main(int argc, char* argv[]) {
     IMG_Init(IMG_INIT_PNG);
     TTF_Init();
     Text::LoadFont();
+    SDL_InitSubSystem(SDL_INIT_JOYSTICK);
+    CTS::LoadInput();
     srand(time(0));
 
     bool DEV_PAUSED = false;

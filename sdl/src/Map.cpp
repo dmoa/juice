@@ -96,21 +96,25 @@ void Map::CreateCollisionBoxes() {
 
     // EDGE WATER TILES
 
+    // top left to top bottom
     collision_boxes.xs.push_back(0);
     collision_boxes.ys.push_back(0);
     collision_boxes.ws.push_back(tile_length);
     collision_boxes.hs.push_back((tiles_high - 1) * tile_length);
 
+    // top left to top right
     collision_boxes.xs.push_back(tile_length);
     collision_boxes.ys.push_back(0);
     collision_boxes.ws.push_back((tiles_wide - 1) * tile_length);
     collision_boxes.hs.push_back(tile_length);
 
+    // top right to bottom right
     collision_boxes.xs.push_back((tiles_wide - 1) * tile_length);
     collision_boxes.ys.push_back(tile_length);
     collision_boxes.ws.push_back(tile_length);
     collision_boxes.hs.push_back((tiles_high - 1) * tile_length);
 
+    // bottom left to bottom right
     collision_boxes.xs.push_back(0);
     collision_boxes.ys.push_back((tiles_high - 1) * tile_length);
     collision_boxes.ws.push_back((tiles_wide - 1) * tile_length);

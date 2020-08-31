@@ -9,6 +9,7 @@
 
 #include "GlobalWindowData.hpp"
 #include "utils/LoadImage.hpp"
+#include "utils/Controls.hpp"
 #include "AABB.hpp"
 #include "CollisionBoxes.hpp"
 #include "ExtraCollisionInfo.hpp"
@@ -28,22 +29,21 @@ public:
     void SetAnimationIfShould(std::string name);
     void DestroyTexture();
 
-    float GetX() { return x; }
-    float GetY() { return y; }
     float GetCenterX() { return x + rendering_quad.w / 2; };
     float GetCenterY() { return y + rendering_quad.h / 2; };
     float GetBottomCollisionY() { return y + rendering_quad.h + extra_collision_info.h; };
+
 private:
     float* dt;
     Map* map;
 
-    float x = 50;
-    float old_x = 50;
+    float x = 720.f;
     float y = 50;
+    float old_x = 50;
     float old_y = 50;
     float current_xv = 0;
     float current_yv = 0;
-    int   v = 130;
+    int   v = 110;
 
     CollisionBoxes* map_cb;
     ExtraCollisionInfo extra_collision_info = {8, 16, 8, 2};

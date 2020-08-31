@@ -27,16 +27,16 @@ void Camera::Update() {
 }
 
 void Camera::DevUpdate() {
-    if (global_window_data.keys_down[SDL_SCANCODE_D]) {
+    if (CTS::Right()) {
         real_x += pan_v * (*dt);
     }
-    if (global_window_data.keys_down[SDL_SCANCODE_A]) {
+    if (CTS::Left()) {
         real_x -= pan_v * (*dt);
     }
-    if (global_window_data.keys_down[SDL_SCANCODE_S]) {
+    if (CTS::Down()) {
         real_y += pan_v * (*dt);
     }
-    if (global_window_data.keys_down[SDL_SCANCODE_W]) {
+    if (CTS::Up()) {
         real_y -= pan_v * (*dt);
     }
     viewport = {real_x, real_y, global_window_data.w / global_window_data.scale, global_window_data.h / global_window_data.scale};

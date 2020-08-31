@@ -20,23 +20,23 @@ void Player::Update() {
 
     current_xv = 0;
     current_yv = 0;
-    if (!((global_window_data.keys_down[SDL_SCANCODE_RIGHT] || global_window_data.keys_down[SDL_SCANCODE_D]) && (global_window_data.keys_down[SDL_SCANCODE_LEFT] || global_window_data.keys_down[SDL_SCANCODE_A]))) {
-        if (global_window_data.keys_down[SDL_SCANCODE_RIGHT] || global_window_data.keys_down[SDL_SCANCODE_D]) {
+    if (!(CTS::Left() && CTS::Right())) {
+        if (CTS::Right()) {
             current_xv = v;
             is_flipped = SDL_FLIP_NONE;
 
         }
-        if (global_window_data.keys_down[SDL_SCANCODE_LEFT] || global_window_data.keys_down[SDL_SCANCODE_A]) {
+        if (CTS::Left()) {
             current_xv = -v;
             is_flipped = SDL_FLIP_HORIZONTAL;
 
         }
     }
-    if (!((global_window_data.keys_down[SDL_SCANCODE_UP] || global_window_data.keys_down[SDL_SCANCODE_W]) && (global_window_data.keys_down[SDL_SCANCODE_DOWN] || global_window_data.keys_down[SDL_SCANCODE_S]))) {
-        if (global_window_data.keys_down[SDL_SCANCODE_UP] || global_window_data.keys_down[SDL_SCANCODE_W]) {
+    if (!(CTS::Up() && CTS::Down())) {
+        if (CTS::Up()) {
             current_yv = -v;
         }
-        if (global_window_data.keys_down[SDL_SCANCODE_DOWN] || global_window_data.keys_down[SDL_SCANCODE_S]) {
+        if (CTS::Down()) {
             current_yv = v;
         }
     }
