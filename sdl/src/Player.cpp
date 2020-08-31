@@ -2,8 +2,7 @@
 #include "Map.hpp"
 
 void Player::LoadTexture() {
-    texture = IMG_LoadTexture(global_window_data.rdr, "assets/player/red.png");
-    if (!texture) SDL_Log("red.png not found");
+    texture = LoadImage(global_window_data.rdr, "assets/player/red.png");
     is_flipped = SDL_FLIP_HORIZONTAL;
 }
 

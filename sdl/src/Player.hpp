@@ -8,21 +8,14 @@
 #include <SDL2/SDL_image.h>
 
 #include "GlobalWindowData.hpp"
+#include "utils/LoadImage.hpp"
 #include "AABB.hpp"
 #include "CollisionBoxes.hpp"
+#include "ExtraCollisionInfo.hpp"
 #include "CurrentAnimationData.hpp"
 #include "AnimationsData.hpp"
 
 class Map;
-
-// This is used when the quad dimensions of the spritesheet are not the same as collision boxes we want,
-// e.g. big quad of a player, but we only want the feet to be the collision box.
-struct ExtraCollisionInfo {
-    int offset_x;
-    int offset_y;
-    int w;
-    int h;
-};
 
 class Player {
 public:
@@ -57,6 +50,7 @@ private:
 
 
     AnimationsData animations_data = {
+        16, 16,
         {{"idle",0}, {"running",1}},
         { 4,      6       },
         { 0.3,    0.1     },

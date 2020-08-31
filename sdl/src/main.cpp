@@ -17,6 +17,7 @@
 
 #include "Player.hpp"
 #include "Map.hpp"
+#include "Enemies.hpp"
 
 GlobalWindowData global_window_data = {640, 640, 4, NULL, SDL_GetKeyboardState(NULL)};
 
@@ -33,6 +34,7 @@ int main(int argc, char* argv[]) {
     Camera gameplay_camera;
     Player player;
     Map map;
+    Enemies enemies;
 
     gameplay_camera.GivePlayerMapDelta(& player, & map, & clock.dt);
 
@@ -43,6 +45,9 @@ int main(int argc, char* argv[]) {
     map.GivePlayerDelta(& player, & clock.dt);
     map.CreateMapTexture();
     map.CreateCollisionBoxes();
+
+    enemies.CreateTextures();
+    enemies.GiveDelta(& clock.dt);
 
     SDL_Event event;
     bool quit = false;
@@ -94,6 +99,7 @@ int main(int argc, char* argv[]) {
         map.DrawFirst();
         player.Draw();
         map.DrawSecond();
+        enemies.Draw();
 
         window.SetDrawOther();
 

@@ -70,23 +70,8 @@ private:
     }
 
     Objects objects;
-    inline void AddObject(int x, int y, int quad_index) {
-
-        // adding with a index according to its y position so that the draw order is correct
-        int index = 0;
-        for (unsigned int i = 0; i < objects.ys.size(); i++) {
-            if (y + object_quads_info.hs[quad_index] > objects.ys[i] + object_quads_info.hs[objects.quad_indexes[i]]) {
-                index ++;
-            } else {
-                break;
-            }
-        }
-        objects.xs.insert(objects.xs.begin() + index, x);
-        objects.ys.insert(objects.ys.begin() + index, y);
-        objects.quad_indexes.insert(objects.quad_indexes.begin() + index, quad_index);
-        objects.opacities.insert(objects.opacities.begin() + index, 255);
-        objects.draw_after_player.insert(objects.draw_after_player.begin() + index, true);
-    }
+    inline void AddObjectIfPossible(int x, int y, int quad_index);
+    inline void AddObject(int x, int y, int quad_index);
 
     SDL_Rect iter_quad;
     SDL_Rect iter_pos;

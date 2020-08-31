@@ -83,10 +83,10 @@ void Map::CreateMapTexture() {
 
     int x;
     int y;
-    for (int i = 0; i < 500; i++) {
+    for (int i = 0; i < 100; i++) {
         x = random(tile_length, GetMapWidth() - tile_length * 2);
         y = random(tile_length, GetMapHeight() - tile_length * 3);
-        AddObject(x, y, rand() % 4);
+        AddObjectIfPossible(x, y, rand() % 4);
     }
 
     SDL_SetRenderTarget(global_window_data.rdr, NULL);
@@ -155,4 +155,31 @@ void Map::Update() {
 void Map::DestroyTextures() {
     SDL_DestroyTexture(static_saved_drawn_data);
     SDL_DestroyTexture(texture);
+}
+
+inline void Map::AddObjectIfPossible(int x, int y, int quad_index) {
+    for (unsigned int i = 0; i < objects.ys.size(); i++) {
+        if (AABB(x, y, object_quads_info.ws[quad_index], object_quads_info.hs[quad_index], objects.xs[i], objects.ys[i], object_quads_info.ws[objects.quad_indexes[i]], object_quads_info.hs[objects.quad_indexes[i]])) {
+            return;
+        }
+    }
+    AddObject(x, y, quad_index);
+}
+
+inline void Map::AddObject(int x, int y, int quad_index) {
+
+    // adding with a index according to its y position so that the draw order is correct
+    int index = 0;
+    for (unsigned int i = 0; i < objects.ys.size(); i++) {
+        if (y + object_quads_info.hs[quad_index] > objects.ys[i] + object_quads_info.hs[objects.quad_indexes[i]]) {
+            index ++;
+        } else {
+            break;
+        }
+    }
+    objects.xs.insert(objects.xs.begin() + index, x);
+    objects.ys.insert(objects.ys.begin() + index, y);
+    objects.quad_indexes.insert(objects.quad_indexes.begin() + index, quad_index);
+    objects.opacities.insert(objects.opacities.begin() + index, 255);
+    objects.draw_after_player.insert(objects.draw_after_player.begin() + index, true);
 }
