@@ -16,6 +16,7 @@ public:
 private:
     SDL_Texture* gameplay_texture;
     SDL_Texture* other_texture;
+    SDL_Rect other_texture_rect;
     SDL_Window* window;
     SDL_Surface* icon;
 };

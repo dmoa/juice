@@ -12,6 +12,7 @@
 #include "utils/Controls.hpp"
 #include "utils/Text.hpp"
 #include "utils/Clock.cpp"
+#include "utils/PrintOnScreen.hpp"
 
 #include "Window.hpp"
 #include "GlobalWindowData.hpp"
@@ -24,15 +25,16 @@
 GlobalWindowData global_window_data = {640, 640, 4, NULL};
 
 int main(int argc, char* argv[]) {
+    SDL_InitSubSystem(SDL_INIT_JOYSTICK);
     IMG_Init(IMG_INIT_PNG);
     TTF_Init();
     Text::LoadFont();
-    SDL_InitSubSystem(SDL_INIT_JOYSTICK);
     CTS::LoadInput();
     srand(time(0));
 
     bool DEV_PAUSED = false;
 
+    PrintOnScreen print;
     Window window;
     Clock clock;
     Camera gameplay_camera;
@@ -106,6 +108,9 @@ int main(int argc, char* argv[]) {
         enemies.Draw();
 
         window.SetDrawOther();
+
+        print.Draw(std::to_string( clock.average_fps ), 2, 0);
+        print.Draw("Hello Sailor!", 2, 10);
 
         window.Present(gameplay_camera.GetViewport());
     }
