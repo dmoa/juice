@@ -9,11 +9,12 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>
 
-#include "Window.hpp"
 #include "utils/Controls.hpp"
+#include "utils/Text.hpp"
+#include "utils/Clock.cpp"
+
+#include "Window.hpp"
 #include "GlobalWindowData.hpp"
-#include "Text.hpp"
-#include "Clock.cpp"
 #include "Camera.hpp"
 
 #include "Player.hpp"

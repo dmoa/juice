@@ -13,9 +13,10 @@
 #include "utils/max.hpp"
 #include "utils/pyth.hpp"
 #include "utils/random.hpp"
-#include "AABB.hpp"
+#include "utils/AABB.hpp"
+#include "utils/CollisionBoxes.hpp"
+
 #include "GlobalWindowData.hpp"
-#include "CollisionBoxes.hpp"
 
 class Player;
 

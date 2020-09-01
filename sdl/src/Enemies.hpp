@@ -7,9 +7,9 @@
 #include <SDL2/SDL_image.h>
 
 #include "utils/LoadImage.hpp"
+#include "utils/CurrentAnimationData.hpp"
+#include "utils/ExtraCollisionInfo.hpp"
 #include "GlobalWindowData.hpp"
-#include "CurrentAnimationData.hpp"
-#include "ExtraCollisionInfo.hpp"
 
 // struct AnimationsData {
 //     std::map<std::string, int> names;

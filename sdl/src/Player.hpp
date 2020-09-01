@@ -7,14 +7,15 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
-#include "GlobalWindowData.hpp"
 #include "utils/LoadImage.hpp"
 #include "utils/Controls.hpp"
-#include "AABB.hpp"
-#include "CollisionBoxes.hpp"
-#include "ExtraCollisionInfo.hpp"
-#include "CurrentAnimationData.hpp"
-#include "AnimationsData.hpp"
+#include "utils/AABB.hpp"
+#include "utils/CollisionBoxes.hpp"
+#include "utils/ExtraCollisionInfo.hpp"
+#include "utils/CurrentAnimationData.hpp"
+#include "utils/AnimationsData.hpp"
+
+#include "GlobalWindowData.hpp"
 
 class Map;
 
