@@ -1,8 +1,5 @@
 #pragma once
 
-#include <iostream>
-#include <vector>
-#include <stdlib.h>
 #include <time.h>
 
 #include <SDL2/SDL.h>
@@ -67,13 +64,9 @@ int main(int argc, char* argv[]) {
                     quit = true;
                     break;
                 case SDL_KEYDOWN:
-                    if (event.key.keysym.sym == SDLK_ESCAPE)
-                        quit = true;
-                    if (event.key.keysym.sym == SDLK_LCTRL)
-                        DEV_PAUSED = ! DEV_PAUSED;
-                    if (event.key.keysym.sym == SDLK_r) {
-                        map.ReloadTilesetTexture();
-                    }
+                    if (event.key.keysym.sym == SDLK_ESCAPE) quit = true;
+                    if (event.key.keysym.sym == SDLK_LCTRL)  DEV_PAUSED = ! DEV_PAUSED;
+                    if (event.key.keysym.sym == SDLK_r)      map.ReloadTilesetTexture();
                     break;
                 case SDL_WINDOWEVENT:
                     if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
