@@ -1,31 +1,29 @@
 #pragma once
 
 #include <vector>
+#include <map>
 #include <string>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
 #include "utils/LoadImage.hpp"
-#include "utils/CurrentAnimationData.hpp"
+//#include "utils/CurrentAnimationsData.hpp"
 #include "utils/ExtraCollisionInfo.hpp"
+#include "utils/AnimationsData.hpp"
 #include "GlobalWindowData.hpp"
-
-// struct AnimationsData {
-//     std::map<std::string, int> names;
-//     std::vector<int> num_frames;
-//     std::vector<float> speeds;
-//     std::vector<int> offsets;
-// };
 
 enum EnemyType {
     SPIDER
 };
 
 struct EnemiesData {
+    std::vector<EnemyType> types;
     std::vector<float> xs;
     std::vector<float> ys;
-    std::vector<EnemyType> enemy_types;
+    std::vector<std::string> current_animations;
+    std::vector<float> animation_timers;
+    std::vector<int>   animation_indexes;
 };
 
 class Enemies {
@@ -37,7 +35,7 @@ public:
 private:
     float* dt;
 
-    EnemiesData enemies_data = {{50}, {50}, {SPIDER}};
+    EnemiesData enemies_data = {{SPIDER}, {50}, {50}, {"idle"}, {0}, {0}};
 
 
     std::map<EnemyType, ExtraCollisionInfo> extra_collision_info = {{SPIDER, {9, 24, 14, 9}}};
@@ -48,7 +46,7 @@ private:
                 32, 32,
                 {{"idle",0}, {"running",1}},
                 { 4,      6       },
-                { 0.3,    0.1     },
+                { 0.2,    0.1     },
                 { 0,      4       }
             }
         }

@@ -85,6 +85,7 @@ int main(int argc, char* argv[]) {
         } else {
             player.Update();
             map.Update();
+            enemies.Update();
             gameplay_camera.Update();
         }
 
