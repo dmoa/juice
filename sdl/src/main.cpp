@@ -50,7 +50,8 @@ int main(int argc, char* argv[]) {
     map.CreateCollisionBoxes();
 
     enemies.CreateTextures();
-    enemies.GiveDelta(& clock.dt);
+    enemies.GiveDeltaMap(& clock.dt, & map);
+    enemies.CreateEnemies();
 
     SDL_Event event;
     bool quit = false;

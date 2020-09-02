@@ -50,13 +50,16 @@ public:
     void DrawSecond();
     void Update();
     void DestroyTextures();
+
+    const int tile_length = 16;
+    const int tiles_wide  = 48;
+    const int tiles_high  = 48;
+    const int map_width   = tile_length * tiles_wide;
+    const int map_height  = tile_length * tiles_high;
 private:
     float* dt;
     Player* player;
 
-    const int tile_length = 16;
-    const int tiles_wide = 48;
-    const int tiles_high = 48;
     const int opacity_distance = 50; // minimum distance from player before objects become transparent
 
     CollisionBoxes collision_boxes;

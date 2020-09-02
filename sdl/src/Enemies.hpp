@@ -7,11 +7,13 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
+#include "utils/random.hpp"
 #include "utils/LoadImage.hpp"
-//#include "utils/CurrentAnimationsData.hpp"
 #include "utils/ExtraCollisionInfo.hpp"
 #include "utils/AnimationsData.hpp"
 #include "GlobalWindowData.hpp"
+
+#include "Map.hpp"
 
 enum EnemyType {
     SPIDER
@@ -29,13 +31,16 @@ struct EnemiesData {
 class Enemies {
 public:
     void CreateTextures();
-    void GiveDelta(float* _dt);
+    void GiveDeltaMap(float* _dt, Map* _map);
+    inline void AddEnemy(EnemyType type, float x, float y, std::string cur_animation);
+    void CreateEnemies();
     void Draw();
     void Update();
 private:
     float* dt;
+    Map*   map;
 
-    EnemiesData enemies_data = {{SPIDER}, {50}, {50}, {"idle"}, {0}, {0}};
+    EnemiesData enemies_data;
 
 
     std::map<EnemyType, ExtraCollisionInfo> extra_collision_info = {{SPIDER, {9, 24, 14, 9}}};
@@ -45,9 +50,9 @@ private:
             {
                 32, 32,
                 {{"idle",0}, {"running",1}},
-                { 4,      6       },
+                { 5,      6       },
                 { 0.2,    0.1     },
-                { 0,      4       }
+                { 0,      1       }
             }
         }
     };
