@@ -19,7 +19,7 @@ inline void Enemies::AddEnemy(EnemyType type, float x, float y, std::string cur_
 }
 
 void Enemies::CreateEnemies() {
-    for (int i = 0; i < 15; i ++) {
+    for (int i = 0; i < 100; i ++) {
         AddEnemy(SPIDER, random(0, map->map_width - 100), random(0, map->map_height - 100), "running");
     }
 }

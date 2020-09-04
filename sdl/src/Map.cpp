@@ -11,6 +11,11 @@ void Map::ReloadTilesetTexture() {
     LoadTexture();
 }
 
+void Map::GivePlayerDelta(Player* _player, float* _dt) {
+    player = _player;
+    dt = _dt;
+};
+
 void Map::CreateMapTexture() {
     SDL_SetRenderTarget(global_window_data.rdr, static_saved_drawn_data);
 
@@ -73,10 +78,10 @@ void Map::CreateMapTexture() {
 
     // CREATING QUADS FOR NON-GROUND TILES / OBJECTS
 
-    AddQuad(0, tile_length * 2, tile_length, tile_length * 2, 32);
-    AddQuad(tile_length, tile_length * 2, tile_length, tile_length * 2, 32);
-    AddQuad(tile_length * 2, tile_length * 2, tile_length, tile_length, 15);
-    AddQuad(tile_length * 2, tile_length * 3, tile_length, tile_length, 15);
+    // AddQuad(0, tile_length * 2, tile_length, tile_length * 2, 32);
+    // AddQuad(tile_length, tile_length * 2, tile_length, tile_length * 2, 32);
+    // AddQuad(tile_length * 2, tile_length * 2, tile_length, tile_length, 15);
+    // AddQuad(tile_length * 2, tile_length * 3, tile_length, tile_length, 15);
 
 
     // TREES, LOGS AND STONES
@@ -86,7 +91,7 @@ void Map::CreateMapTexture() {
     for (int i = 0; i < 100; i++) {
         x = random(tile_length, GetMapWidth() - tile_length * 2);
         y = random(tile_length, GetMapHeight() - tile_length * 3);
-        AddObjectIfPossible(x, y, rand() % 4);
+        AddObjectIfPossible(x, y, (OBJECT_NAMES) ( rand() % 4) );
     }
 
     SDL_SetRenderTarget(global_window_data.rdr, NULL);
@@ -121,39 +126,42 @@ void Map::CreateCollisionBoxes() {
     collision_boxes.hs.push_back(tile_length);
 }
 
-void Map::DrawFirst() {
+void Map::DrawBase() {
     SDL_RenderCopy(global_window_data.rdr, static_saved_drawn_data, NULL, NULL);
-
-    for (unsigned int i = 0; i < objects.xs.size(); i++) {
-        if (! objects.draw_after_player[i]) {
-            iter_quad = {object_quads_info.xs[objects.quad_indexes[i]], object_quads_info.ys[objects.quad_indexes[i]], object_quads_info.ws[objects.quad_indexes[i]], object_quads_info.hs[objects.quad_indexes[i]]};
-            iter_pos  = {objects.xs[i], objects.ys[i], object_quads_info.ws[objects.quad_indexes[i]], object_quads_info.hs[objects.quad_indexes[i]]};
-            SDL_SetTextureAlphaMod(texture, (int) objects.opacities[i]);
-            SDL_RenderCopy(global_window_data.rdr, texture, & iter_quad, & iter_pos);
-        }
-    }
 }
 
-void Map::DrawSecond() {
-    for (unsigned int i = 0; i < objects.xs.size(); i++) {
-        if (objects.draw_after_player[i]) {
-            iter_quad = {object_quads_info.xs[objects.quad_indexes[i]], object_quads_info.ys[objects.quad_indexes[i]], object_quads_info.ws[objects.quad_indexes[i]], object_quads_info.hs[objects.quad_indexes[i]]};
-            iter_pos  = {objects.xs[i], objects.ys[i], object_quads_info.ws[objects.quad_indexes[i]], object_quads_info.hs[objects.quad_indexes[i]]};
-            SDL_SetTextureAlphaMod(texture, (int) objects.opacities[i]);
-            SDL_RenderCopy(global_window_data.rdr, texture, & iter_quad, & iter_pos);
-        }
-    }
-}
+// void Map::DrawFirst() {
+
+//     for (unsigned int i = 0; i < objects.xs.size(); i++) {
+//         if (! objects.draw_after_player[i]) {
+//             iter_quad = {object_quads_info.xs[objects.quad_indexes[i]], object_quads_info.ys[objects.quad_indexes[i]], object_quads_info.ws[objects.quad_indexes[i]], object_quads_info.hs[objects.quad_indexes[i]]};
+//             iter_pos  = {objects.xs[i], objects.ys[i], object_quads_info.ws[objects.quad_indexes[i]], object_quads_info.hs[objects.quad_indexes[i]]};
+//             SDL_SetTextureAlphaMod(texture, (int) objects.opacities[i]);
+//             SDL_RenderCopy(global_window_data.rdr, texture, & iter_quad, & iter_pos);
+//         }
+//     }
+// }
+
+// void Map::DrawSecond() {
+//     for (unsigned int i = 0; i < objects.xs.size(); i++) {
+//         if (objects.draw_after_player[i]) {
+//             iter_quad = {object_quads_info.xs[objects.quad_indexes[i]], object_quads_info.ys[objects.quad_indexes[i]], object_quads_info.ws[objects.quad_indexes[i]], object_quads_info.hs[objects.quad_indexes[i]]};
+//             iter_pos  = {objects.xs[i], objects.ys[i], object_quads_info.ws[objects.quad_indexes[i]], object_quads_info.hs[objects.quad_indexes[i]]};
+//             SDL_SetTextureAlphaMod(texture, (int) objects.opacities[i]);
+//             SDL_RenderCopy(global_window_data.rdr, texture, & iter_quad, & iter_pos);
+//         }
+//     }
+// }
 
 void Map::Update() {
-    for (unsigned int i = 0; i < objects.xs.size(); i++) {
-        if (pyth(objects.xs[i] + object_quads_info.ws[objects.quad_indexes[i]] / 2, objects.ys[i] + object_quads_info.hs[objects.quad_indexes[i]] / 2, player->GetCenterX(), player->GetCenterY()) < opacity_distance) {
-            objects.opacities[i] = max(objects.opacities[i] - (*dt) * 500, 130.f);
-            objects.draw_after_player[i] = player->GetBottomCollisionY() < objects.ys[i] + object_quads_info.draw_order_offset_y[objects.quad_indexes[i]];
-        } else {
-            objects.opacities[i] = min(objects.opacities[i] + (*dt) * 200, 255.f);
-        }
-    }
+    // for (unsigned int i = 0; i < objects.xs.size(); i++) {
+    //     if (pyth(objects.xs[i] + object_quads_info.ws[objects.quad_indexes[i]] / 2, objects.ys[i] + object_quads_info.hs[objects.quad_indexes[i]] / 2, player->GetCenterX(), player->GetCenterY()) < opacity_distance) {
+    //         objects.opacities[i] = max(objects.opacities[i] - (*dt) * 500, 130.f);
+    //         objects.draw_after_player[i] = player->GetBottomCollisionY() < objects.ys[i] + object_quads_info.draw_order_offset_y[objects.quad_indexes[i]];
+    //     } else {
+    //         objects.opacities[i] = min(objects.opacities[i] + (*dt) * 200, 255.f);
+    //     }
+    // }
 }
 
 void Map::DestroyTextures() {
@@ -161,29 +169,17 @@ void Map::DestroyTextures() {
     SDL_DestroyTexture(texture);
 }
 
-inline void Map::AddObjectIfPossible(int x, int y, int quad_index) {
+inline void Map::AddObjectIfPossible(int x, int y, OBJECT_NAMES name) {
     for (unsigned int i = 0; i < objects.ys.size(); i++) {
-        if (AABB(x, y, object_quads_info.ws[quad_index], object_quads_info.hs[quad_index], objects.xs[i], objects.ys[i], object_quads_info.ws[objects.quad_indexes[i]], object_quads_info.hs[objects.quad_indexes[i]])) {
+        if (AABB(x, y, OBJECTS_QUAD_INFO.ws[name], OBJECTS_QUAD_INFO.hs[name], objects.xs[i], objects.ys[i], OBJECTS_QUAD_INFO.ws[objects.ids[i]], OBJECTS_QUAD_INFO.hs[objects.ids[i]])) {
             return;
         }
     }
-    AddObject(x, y, quad_index);
+    AddObject(x, y, name);
 }
 
-inline void Map::AddObject(int x, int y, int quad_index) {
-
-    // adding with a index according to its y position so that the draw order is correct
-    int index = 0;
-    for (unsigned int i = 0; i < objects.ys.size(); i++) {
-        if (y + object_quads_info.hs[quad_index] > objects.ys[i] + object_quads_info.hs[objects.quad_indexes[i]]) {
-            index ++;
-        } else {
-            break;
-        }
-    }
-    objects.xs.insert(objects.xs.begin() + index, x);
-    objects.ys.insert(objects.ys.begin() + index, y);
-    objects.quad_indexes.insert(objects.quad_indexes.begin() + index, quad_index);
-    objects.opacities.insert(objects.opacities.begin() + index, 255);
-    objects.draw_after_player.insert(objects.draw_after_player.begin() + index, true);
+inline void Map::AddObject(int x, int y, OBJECT_NAMES name) {
+    objects.xs.push_back(x);
+    objects.ys.push_back(y);
+    objects.ids.push_back(name);
 }

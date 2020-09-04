@@ -15,6 +15,8 @@
 #include "GlobalWindowData.hpp"
 #include "Camera.hpp"
 
+#include "objects/ObjectsInfo.hpp"
+
 #include "Player.hpp"
 #include "Map.hpp"
 #include "Enemies.hpp"
@@ -97,9 +99,15 @@ int main(int argc, char* argv[]) {
 
         window.SetDrawGameplay();
 
-        map.DrawFirst();
+        map.DrawBase();
+        for (unsigned int i = 0; i < map.objects.xs.size(); i++) {
+            int id = map.objects.ids[i];
+            SDL_Rect quad = {OBJECTS_QUAD_INFO.xs[id], OBJECTS_QUAD_INFO.ys[id], OBJECTS_QUAD_INFO.ws[id], OBJECTS_QUAD_INFO.hs[id]};
+            SDL_Rect pos = {map.objects.xs[i], map.objects.ys[i], OBJECTS_QUAD_INFO.ws[id], OBJECTS_QUAD_INFO.hs[id]};
+
+            SDL_RenderCopy(global_window_data.rdr, map.texture, & quad, & pos);
+        }
         player.Draw();
-        map.DrawSecond();
         enemies.Draw();
 
         window.SetDrawOther();
