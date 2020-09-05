@@ -23,14 +23,6 @@
 
 class Player;
 
-// struct Objects {
-//     std::vector<int> xs;
-//     std::vector<int> ys;
-//     std::vector<int> quad_indexes;
-//     std::vector<float> opacities;
-//     std::vector<bool> draw_after_player;
-// };
-
 class Map {
 public:
     void LoadTexture();
@@ -42,6 +34,12 @@ public:
     int GetMapWidth () { return tiles_wide * tile_length; };
     int GetMapHeight() { return tiles_high * tile_length; };
     void DrawBase();
+    inline void DrawObject(float x, float y, OBJECT_NAMES name) {
+        int i = name - FIRST_MAP_OBJECT_OFFSET;
+        SDL_Rect quad = {QUADS_INFO.xs[i], QUADS_INFO.ys[i], QUADS_INFO.ws[i], QUADS_INFO.hs[i]};
+        SDL_Rect pos = {x, y, QUADS_INFO.ws[i], QUADS_INFO.hs[i]};
+        SDL_RenderCopy(global_window_data.rdr, texture, & quad, & pos);
+    }
 
     void Update();
     void DestroyTextures();
@@ -52,8 +50,14 @@ public:
     const int map_width   = tile_length * tiles_wide;
     const int map_height  = tile_length * tiles_high;
 
+    const SOARects QUADS_INFO = {
+        {0, 16, 32, 32},
+        {32, 32, 32, 48},
+        {16, 16, 16, 16},
+        {32, 32, 16, 16},
+    };
+
     Objects objects;
-    SDL_Texture* texture;
 private:
     float* dt;
     Player* player;
@@ -71,10 +75,14 @@ private:
     //     object_quads_info.draw_order_offset_y.push_back(offset_y);
     // }
 
+        // x, y, w, h
+
+
     inline void AddObjectIfPossible(int x, int y, OBJECT_NAMES name);
     inline void AddObject(int x, int y, OBJECT_NAMES name);
 
     SDL_Rect iter_quad;
     SDL_Rect iter_pos;
     SDL_Texture* static_saved_drawn_data = SDL_CreateTexture(global_window_data.rdr, NULL, SDL_TEXTUREACCESS_TARGET, tiles_wide * tile_length, tiles_high * tile_length);
+    SDL_Texture* texture;
 };

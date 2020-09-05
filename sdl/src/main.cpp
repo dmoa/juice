@@ -10,18 +10,40 @@
 #include "utils/Text.hpp"
 #include "utils/Clock.cpp"
 #include "utils/PrintOnScreen.hpp"
+#include "utils/AABB.hpp"
 
 #include "Window.hpp"
 #include "GlobalWindowData.hpp"
 #include "Camera.hpp"
 
 #include "objects/ObjectsInfo.hpp"
+#include "objects/Objects.hpp"
+#include "objects/ObjectsNames.hpp"
 
 #include "Player.hpp"
 #include "Map.hpp"
 #include "Enemies.hpp"
 
 GlobalWindowData global_window_data = {640, 640, 4, NULL};
+
+Objects SortObjects(Map* map, Player* player, Enemies* enemies) {
+    Objects objects = map->objects;
+
+    int i = objects.xs.size() - 1;
+    while (i > 0) {
+        if (AABB(player->x, player->y, player->quad_w, player->quad_h, objects.xs[i], objects.ys[i], map->QUADS_INFO.ws[objects.names[i] - FIRST_MAP_OBJECT_OFFSET], map->QUADS_INFO.hs[objects.names[i] - FIRST_MAP_OBJECT_OFFSET]) && player->y + OBJECTS_COLLISION_INFO.ys[PLAYER] + OBJECTS_COLLISION_INFO.hs[PLAYER] > objects.ys[i] + OBJECTS_COLLISION_INFO.ys[objects.names[i]] + OBJECTS_COLLISION_INFO.hs[objects.names[i]]) {
+            break;
+        }
+        i --;
+    }
+    i ++;
+
+    objects.xs.insert(objects.xs.begin() + i, 0.f);
+    objects.ys.insert(objects.ys.begin() + i, 0.f);
+    objects.names.insert(objects.names.begin() + i, PLAYER);
+
+    return objects;
+}
 
 int main(int argc, char* argv[]) {
     SDL_InitSubSystem(SDL_INIT_JOYSTICK);
@@ -92,6 +114,7 @@ int main(int argc, char* argv[]) {
             gameplay_camera.Update();
         }
 
+        Objects objects = SortObjects(& map, & player, & enemies);
 
         // DRAW
 
@@ -100,15 +123,18 @@ int main(int argc, char* argv[]) {
         window.SetDrawGameplay();
 
         map.DrawBase();
-        for (unsigned int i = 0; i < map.objects.xs.size(); i++) {
-            int id = map.objects.ids[i];
-            SDL_Rect quad = {OBJECTS_QUAD_INFO.xs[id], OBJECTS_QUAD_INFO.ys[id], OBJECTS_QUAD_INFO.ws[id], OBJECTS_QUAD_INFO.hs[id]};
-            SDL_Rect pos = {map.objects.xs[i], map.objects.ys[i], OBJECTS_QUAD_INFO.ws[id], OBJECTS_QUAD_INFO.hs[id]};
+        for (unsigned int i = 0; i < objects.xs.size(); i++) {
 
-            SDL_RenderCopy(global_window_data.rdr, map.texture, & quad, & pos);
+            OBJECT_NAMES name = objects.names[i];
+
+           if (name == PLAYER) {
+                player.Draw();
+            } else {
+                map.DrawObject(objects.xs[i], objects.ys[i], name);
+            }
+
         }
-        player.Draw();
-        enemies.Draw();
+        //enemies.Draw();
 
         window.SetDrawOther();
 

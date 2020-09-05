@@ -62,21 +62,21 @@ void Player::CollisionUpdate() {
     bool collided_y = false;
 
     for (unsigned int i = 0; i < map_cb->ws.size(); i++) {
-        if (AABB(x + extra_collision_info.offset_x, y + extra_collision_info.offset_y, extra_collision_info.w, extra_collision_info.h, map_cb->xs[i], map_cb->ys[i], map_cb->ws[i], map_cb->hs[i])) {
-            if (old_y + extra_collision_info.offset_y >= map_cb->ys[i] + map_cb->hs[i]) {
-                y = map_cb->ys[i] + map_cb->hs[i] - extra_collision_info.offset_y;
+        if (AABB(x + collision_info.offset_x, y + collision_info.offset_y, collision_info.w, collision_info.h, map_cb->xs[i], map_cb->ys[i], map_cb->ws[i], map_cb->hs[i])) {
+            if (old_y + collision_info.offset_y >= map_cb->ys[i] + map_cb->hs[i]) {
+                y = map_cb->ys[i] + map_cb->hs[i] - collision_info.offset_y;
                 collided_y = true;
             }
-            if (old_x + extra_collision_info.offset_x >= map_cb->xs[i] + map_cb->ws[i]) {
-                x = map_cb->xs[i] + map_cb->ws[i] - extra_collision_info.offset_x;
+            if (old_x + collision_info.offset_x >= map_cb->xs[i] + map_cb->ws[i]) {
+                x = map_cb->xs[i] + map_cb->ws[i] - collision_info.offset_x;
                 collided_x = true;
             }
-            if (old_y + extra_collision_info.offset_y + extra_collision_info.h <= map_cb->ys[i]) {
-                y = map_cb->ys[i] - extra_collision_info.offset_y - extra_collision_info.h;
+            if (old_y + collision_info.offset_y + collision_info.h <= map_cb->ys[i]) {
+                y = map_cb->ys[i] - collision_info.offset_y - collision_info.h;
                 collided_y = true;
             }
-            if (old_x + extra_collision_info.offset_x + extra_collision_info.w <= map_cb->xs[i]) {
-                x = map_cb->xs[i] - extra_collision_info.offset_x - extra_collision_info.w;
+            if (old_x + collision_info.offset_x + collision_info.w <= map_cb->xs[i]) {
+                x = map_cb->xs[i] - collision_info.offset_x - collision_info.w;
                 collided_x = true;
             }
         }

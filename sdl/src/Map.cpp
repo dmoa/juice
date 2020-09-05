@@ -91,7 +91,7 @@ void Map::CreateMapTexture() {
     for (int i = 0; i < 100; i++) {
         x = random(tile_length, GetMapWidth() - tile_length * 2);
         y = random(tile_length, GetMapHeight() - tile_length * 3);
-        AddObjectIfPossible(x, y, (OBJECT_NAMES) ( rand() % 4) );
+        AddObjectIfPossible(x, y, TREE1 );
     }
 
     SDL_SetRenderTarget(global_window_data.rdr, NULL);
@@ -171,7 +171,7 @@ void Map::DestroyTextures() {
 
 inline void Map::AddObjectIfPossible(int x, int y, OBJECT_NAMES name) {
     for (unsigned int i = 0; i < objects.ys.size(); i++) {
-        if (AABB(x, y, OBJECTS_QUAD_INFO.ws[name], OBJECTS_QUAD_INFO.hs[name], objects.xs[i], objects.ys[i], OBJECTS_QUAD_INFO.ws[objects.ids[i]], OBJECTS_QUAD_INFO.hs[objects.ids[i]])) {
+        if (AABB(x, y, QUADS_INFO.ws[name], QUADS_INFO.hs[name], objects.xs[i], objects.ys[i], QUADS_INFO.ws[objects.names[i]], QUADS_INFO.hs[objects.names[i]])) {
             return;
         }
     }
@@ -181,5 +181,5 @@ inline void Map::AddObjectIfPossible(int x, int y, OBJECT_NAMES name) {
 inline void Map::AddObject(int x, int y, OBJECT_NAMES name) {
     objects.xs.push_back(x);
     objects.ys.push_back(y);
-    objects.ids.push_back(name);
+    objects.names.push_back(name);
 }

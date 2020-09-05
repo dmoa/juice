@@ -32,14 +32,20 @@ public:
 
     float GetCenterX() { return x + rendering_quad.w / 2; };
     float GetCenterY() { return y + rendering_quad.h / 2; };
-    float GetBottomCollisionY() { return y + rendering_quad.h + extra_collision_info.h; };
+    float GetBottomCollisionY() { return y + rendering_quad.h + collision_info.h; };
 
+    ExtraCollisionInfo collision_info = {8, 16, 8, 2};
+    float x = 30;
+    float y = 50;
+
+    const int quad_w = 24;
+    const int quad_h = 18;
+
+    SDL_Texture* texture;
 private:
     float* dt;
     Map* map;
 
-    float x = 720.f;
-    float y = 50;
     float old_x = 50;
     float old_y = 50;
     float current_xv = 0;
@@ -47,7 +53,6 @@ private:
     int   v = 110;
 
     CollisionBoxes* map_cb;
-    ExtraCollisionInfo extra_collision_info = {8, 16, 8, 2};
 
 
     AnimationsData animations_data = {
@@ -60,8 +65,7 @@ private:
 
     CurrentAnimationData current_animation = {"idle", 0, 0, 0, animations_data.num_frames[0], animations_data.speeds[0]};
 
-    SDL_Rect     current_spritesheet_quad = {0, 0, 24, 18};
-    SDL_Rect     rendering_quad = {x, y, 24, 18};
-    SDL_Texture* texture;
+    SDL_Rect     current_spritesheet_quad = {0, 0, quad_w, quad_h};
+    SDL_Rect     rendering_quad = {x, y, quad_w, quad_h};
     SDL_RendererFlip is_flipped = SDL_FLIP_NONE;
 };

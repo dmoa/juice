@@ -1,13 +1,5 @@
 #include "ObjectsInfo.hpp"
 
-// x, y, w, h
-const SOARects OBJECTS_QUAD_INFO = {
-    {0, 16, 32, 32},
-    {32, 32, 32, 48},
-    {16, 16, 16, 16},
-    {32, 32, 16, 16},
-};
-
 // y offset
 // const std::vector<int> OBJECTS_DRAW_ORDER_OFFSET = {32, 32, };
 
@@ -16,8 +8,10 @@ const SOARects OBJECTS_QUAD_INFO = {
 // width of collision box,
 // height of collision box.
 const SOARects OBJECTS_COLLISION_INFO = {
-    {1, 1, 1, 1},
-    {1, 1, 2, 2},
-    {14, 14, 14},
-    {29, 29, 12},
+    {8, 5, 1, 1, 1},
+    {16, 26, 1, 2, 2},
+    {8, 6, 14, 14},
+    {2, 5, 29, 12},
 };
+
+const int FIRST_MAP_OBJECT_OFFSET = 1;
