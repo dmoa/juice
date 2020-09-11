@@ -17,7 +17,7 @@
 #include "utils/CollisionBoxes.hpp"
 
 #include "GlobalWindowData.hpp"
-#include "objects/Objects.hpp"
+#include "objects/SOAObjects.hpp"
 #include "objects/ObjectsNames.hpp"
 #include "objects/ObjectsInfo.hpp"
 
@@ -35,9 +35,9 @@ public:
     int GetMapHeight() { return tiles_high * tile_length; };
     void DrawBase();
     inline void DrawObject(float x, float y, OBJECT_NAMES name) {
-        int i = name - FIRST_MAP_OBJECT_OFFSET;
-        SDL_Rect quad = {QUADS_INFO.xs[i], QUADS_INFO.ys[i], QUADS_INFO.ws[i], QUADS_INFO.hs[i]};
-        SDL_Rect pos = {x, y, QUADS_INFO.ws[i], QUADS_INFO.hs[i]};
+        int i = name;
+        SDL_Rect quad = {QUADS_INFO.xs[i], QUADS_INFO.ys[i], OBJECTS_QUAD_DIMENSIONS.ws[i], OBJECTS_QUAD_DIMENSIONS.hs[i]};
+        SDL_Rect pos = {x, y, OBJECTS_QUAD_DIMENSIONS.ws[i], OBJECTS_QUAD_DIMENSIONS.hs[i]};
         SDL_RenderCopy(global_window_data.rdr, texture, & quad, & pos);
     }
 
@@ -50,11 +50,11 @@ public:
     const int map_width   = tile_length * tiles_wide;
     const int map_height  = tile_length * tiles_high;
 
+    // Already know dimensions from OBJECTS_QUAD_DIMENSIONS, so no need to use widths and heights.
     const SOARects QUADS_INFO = {
         {0, 16, 32, 32},
         {32, 32, 32, 48},
-        {16, 16, 16, 16},
-        {32, 32, 16, 16},
+        {},{},
     };
 
     Objects objects;

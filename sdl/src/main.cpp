@@ -17,7 +17,7 @@
 #include "Camera.hpp"
 
 #include "objects/ObjectsInfo.hpp"
-#include "objects/Objects.hpp"
+#include "objects/SOAObjects.hpp"
 #include "objects/ObjectsNames.hpp"
 
 #include "Player.hpp"
@@ -26,21 +26,27 @@
 
 GlobalWindowData global_window_data = {640, 640, 4, NULL};
 
-Objects SortObjects(Map* map, Player* player, Enemies* enemies) {
-    Objects objects = map->objects;
+void AddObject(Objects* objects, float x, float y, OBJECT_NAMES name) {
 
-    int i = objects.xs.size() - 1;
+    int i = objects->xs.size() - 1;
     while (i > 0) {
-        if (AABB(player->x, player->y, player->quad_w, player->quad_h, objects.xs[i], objects.ys[i], map->QUADS_INFO.ws[objects.names[i] - FIRST_MAP_OBJECT_OFFSET], map->QUADS_INFO.hs[objects.names[i] - FIRST_MAP_OBJECT_OFFSET]) && player->y + OBJECTS_COLLISION_INFO.ys[PLAYER] + OBJECTS_COLLISION_INFO.hs[PLAYER] > objects.ys[i] + OBJECTS_COLLISION_INFO.ys[objects.names[i]] + OBJECTS_COLLISION_INFO.hs[objects.names[i]]) {
+        if (AABB(x, y, OBJECTS_QUAD_DIMENSIONS.ws[name], OBJECTS_QUAD_DIMENSIONS.hs[name], objects->xs[i], objects->ys[i], OBJECTS_QUAD_DIMENSIONS.ws[objects->names[i]], OBJECTS_QUAD_DIMENSIONS.hs[objects->names[i]]) && y + OBJECTS_COLLISION_INFO.ys[name] + OBJECTS_COLLISION_INFO.hs[name] > objects->ys[i] + OBJECTS_COLLISION_INFO.ys[objects->names[i]] + OBJECTS_COLLISION_INFO.hs[objects->names[i]]) {
             break;
         }
         i --;
     }
+
     i ++;
 
-    objects.xs.insert(objects.xs.begin() + i, 0.f);
-    objects.ys.insert(objects.ys.begin() + i, 0.f);
-    objects.names.insert(objects.names.begin() + i, PLAYER);
+    objects->xs.insert(objects->xs.begin() + i, 0.f);
+    objects->ys.insert(objects->ys.begin() + i, 0.f);
+    objects->names.insert(objects->names.begin() + i, name);
+}
+
+Objects SortObjects(Map* map, Player* player, Enemies* enemies) {
+    Objects objects = map->objects;
+
+    AddObject(& objects, player->x, player->y, PLAYER);
 
     return objects;
 }
@@ -134,7 +140,7 @@ int main(int argc, char* argv[]) {
             }
 
         }
-        //enemies.Draw();
+        enemies.Draw();
 
         window.SetDrawOther();
 

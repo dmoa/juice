@@ -171,7 +171,7 @@ void Map::DestroyTextures() {
 
 inline void Map::AddObjectIfPossible(int x, int y, OBJECT_NAMES name) {
     for (unsigned int i = 0; i < objects.ys.size(); i++) {
-        if (AABB(x, y, QUADS_INFO.ws[name], QUADS_INFO.hs[name], objects.xs[i], objects.ys[i], QUADS_INFO.ws[objects.names[i]], QUADS_INFO.hs[objects.names[i]])) {
+        if (AABB(x, y, OBJECTS_QUAD_DIMENSIONS.ws[name], OBJECTS_QUAD_DIMENSIONS.hs[name], objects.xs[i], objects.ys[i], OBJECTS_QUAD_DIMENSIONS.ws[objects.names[i]], OBJECTS_QUAD_DIMENSIONS.hs[objects.names[i]])) {
             return;
         }
     }
@@ -179,7 +179,11 @@ inline void Map::AddObjectIfPossible(int x, int y, OBJECT_NAMES name) {
 }
 
 inline void Map::AddObject(int x, int y, OBJECT_NAMES name) {
-    objects.xs.push_back(x);
-    objects.ys.push_back(y);
-    objects.names.push_back(name);
+    int i;
+    for (i = 0; i < objects.ys.size(); i ++) {
+        if (objects.ys.back() < y) break;
+    }
+    objects.xs.insert(objects.xs.begin() + i, x);
+    objects.ys.insert(objects.ys.begin() + i, y);
+    objects.names.insert(objects.names.begin() + i, name);
 }

@@ -17,6 +17,9 @@
 
 #include "GlobalWindowData.hpp"
 
+#include "objects/ObjectsNames.hpp"
+#include "objects/ObjectsInfo.hpp"
+
 class Map;
 
 class Player {
@@ -38,8 +41,8 @@ public:
     float x = 30;
     float y = 50;
 
-    const int quad_w = 24;
-    const int quad_h = 18;
+    const int quad_w = OBJECTS_QUAD_DIMENSIONS.ws[PLAYER];
+    const int quad_h = OBJECTS_QUAD_DIMENSIONS.hs[PLAYER];
 
     SDL_Texture* texture;
 private:
