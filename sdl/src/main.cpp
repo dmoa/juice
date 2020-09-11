@@ -26,6 +26,12 @@
 
 GlobalWindowData global_window_data = {640, 640, 4, NULL};
 
+// @TODO
+// Organise AddObject and SortObjects into a struct or something.
+// AddObject returns an id, as it has the counter for the number of objects.
+// That way, when adding an enemy in enemies, we can easily add stuff to the map.
+
+
 void AddObject(Objects* objects, float x, float y, OBJECT_NAMES name) {
 
     int i = objects->xs.size() - 1;
