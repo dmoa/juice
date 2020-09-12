@@ -10,7 +10,6 @@
 #include "utils/Text.hpp"
 #include "utils/Clock.cpp"
 #include "utils/PrintOnScreen.hpp"
-#include "utils/AABB.hpp"
 
 #include "Window.hpp"
 #include "GlobalWindowData.hpp"
@@ -19,6 +18,9 @@
 #include "objects/ObjectsInfo.hpp"
 #include "objects/SOAObjects.hpp"
 #include "objects/ObjectsNames.hpp"
+#include "objects/ObjectTypes.hpp"
+
+#include "objects/DrawObjects.hpp"
 
 #include "Player.hpp"
 #include "Map.hpp"
@@ -27,35 +29,8 @@
 GlobalWindowData global_window_data = {640, 640, 4, NULL};
 
 // @TODO
-// Organise AddObject and SortObjects into a struct or something.
 // AddObject returns an id, as it has the counter for the number of objects.
 // That way, when adding an enemy in enemies, we can easily add stuff to the map.
-
-
-void AddObject(Objects* objects, float x, float y, OBJECT_NAMES name) {
-
-    int i = objects->xs.size() - 1;
-    while (i > 0) {
-        if (AABB(x, y, OBJECTS_QUAD_DIMENSIONS.ws[name], OBJECTS_QUAD_DIMENSIONS.hs[name], objects->xs[i], objects->ys[i], OBJECTS_QUAD_DIMENSIONS.ws[objects->names[i]], OBJECTS_QUAD_DIMENSIONS.hs[objects->names[i]]) && y + OBJECTS_COLLISION_INFO.ys[name] + OBJECTS_COLLISION_INFO.hs[name] > objects->ys[i] + OBJECTS_COLLISION_INFO.ys[objects->names[i]] + OBJECTS_COLLISION_INFO.hs[objects->names[i]]) {
-            break;
-        }
-        i --;
-    }
-
-    i ++;
-
-    objects->xs.insert(objects->xs.begin() + i, 0.f);
-    objects->ys.insert(objects->ys.begin() + i, 0.f);
-    objects->names.insert(objects->names.begin() + i, name);
-}
-
-Objects SortObjects(Map* map, Player* player, Enemies* enemies) {
-    Objects objects = map->objects;
-
-    AddObject(& objects, player->x, player->y, PLAYER);
-
-    return objects;
-}
 
 int main(int argc, char* argv[]) {
     SDL_InitSubSystem(SDL_INIT_JOYSTICK);
@@ -71,17 +46,21 @@ int main(int argc, char* argv[]) {
     Window window;
     Clock clock;
     Camera gameplay_camera;
+    DrawObjects draw_objects;
     Player player;
     Map map;
     Enemies enemies;
 
     gameplay_camera.GivePlayerMapDelta(& player, & map, & clock.dt);
 
+    draw_objects.GiveMapPlayerEnemies(& map, & player, & enemies);
+
     player.LoadTexture();
-    player.GiveMapDelta(& map, & clock.dt);
+    player.GiveMapDeltaDrawObjects(& map, & clock.dt, & draw_objects);
+    player.InitPos();
 
     map.LoadTexture();
-    map.GivePlayerDelta(& player, & clock.dt);
+    map.GivePlayerDeltaDrawObjects(& player, & clock.dt, & draw_objects);
     map.CreateMapTexture();
     map.CreateCollisionBoxes();
 
@@ -124,9 +103,9 @@ int main(int argc, char* argv[]) {
             map.Update();
             enemies.Update();
             gameplay_camera.Update();
+            draw_objects.Sort();
         }
 
-        Objects objects = SortObjects(& map, & player, & enemies);
 
         // DRAW
 
@@ -135,18 +114,8 @@ int main(int argc, char* argv[]) {
         window.SetDrawGameplay();
 
         map.DrawBase();
-        for (unsigned int i = 0; i < objects.xs.size(); i++) {
-
-            OBJECT_NAMES name = objects.names[i];
-
-           if (name == PLAYER) {
-                player.Draw();
-            } else {
-                map.DrawObject(objects.xs[i], objects.ys[i], name);
-            }
-
-        }
-        enemies.Draw();
+        draw_objects.Draw();
+        //enemies.Draw();
 
         window.SetDrawOther();
 

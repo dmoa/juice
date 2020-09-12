@@ -20,14 +20,16 @@
 #include "objects/SOAObjects.hpp"
 #include "objects/ObjectsNames.hpp"
 #include "objects/ObjectsInfo.hpp"
+#include "objects/ObjectTypes.hpp"
 
 class Player;
+class DrawObjects;
 
 class Map {
 public:
     void LoadTexture();
     void ReloadTilesetTexture();
-    void GivePlayerDelta(Player* _player, float* _dt);
+    void GivePlayerDeltaDrawObjects(Player* _player, float* _dt, DrawObjects* _draw_objects);
     void CreateMapTexture();
     void CreateCollisionBoxes();
     CollisionBoxes* GetCollisionBoxes() { return & collision_boxes; }
@@ -56,30 +58,17 @@ public:
         {32, 32, 32, 48},
         {},{},
     };
-
-    Objects objects;
 private:
     float* dt;
     Player* player;
+    DrawObjects* draw_objects;
 
     const int opacity_distance = 50; // minimum distance from player before objects become transparent
 
     CollisionBoxes collision_boxes;
 
-    // ObjectQuadsInfo object_quads_info;
-    // inline void AddQuad(int x, int y, int w, int h, int offset_y) {
-    //     object_quads_info.xs.push_back(x);
-    //     object_quads_info.ys.push_back(y);
-    //     object_quads_info.ws.push_back(w);
-    //     object_quads_info.hs.push_back(h);
-    //     object_quads_info.draw_order_offset_y.push_back(offset_y);
-    // }
-
-        // x, y, w, h
-
 
     inline void AddObjectIfPossible(int x, int y, OBJECT_NAMES name);
-    inline void AddObject(int x, int y, OBJECT_NAMES name);
 
     SDL_Rect iter_quad;
     SDL_Rect iter_pos;

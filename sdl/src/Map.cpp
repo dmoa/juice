@@ -1,5 +1,6 @@
 #include "Map.hpp"
 #include "Player.hpp"
+#include "objects/DrawObjects.hpp"
 
 void Map::LoadTexture() {
     texture = IMG_LoadTexture(global_window_data.rdr, "assets/tileset.png");
@@ -11,9 +12,10 @@ void Map::ReloadTilesetTexture() {
     LoadTexture();
 }
 
-void Map::GivePlayerDelta(Player* _player, float* _dt) {
+void Map::GivePlayerDeltaDrawObjects(Player* _player, float* _dt, DrawObjects* _draw_objects) {
     player = _player;
     dt = _dt;
+    draw_objects = _draw_objects;
 };
 
 void Map::CreateMapTexture() {
@@ -88,11 +90,13 @@ void Map::CreateMapTexture() {
 
     int x;
     int y;
-    for (int i = 0; i < 100; i++) {
-        x = random(tile_length, GetMapWidth() - tile_length * 2);
-        y = random(tile_length, GetMapHeight() - tile_length * 3);
-        AddObjectIfPossible(x, y, TREE1 );
-    }
+    // for (int i = 0; i < 100; i++) {
+    //     x = random(tile_length, GetMapWidth() - tile_length * 2);
+    //     y = random(tile_length, GetMapHeight() - tile_length * 3);
+    //     AddObjectIfPossible(x, y, TREE1 );
+    // }
+
+    AddObjectIfPossible(150, 150, TREE1);
 
     SDL_SetRenderTarget(global_window_data.rdr, NULL);
 }
@@ -170,20 +174,10 @@ void Map::DestroyTextures() {
 }
 
 inline void Map::AddObjectIfPossible(int x, int y, OBJECT_NAMES name) {
-    for (unsigned int i = 0; i < objects.ys.size(); i++) {
-        if (AABB(x, y, OBJECTS_QUAD_DIMENSIONS.ws[name], OBJECTS_QUAD_DIMENSIONS.hs[name], objects.xs[i], objects.ys[i], OBJECTS_QUAD_DIMENSIONS.ws[objects.names[i]], OBJECTS_QUAD_DIMENSIONS.hs[objects.names[i]])) {
+    for (unsigned int i = 0; i < draw_objects->objects.ys.size(); i++) {
+        if (AABB(x, y, OBJECTS_QUAD_DIMENSIONS.ws[name], OBJECTS_QUAD_DIMENSIONS.hs[name], draw_objects->objects.xs[i], draw_objects->objects.ys[i], OBJECTS_QUAD_DIMENSIONS.ws[draw_objects->objects.names[i]], OBJECTS_QUAD_DIMENSIONS.hs[draw_objects->objects.names[i]])) {
             return;
         }
     }
-    AddObject(x, y, name);
-}
-
-inline void Map::AddObject(int x, int y, OBJECT_NAMES name) {
-    int i;
-    for (i = 0; i < objects.ys.size(); i ++) {
-        if (objects.ys.back() < y) break;
-    }
-    objects.xs.insert(objects.xs.begin() + i, x);
-    objects.ys.insert(objects.ys.begin() + i, y);
-    objects.names.insert(objects.names.begin() + i, name);
+    draw_objects->AddObject(x, y, name, MAP_TYPE, -1);
 }

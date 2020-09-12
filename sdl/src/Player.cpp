@@ -1,15 +1,21 @@
 #include "Player.hpp"
 #include "Map.hpp"
+#include "objects/DrawObjects.hpp"
 
 void Player::LoadTexture() {
     texture = LoadImage(global_window_data.rdr, "assets/player/red.png");
     is_flipped = SDL_FLIP_HORIZONTAL;
 }
 
-void Player::GiveMapDelta(Map* _map, float* _dt) {
+void Player::GiveMapDeltaDrawObjects(Map* _map, float* _dt, DrawObjects* _draw_objects) {
     dt = _dt;
     map = _map;
     map_cb = map->GetCollisionBoxes();
+    draw_objects = _draw_objects;
+}
+
+void Player::InitPos() {
+    id = draw_objects->AddObject(x, y, PLAYER, PLAYER_TYPE, 69);
 }
 
 void Player::Draw() {
@@ -54,6 +60,10 @@ void Player::Update() {
     CollisionUpdate();
     rendering_quad = {x, y, 24, 18};
     AnimationUpdate();
+
+    // updating pos in the draw objects, so that it can calculate the draw order.
+    draw_objects->objects.xs[draw_objects->find_objects[id]] = x;
+    draw_objects->objects.ys[draw_objects->find_objects[id]] = y;
 }
 
 void Player::CollisionUpdate() {

@@ -19,13 +19,16 @@
 
 #include "objects/ObjectsNames.hpp"
 #include "objects/ObjectsInfo.hpp"
+#include "objects/DrawObjects.hpp"
 
 class Map;
+class DrawObjects;
 
 class Player {
 public:
     void LoadTexture();
-    void GiveMapDelta(Map* _map, float* _dt);
+    void GiveMapDeltaDrawObjects(Map* _map, float* _dt, DrawObjects* _draw_objects);
+    void InitPos();
     void Draw();
     void Update();
     void CollisionUpdate();
@@ -48,6 +51,12 @@ public:
 private:
     float* dt;
     Map* map;
+    DrawObjects* draw_objects;
+
+    // for lookup in draw_objects,
+    // so that we can set the correct pos for the player in draw_objects,
+    // so it can figure out the correct draw order.
+    int id;
 
     float old_x = 50;
     float old_y = 50;
