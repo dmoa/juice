@@ -21,8 +21,8 @@ void Map::GivePlayerDeltaDrawObjects(Player* _player, float* _dt, DrawObjects* _
 void Map::CreateMapTexture() {
     SDL_SetRenderTarget(global_window_data.rdr, static_saved_drawn_data);
 
-    iter_quad = {0, 0, tile_length, tile_length};
-    iter_pos  = {0, 0, tile_length, tile_length};
+    SDL_Rect iter_quad = {0, 0, tile_length, tile_length};
+    SDL_Rect iter_pos  = {0, 0, tile_length, tile_length};
 
     // GRASS TILES
 
@@ -84,11 +84,9 @@ void Map::CreateMapTexture() {
     for (int i = 0; i < 100; i++) {
         x = random(tile_length, GetMapWidth() - tile_length * 2);
         y = random(tile_length, GetMapHeight() - tile_length * 3);
-        int index = AddObjectIfPossible(x, y, TREE1);
+        int index = AddObjectIfPossible(x, y, (OBJECT_NAMES) (rand() % NUM_MAP_OBJECT_TYPES + MAP_TYPE_OFFSET)); // oddly specific, it's just the numerical value of all the map object enums
         if (index != -1) object_opacities[index] = 255.f;
     }
-
-    //AddObjectIfPossible(150, 150, TREE1);
 
     SDL_SetRenderTarget(global_window_data.rdr, NULL);
 }
@@ -127,11 +125,13 @@ void Map::DrawBase() {
 }
 
 void Map::DrawObject(float x, float y, OBJECT_NAMES name, int id) {
-        int i = name;
-        SDL_Rect quad = {QUADS_INFO.xs[i], QUADS_INFO.ys[i], OBJECTS_QUAD_DIMENSIONS.ws[i], OBJECTS_QUAD_DIMENSIONS.hs[i]};
-        SDL_Rect pos = {x, y, OBJECTS_QUAD_DIMENSIONS.ws[i], OBJECTS_QUAD_DIMENSIONS.hs[i]};
-        SDL_RenderCopy(global_window_data.rdr, texture, & quad, & pos);
-    }
+    int i = name;
+    SDL_Rect quad = {STATIC_QUADS_INFO.xs[i - MAP_TYPE_OFFSET], STATIC_QUADS_INFO.ys[i - MAP_TYPE_OFFSET], OBJECTS_QUAD_DIMENSIONS.ws[i], OBJECTS_QUAD_DIMENSIONS.hs[i]};
+    SDL_Rect pos = {x, y, OBJECTS_QUAD_DIMENSIONS.ws[i], OBJECTS_QUAD_DIMENSIONS.hs[i]};
+
+    SDL_SetTextureAlphaMod(texture, object_opacities[id]);
+    SDL_RenderCopy(global_window_data.rdr, texture, & quad, & pos);
+}
 
 
 void Map::Update() {

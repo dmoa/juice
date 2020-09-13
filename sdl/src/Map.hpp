@@ -47,11 +47,12 @@ public:
     const int map_height  = tile_length * tiles_high;
 
     // Already know dimensions from OBJECTS_QUAD_DIMENSIONS, so no need to use widths and heights.
-    const SOARects QUADS_INFO = {
+    const SOARects STATIC_QUADS_INFO = {
         {0, 16, 32, 32},
         {32, 32, 32, 48},
         {},{},
     };
+
 private:
     float* dt;
     Player* player;
@@ -65,8 +66,6 @@ private:
 
     int AddObjectIfPossible(int x, int y, OBJECT_NAMES name);
 
-    SDL_Rect iter_quad;
-    SDL_Rect iter_pos;
     SDL_Texture* static_saved_drawn_data = SDL_CreateTexture(global_window_data.rdr, NULL, SDL_TEXTUREACCESS_TARGET, tiles_wide * tile_length, tiles_high * tile_length);
     SDL_Texture* texture;
 };
