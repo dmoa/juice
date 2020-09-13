@@ -15,12 +15,7 @@
 #include "GlobalWindowData.hpp"
 #include "Camera.hpp"
 
-#include "objects/ObjectsInfo.hpp"
-#include "objects/SOAObjects.hpp"
-#include "objects/ObjectsNames.hpp"
-#include "objects/ObjectTypes.hpp"
-
-#include "objects/DrawObjects.hpp"
+#include "ECS/ECS.hpp"
 
 #include "Player.hpp"
 #include "Map.hpp"
@@ -29,7 +24,7 @@
 GlobalWindowData global_window_data = {640, 640, 4, NULL};
 
 // @TODO
-// AddObject returns an id, as it has the counter for the number of objects.
+// AddEntity returns an id, as it has the counter for the number of objects.
 // That way, when adding an enemy in enemies, we can easily add stuff to the map.
 
 int main(int argc, char* argv[]) {
@@ -46,21 +41,21 @@ int main(int argc, char* argv[]) {
     Window window;
     Clock clock;
     Camera gameplay_camera;
-    DrawObjects draw_objects;
+    ECS ecs;
     Player player;
     Map map;
     Enemies enemies;
 
     gameplay_camera.GivePlayerMapDelta(& player, & map, & clock.dt);
 
-    draw_objects.GiveMapPlayerEnemies(& map, & player, & enemies);
+    ecs.GiveMapPlayerEnemies(& map, & player, & enemies);
 
     player.LoadTexture();
-    player.GiveMapDeltaDrawObjects(& map, & clock.dt, & draw_objects);
+    player.GiveMapDeltaECS(& map, & clock.dt, & ecs);
     player.InitPos();
 
     map.LoadTexture();
-    map.GivePlayerDeltaDrawObjects(& player, & clock.dt, & draw_objects);
+    map.GivePlayerDeltaECS(& player, & clock.dt, & ecs);
     map.CreateMapTexture();
     map.CreateCollisionBoxes();
 
@@ -103,7 +98,7 @@ int main(int argc, char* argv[]) {
             map.Update();
             enemies.Update();
             gameplay_camera.Update();
-            draw_objects.Sort();
+            ecs.Sort();
         }
 
 
@@ -114,7 +109,7 @@ int main(int argc, char* argv[]) {
         window.SetDrawGameplay();
 
         map.DrawBase();
-        draw_objects.Draw();
+        ecs.Draw();
         //enemies.Draw();
 
         window.SetDrawOther();

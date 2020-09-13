@@ -1,21 +1,21 @@
 #include "Player.hpp"
 #include "Map.hpp"
-#include "objects/DrawObjects.hpp"
+#include "ECS/ECS.hpp"
 
 void Player::LoadTexture() {
     texture = LoadImage(global_window_data.rdr, "assets/player/red.png");
     is_flipped = SDL_FLIP_HORIZONTAL;
 }
 
-void Player::GiveMapDeltaDrawObjects(Map* _map, float* _dt, DrawObjects* _draw_objects) {
+void Player::GiveMapDeltaECS(Map* _map, float* _dt, ECS* _ecs) {
     dt = _dt;
     map = _map;
     map_cb = map->GetCollisionBoxes();
-    draw_objects = _draw_objects;
+    ecs = _ecs;
 }
 
 void Player::InitPos() {
-    id = draw_objects->AddObject(x, y, PLAYER, PLAYER_TYPE);
+    id = ecs->AddEntity(x, y, PLAYER, PLAYER_TYPE);
 }
 
 void Player::Draw() {
@@ -62,8 +62,8 @@ void Player::Update() {
     AnimationUpdate();
 
     // updating pos in the draw objects, so that it can calculate the draw order.
-    draw_objects->objects.xs[draw_objects->find_objects[id]] = x;
-    draw_objects->objects.ys[draw_objects->find_objects[id]] = y;
+    ecs->entities.xs[ecs->find_entities[id]] = x;
+    ecs->entities.ys[ecs->find_entities[id]] = y;
 }
 
 void Player::CollisionUpdate() {

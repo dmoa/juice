@@ -17,17 +17,15 @@
 
 #include "GlobalWindowData.hpp"
 
-#include "objects/ObjectsNames.hpp"
-#include "objects/ObjectsInfo.hpp"
-#include "objects/DrawObjects.hpp"
+#include "ECS/ECS.hpp"
 
 class Map;
-class DrawObjects;
+class ECS;
 
 class Player {
 public:
     void LoadTexture();
-    void GiveMapDeltaDrawObjects(Map* _map, float* _dt, DrawObjects* _draw_objects);
+    void GiveMapDeltaECS(Map* _map, float* _dt, ECS* _ecs);
     void InitPos();
     void Draw();
     void Update();
@@ -44,17 +42,17 @@ public:
     float x = 30;
     float y = 50;
 
-    const int quad_w = OBJECTS_QUAD_DIMENSIONS.ws[PLAYER];
-    const int quad_h = OBJECTS_QUAD_DIMENSIONS.hs[PLAYER];
+    const int quad_w = ENTITY_QUAD_DIMENSIONS.ws[PLAYER];
+    const int quad_h = ENTITY_QUAD_DIMENSIONS.hs[PLAYER];
 
     SDL_Texture* texture;
 private:
     float* dt;
     Map* map;
-    DrawObjects* draw_objects;
+    ECS* ecs;
 
-    // for lookup in draw_objects,
-    // so that we can set the correct pos for the player in draw_objects,
+    // for lookup in ecs,
+    // so that we can set the correct pos for the player in ecs,
     // so it can figure out the correct draw order.
     int id;
 

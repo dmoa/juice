@@ -1,19 +1,19 @@
 #pragma once
 
-#include "ObjectsNames.hpp"
-#include "ObjectTypes.hpp"
+#include "EntityInfo.hpp"
+#include "SOAEntities.hpp"
 
 #include "../Map.hpp"
 #include "../Player.hpp"
 #include "../Enemies.hpp"
 
 class Map;
-class DrawObjects;
+class Enemies;
 
-struct DrawObjects {
+struct ECS {
 
     void GiveMapPlayerEnemies(Map* _map, Player* _player, Enemies* _enemies);
-    int AddObject(float x, float y, OBJECT_NAMES name, OBJECT_TYPES type, int id = -1);
+    int AddEntity(float x, float y, ENTITY_NAME name, ENTITY_TYPE type, int id = -1);
     void Sort();
     void Draw();
 
@@ -21,6 +21,6 @@ struct DrawObjects {
     Player* player;
     Enemies* enemies;
 
-    Objects objects;
-    std::map<int, int> find_objects;
+    SOAEntities entities;
+    std::map<int, int> find_entities;
 };

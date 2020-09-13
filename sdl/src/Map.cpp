@@ -1,6 +1,6 @@
 #include "Map.hpp"
 #include "Player.hpp"
-#include "objects/DrawObjects.hpp"
+#include "ECS/ECS.hpp"
 
 void Map::LoadTexture() {
     texture = IMG_LoadTexture(global_window_data.rdr, "assets/tileset.png");
@@ -12,10 +12,10 @@ void Map::ReloadTilesetTexture() {
     LoadTexture();
 }
 
-void Map::GivePlayerDeltaDrawObjects(Player* _player, float* _dt, DrawObjects* _draw_objects) {
+void Map::GivePlayerDeltaECS(Player* _player, float* _dt, ECS* _ecs) {
     player = _player;
     dt = _dt;
-    draw_objects = _draw_objects;
+    ecs = _ecs;
 };
 
 void Map::CreateMapTexture() {
@@ -84,7 +84,7 @@ void Map::CreateMapTexture() {
     for (int i = 0; i < 100; i++) {
         x = random(tile_length, GetMapWidth() - tile_length * 2);
         y = random(tile_length, GetMapHeight() - tile_length * 3);
-        int index = AddObjectIfPossible(x, y, (OBJECT_NAMES) (rand() % NUM_MAP_OBJECT_TYPES + MAP_TYPE_OFFSET)); // oddly specific, it's just the numerical value of all the map object enums
+        int index = AddEntityIfPossible(x, y, (ENTITY_NAME) (rand() % NUM_MAP_ENTITY_TYPE + MAP_ENTITY_OFFSET)); // oddly specific, it's just the numerical value of all the map object enums
         if (index != -1) object_opacities[index] = 255.f;
     }
 
@@ -124,10 +124,10 @@ void Map::DrawBase() {
     SDL_RenderCopy(global_window_data.rdr, static_saved_drawn_data, NULL, NULL);
 }
 
-void Map::DrawObject(float x, float y, OBJECT_NAMES name, int id) {
+void Map::DrawObject(float x, float y, ENTITY_NAME name, int id) {
     int i = name;
-    SDL_Rect quad = {STATIC_QUADS_INFO.xs[i - MAP_TYPE_OFFSET], STATIC_QUADS_INFO.ys[i - MAP_TYPE_OFFSET], OBJECTS_QUAD_DIMENSIONS.ws[i], OBJECTS_QUAD_DIMENSIONS.hs[i]};
-    SDL_Rect pos = {x, y, OBJECTS_QUAD_DIMENSIONS.ws[i], OBJECTS_QUAD_DIMENSIONS.hs[i]};
+    SDL_Rect quad = {ENTITY_QUAD_DIMENSIONS.xs[i], ENTITY_QUAD_DIMENSIONS.ys[i], ENTITY_QUAD_DIMENSIONS.ws[i], ENTITY_QUAD_DIMENSIONS.hs[i]};
+    SDL_Rect pos = {x, y, ENTITY_QUAD_DIMENSIONS.ws[i], ENTITY_QUAD_DIMENSIONS.hs[i]};
 
     SDL_SetTextureAlphaMod(texture, object_opacities[id]);
     SDL_RenderCopy(global_window_data.rdr, texture, & quad, & pos);
@@ -135,11 +135,11 @@ void Map::DrawObject(float x, float y, OBJECT_NAMES name, int id) {
 
 
 void Map::Update() {
-    for (unsigned int i = 0; i < draw_objects->objects.xs.size(); i++) {
-        if (pyth(draw_objects->objects.xs[i] + OBJECTS_QUAD_DIMENSIONS.ws[draw_objects->objects.names[i]] / 2, draw_objects->objects.ys[i] + OBJECTS_QUAD_DIMENSIONS.hs[draw_objects->objects.names[i]] / 2, player->GetCenterX(), player->GetCenterY()) < opacity_distance) {
-            object_opacities[draw_objects->objects.ids[i]] = max(object_opacities[draw_objects->objects.ids[i]] - (*dt) * 500, 130.f);
+    for (unsigned int i = 0; i < ecs->entities.xs.size(); i++) {
+        if (pyth(ecs->entities.xs[i] + ENTITY_QUAD_DIMENSIONS.ws[ecs->entities.names[i]] / 2, ecs->entities.ys[i] + ENTITY_QUAD_DIMENSIONS.hs[ecs->entities.names[i]] / 2, player->GetCenterX(), player->GetCenterY()) < opacity_distance) {
+            object_opacities[ecs->entities.ids[i]] = max(object_opacities[ecs->entities.ids[i]] - (*dt) * 500, 130.f);
         } else {
-            object_opacities[draw_objects->objects.ids[i]] = min(object_opacities[draw_objects->objects.ids[i]] + (*dt) * 200, 255.f);
+            object_opacities[ecs->entities.ids[i]] = min(object_opacities[ecs->entities.ids[i]] + (*dt) * 200, 255.f);
         }
     }
 }
@@ -149,11 +149,11 @@ void Map::DestroyTextures() {
     SDL_DestroyTexture(texture);
 }
 
-int Map::AddObjectIfPossible(int x, int y, OBJECT_NAMES name) {
-    for (unsigned int i = 0; i < draw_objects->objects.ys.size(); i++) {
-        if (AABB(x, y, OBJECTS_QUAD_DIMENSIONS.ws[name], OBJECTS_QUAD_DIMENSIONS.hs[name], draw_objects->objects.xs[i], draw_objects->objects.ys[i], OBJECTS_QUAD_DIMENSIONS.ws[draw_objects->objects.names[i]], OBJECTS_QUAD_DIMENSIONS.hs[draw_objects->objects.names[i]])) {
+int Map::AddEntityIfPossible(int x, int y, ENTITY_NAME name) {
+    for (unsigned int i = 0; i < ecs->entities.ys.size(); i++) {
+        if (AABB(x, y, ENTITY_QUAD_DIMENSIONS.ws[name], ENTITY_QUAD_DIMENSIONS.hs[name], ecs->entities.xs[i], ecs->entities.ys[i], ENTITY_QUAD_DIMENSIONS.ws[ecs->entities.names[i]], ENTITY_QUAD_DIMENSIONS.hs[ecs->entities.names[i]])) {
             return -1;
         }
     }
-    return draw_objects->AddObject(x, y, name, MAP_TYPE, -1);
+    return ecs->AddEntity(x, y, name, MAP_TYPE, -1);
 }
