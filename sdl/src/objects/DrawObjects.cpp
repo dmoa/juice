@@ -23,38 +23,31 @@ int DrawObjects::AddObject(float x, float y, OBJECT_NAMES name, OBJECT_TYPES typ
     }
 
 
-// KEEP OBJECTS IN THE CORRECT PLACE, (MAYBE NEED LOOKUP STILL FOR WHEN OBJECTS ARE DELETED)
-// KEEP VECTOR OF INTS, FOR THE CORRECT DRAW ORDER.    
+    objects.xs.insert(objects.xs.begin() + i, x);
+    objects.ys.insert(objects.ys.begin() + i, y);
+    objects.names.insert(objects.names.begin() + i, name);
+    objects.types.insert(objects.types.begin() + i, type);
 
-    // // SDL_Log("%i", i);
+    // if no id has been given, it's a new object, and we can generate a unique id.
+    if (id == -1) id = i;
+    objects.ids.insert(objects.ids.begin() + i, id);
 
-    // objects.xs.insert(objects.xs.begin() + i, x);
-    // objects.ys.insert(objects.ys.begin() + i, y);
-    // objects.names.insert(objects.names.begin() + i, name);
-    // objects.types.insert(objects.types.begin() + i, type);
-
-    // // if no id has been given, it's a new object, and we can generate a unique id.
-    // if (id == -1) id = i;
-    // objects.ids.insert(objects.ids.begin() + i, id);
-
-    // SDL_Log("id: %i index: %i", id, i);
-    // find_objects[id] = i;
-    // if (i < objects.xs.size() - 1) {
-    //     objects.ids[i - 1] = i - 1;
-    // }
-
-//    SDL_Log("%i", id);
     return id;
 }
 
 // Sorting for the draw order, but not bothering to sort objects that don't move with each other.
 void DrawObjects::Sort() {
+
+    // reordering objects
     Objects _old_objects = objects;
     objects = Objects();
-    find_objects.clear();
-
     for (unsigned int i = 0; i < _old_objects.xs.size(); i ++) {
         AddObject(_old_objects.xs[i], _old_objects.ys[i], _old_objects.names[i], _old_objects.types[i], _old_objects.ids[i]);
+    }
+
+    // remapping keys
+    for (unsigned int i = 0; i < objects.xs.size(); i ++) {
+        find_objects[objects.ids[i]] = i;
     }
 }
 
@@ -68,7 +61,7 @@ void DrawObjects::Draw() {
                 player->Draw();
                 break;
             case MAP_TYPE:
-                map->DrawObject(objects.xs[i], objects.ys[i], name);
+                map->DrawObject(objects.xs[i], objects.ys[i], name, objects.ids[i]);
                 break;
         }
 

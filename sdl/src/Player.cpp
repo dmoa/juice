@@ -15,7 +15,7 @@ void Player::GiveMapDeltaDrawObjects(Map* _map, float* _dt, DrawObjects* _draw_o
 }
 
 void Player::InitPos() {
-    id = draw_objects->AddObject(x, y, PLAYER, PLAYER_TYPE, 69);
+    id = draw_objects->AddObject(x, y, PLAYER, PLAYER_TYPE);
 }
 
 void Player::Draw() {

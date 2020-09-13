@@ -36,13 +36,7 @@ public:
     int GetMapWidth () { return tiles_wide * tile_length; };
     int GetMapHeight() { return tiles_high * tile_length; };
     void DrawBase();
-    inline void DrawObject(float x, float y, OBJECT_NAMES name) {
-        int i = name;
-        SDL_Rect quad = {QUADS_INFO.xs[i], QUADS_INFO.ys[i], OBJECTS_QUAD_DIMENSIONS.ws[i], OBJECTS_QUAD_DIMENSIONS.hs[i]};
-        SDL_Rect pos = {x, y, OBJECTS_QUAD_DIMENSIONS.ws[i], OBJECTS_QUAD_DIMENSIONS.hs[i]};
-        SDL_RenderCopy(global_window_data.rdr, texture, & quad, & pos);
-    }
-
+    void DrawObject(float x, float y, OBJECT_NAMES name, int id);
     void Update();
     void DestroyTextures();
 
@@ -64,11 +58,12 @@ private:
     DrawObjects* draw_objects;
 
     const int opacity_distance = 50; // minimum distance from player before objects become transparent
+    std::map<int, float> object_opacities;
 
     CollisionBoxes collision_boxes;
 
 
-    inline void AddObjectIfPossible(int x, int y, OBJECT_NAMES name);
+    int AddObjectIfPossible(int x, int y, OBJECT_NAMES name);
 
     SDL_Rect iter_quad;
     SDL_Rect iter_pos;
