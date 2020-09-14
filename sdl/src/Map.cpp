@@ -84,8 +84,8 @@ void Map::CreateMapTexture() {
     for (int i = 0; i < 100; i++) {
         x = random(tile_length, GetMapWidth() - tile_length * 2);
         y = random(tile_length, GetMapHeight() - tile_length * 3);
-        int index = AddEntityIfPossible(x, y, (ENTITY_NAME) (rand() % NUM_MAP_ENTITY_TYPE + MAP_ENTITY_OFFSET)); // oddly specific, it's just the numerical value of all the map object enums
-        if (index != -1) object_opacities[index] = 255.f;
+        int entity_id = AddEntityIfPossible(x, y, (ENTITY_NAME) (rand() % NUM_MAP_ENTITY_TYPE + MAP_ENTITY_OFFSET)); // oddly specific, it's just the numerical value of all the map object enums
+        if (entity_id != -1) object_opacities[entity_id] = 255.f;
     }
 
     SDL_SetRenderTarget(global_window_data.rdr, NULL);
@@ -135,11 +135,13 @@ void Map::DrawObject(float x, float y, ENTITY_NAME name, int id) {
 
 
 void Map::Update() {
-    for (unsigned int i = 0; i < ecs->entities.xs.size(); i++) {
-        if (pyth(ecs->entities.xs[i] + ENTITY_QUAD_DIMENSIONS.ws[ecs->entities.names[i]] / 2, ecs->entities.ys[i] + ENTITY_QUAD_DIMENSIONS.hs[ecs->entities.names[i]] / 2, player->GetCenterX(), player->GetCenterY()) < opacity_distance) {
-            object_opacities[ecs->entities.ids[i]] = max(object_opacities[ecs->entities.ids[i]] - (*dt) * 500, 130.f);
+    // info.first  = entity id
+    // info.second = opacity
+    for (auto const & info : object_opacities) {
+        if (pyth(ecs->entities.xs[info.first] + ENTITY_QUAD_DIMENSIONS.ws[ecs->entities.names[info.first]] / 2, ecs->entities.ys[info.first] + ENTITY_QUAD_DIMENSIONS.hs[ecs->entities.names[info.first]] / 2, player->GetCenterX(), player->GetCenterY()) < opacity_distance) {
+            info.second = max(object_opacities[ecs->entities.ids[info.first]] - (*dt) * 500, 130.f);
         } else {
-            object_opacities[ecs->entities.ids[i]] = min(object_opacities[ecs->entities.ids[i]] + (*dt) * 200, 255.f);
+            info.second = min(object_opacities[ecs->entities.ids[info.first]] + (*dt) * 200, 255.f);
         }
     }
 }

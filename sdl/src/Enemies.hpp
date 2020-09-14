@@ -15,9 +15,7 @@
 
 #include "Map.hpp"
 
-enum EnemyType {
-    SPIDER
-};
+#include "ECS/ECS.hpp"
 
 struct EnemiesData {
     std::vector<EnemyType> types;
@@ -34,7 +32,7 @@ public:
     void GiveDeltaMap(float* _dt, Map* _map);
     inline void AddEnemy(EnemyType type, float x, float y, std::string cur_animation);
     void CreateEnemies();
-    void Draw();
+    void DrawEnemy(float x, float y, ENTITY_NAME name, );
     void Update();
 private:
     float* dt;
@@ -42,9 +40,7 @@ private:
 
     EnemiesData enemies_data;
 
-
-    std::map<EnemyType, ExtraCollisionInfo> extra_collision_info = {{SPIDER, {9, 24, 14, 9}}};
-    std::map<EnemyType, AnimationsData> enemies_animations_data = {
+    std::map<EntityType, AnimationsData> enemies_animations_data = {
         {
             SPIDER,
             {

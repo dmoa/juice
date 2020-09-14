@@ -23,6 +23,8 @@ enum ENTITY_NAME {
     TREE2,
     LOG,
     STONE,
+
+    SPIDER
 };
 
 extern const SOARects ENTITY_COLLISION_INFO; // x and y are for offsets
