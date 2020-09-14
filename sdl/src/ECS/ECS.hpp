@@ -1,7 +1,8 @@
 #pragma once
 
 #include "EntityInfo.hpp"
-#include "SOAEntities.hpp"
+#include "SOA_Entities.hpp"
+#include "SOA_AnimationData.hpp"
 
 #include "../Map.hpp"
 #include "../Player.hpp"
@@ -22,5 +23,5 @@ struct ECS {
     Enemies* enemies;
 
     SOAEntities entities;
-    std::map<int, int> find_entities;
+    std::vector<int> draw_order_indexes;
 };

@@ -9,57 +9,56 @@ void ECS::GiveMapPlayerEnemies(Map* _map, Player* _player, Enemies* _enemies) {
 }
 
 int ECS::AddEntity(float x, float y, ENTITY_NAME name, ENTITY_TYPE type, int id) {
-    int i;
 
-    for (i = 0; i < entities.xs.size(); i ++) {
-        if (AABB(x, y, ENTITY_QUAD_DIMENSIONS.ws[name], ENTITY_QUAD_DIMENSIONS.hs[name], entities.xs[i], entities.ys[i], ENTITY_QUAD_DIMENSIONS.ws[entities.names[i]], ENTITY_QUAD_DIMENSIONS.hs[entities.names[i]]) && y + ENTITY_COLLISION_INFO.ys[name] + ENTITY_COLLISION_INFO.hs[name] < entities.ys[i] + ENTITY_COLLISION_INFO.ys[entities.names[i]] + ENTITY_COLLISION_INFO.hs[entities.names[i]]) {
-            break;
-        }
-    }
-
-
-    entities.xs.insert(entities.xs.begin() + i, x);
-    entities.ys.insert(entities.ys.begin() + i, y);
-    entities.names.insert(entities.names.begin() + i, name);
-    entities.types.insert(entities.types.begin() + i, type);
+    entities.xs.push_back(x);
+    entities.ys.push_back(y);
+    entities.names.push_back(name);
+    entities.types.push_back(type);
 
     // if no id has been given, it's a new object, and we can generate a unique id.
-    if (id == -1) id = i;
-    entities.ids.insert(entities.ids.begin() + i, id);
+    if (id == -1) id = entities.xs.size();
+    entities.ids.push_back(id);
+
+    draw_order_indexes.push_back(entities.xs.size() - 1);
 
     return id;
 }
 
-// Sorting for the draw order, but not bothering to sort entities that don't move with each other.
-void ECS::Sort() {
-
-    // reordering entities
-    SOAEntities _old_entities = entities;
-    entities = SOAEntities();
-    for (unsigned int i = 0; i < _old_entities.xs.size(); i ++) {
-        AddEntity(_old_entities.xs[i], _old_entities.ys[i], _old_entities.names[i], _old_entities.types[i], _old_entities.ids[i]);
-    }
-
-    // remapping keys
-    for (unsigned int i = 0; i < entities.xs.size(); i ++) {
-        find_entities[entities.ids[i]] = i;
-    }
-}
-
 void ECS::Draw() {
-    for (unsigned int i = 0; i < entities.xs.size(); i++) {
 
-        ENTITY_NAME name = entities.names[i];
+    // bubble sort for draw order
 
-        switch (entities.types[i]) {
+    for (int _ = 0; i < draw_order_indexes.size(); i ++) {
+        for (int j = 0; j < draw_order_indexes.size() - _ - 1; j ++) {
+
+            // indexes and names of enemies
+            int i1 = draw_order_indexes[j];
+            int i2 = draw_order_indexes[j+1];
+            int name1 = entities.names[i1];
+            int name2 = entities.names[i2];
+
+            if (AABB(entities.xs[i1], entities.ys[i1], ENTITY_QUAD_DIMENSIONS.ws[name1], ENTITY_QUAD_DIMENSIONS.hs[name1], entities.xs[i2], entities.ys[i2], ENTITY_QUAD_DIMENSIONS.ws[name2], ENTITY_QUAD_DIMENSIONS.hs[name2]) && entities.ys[i1] + ENTITY_COLLISION_INFO.ys[name1] + ENTITY_COLLISION_INFO.hs[name1] > entities.ys[i2] + ENTITY_COLLISION_INFO.ys[name2] + ENTITY_COLLISION_INFO.hs[name2]) {
+
+                draw_order_indexes[j]   = i2;
+                draw_order_indexes[j+1] = i1;
+            }
+        }
+    }
+
+    for (unsigned int i = 0; i < draw_order_indexes.size(); i++) {
+        int j = draw_order_indexes[i];
+
+        ENTITY_NAME name = entities.names[j];
+
+        switch (entities.types[j]) {
             case PLAYER_TYPE:
                 player->Draw();
                 break;
             case MAP_TYPE:
-                map->DrawObject(entities.xs[i], entities.ys[i], name, entities.ids[i]);
+                map->DrawObject(entities.xs[j], entities.ys[j], name, entities.ids[j]);
                 break;
             default:
-                SDL_Log("Entity not being drawn!, x: %i, y: %i, name: %i, id: %i, type: %i", entities.xs[i], entities.ys[i], (int) entities.names[i], (int) entities.ids[i], (int) entities.types[i]);
+                SDL_Log("Entity not being drawn!, x: %i, y: %i, name: %i, id: %i, type: %i", entities.xs[j], entities.ys[j], (int) entities.names[j], (int) entities.ids[j], (int) entities.types[j]);
                 break;
         }
 

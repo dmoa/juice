@@ -98,7 +98,6 @@ int main(int argc, char* argv[]) {
             map.Update();
             enemies.Update();
             gameplay_camera.Update();
-            ecs.Sort();
         }
 
 
@@ -110,7 +109,6 @@ int main(int argc, char* argv[]) {
 
         map.DrawBase();
         ecs.Draw();
-        //enemies.Draw();
 
         window.SetDrawOther();
 
