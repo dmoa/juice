@@ -5,6 +5,6 @@
 
 struct AnimationData {
     std::vector<std::string> current_animations;
-    std::vector<float> animation_timers;
-    std::vector<int>   animation_indexes;
+    std::vector<float> timers;
+    std::vector<int>   current_frame;
 };

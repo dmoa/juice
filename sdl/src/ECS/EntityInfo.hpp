@@ -2,6 +2,10 @@
 
 #include <vector>
 #include <map>
+#include <string>
+
+#include "Data/EntityType.hpp"
+#include "Data/EntityName.hpp"
 
 struct SOARects {
     std::vector<int> xs;
@@ -10,24 +14,17 @@ struct SOARects {
     std::vector<int> hs;
 };
 
-enum ENTITY_TYPE {
-    PLAYER_TYPE,
-    MAP_TYPE,
-    ENEMY_TYPE
+struct SOAAnimations {
+    int w;
+    int h;
+    std::map<std::string, int> animation_types;
+    std::vector<int> num_frames;
+    std::vector<float> speeds;
+    std::vector<int> offsets;
 };
 
-enum ENTITY_NAME {
-    PLAYER,
-
-    TREE1,
-    TREE2,
-    LOG,
-    STONE,
-
-    SPIDER
-};
-
-extern const SOARects ENTITY_COLLISION_INFO; // x and y are for offsets
+extern const SOARects ENTITY_COLLISION_DATA; // x and y are for offsets
 extern const SOARects ENTITY_QUAD_DIMENSIONS;
+extern const std::map<ENTITY_TYPE, SOAAnimations> ENTITY_ANIMATION_DATA;
 extern const int MAP_ENTITY_OFFSET;
 extern const int NUM_MAP_ENTITY_TYPE;

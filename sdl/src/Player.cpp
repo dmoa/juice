@@ -62,8 +62,8 @@ void Player::Update() {
     AnimationUpdate();
 
     // updating pos in the draw objects, so that it can calculate the draw order.
-    ecs->entities.xs[ecs->find_entities[id]] = x;
-    ecs->entities.ys[ecs->find_entities[id]] = y;
+    ecs->entities.xs[id] = x;
+    ecs->entities.ys[id] = y;
 }
 
 void Player::CollisionUpdate() {

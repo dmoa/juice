@@ -137,7 +137,7 @@ void Map::DrawObject(float x, float y, ENTITY_NAME name, int id) {
 void Map::Update() {
     // info.first  = entity id
     // info.second = opacity
-    for (auto const & info : object_opacities) {
+    for (auto & info : object_opacities) {
         if (pyth(ecs->entities.xs[info.first] + ENTITY_QUAD_DIMENSIONS.ws[ecs->entities.names[info.first]] / 2, ecs->entities.ys[info.first] + ENTITY_QUAD_DIMENSIONS.hs[ecs->entities.names[info.first]] / 2, player->GetCenterX(), player->GetCenterY()) < opacity_distance) {
             info.second = max(object_opacities[ecs->entities.ids[info.first]] - (*dt) * 500, 130.f);
         } else {
@@ -157,5 +157,5 @@ int Map::AddEntityIfPossible(int x, int y, ENTITY_NAME name) {
             return -1;
         }
     }
-    return ecs->AddEntity(x, y, name, MAP_TYPE, -1);
+    return ecs->AddEntity(x, y, name, MAP_TYPE);
 }
