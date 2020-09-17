@@ -11,7 +11,6 @@
 #include "utils/Controls.hpp"
 #include "utils/AABB.hpp"
 #include "utils/CollisionBoxes.hpp"
-#include "utils/ExtraCollisionInfo.hpp"
 #include "utils/CurrentAnimationData.hpp"
 #include "utils/AnimationsData.hpp"
 
@@ -38,7 +37,6 @@ public:
     float GetCenterY() { return y + rendering_quad.h / 2; };
     float GetBottomCollisionY() { return y + rendering_quad.h + collision_info.h; };
 
-    ExtraCollisionInfo collision_info = {8, 16, 8, 2};
     float x = 30;
     float y = 50;
 
