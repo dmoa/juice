@@ -10,13 +10,12 @@
 #include "utils/LoadImage.hpp"
 #include "utils/Controls.hpp"
 #include "utils/AABB.hpp"
-#include "utils/CollisionBoxes.hpp"
-#include "utils/CurrentAnimationData.hpp"
-#include "utils/AnimationsData.hpp"
+#include "utils/SOARects.hpp"
 
 #include "GlobalWindowData.hpp"
 
 #include "ECS/ECS.hpp"
+#include "ECS/Animation/UpdateAnimation.hpp"
 
 class Map;
 class ECS;
@@ -33,15 +32,15 @@ public:
     void SetAnimationIfShould(std::string name);
     void DestroyTexture();
 
-    float GetCenterX() { return x + rendering_quad.w / 2; };
-    float GetCenterY() { return y + rendering_quad.h / 2; };
-    float GetBottomCollisionY() { return y + rendering_quad.h + collision_info.h; };
 
     float x = 30;
     float y = 50;
 
     const int quad_w = ENTITY_QUAD_DIMENSIONS.ws[PLAYER];
     const int quad_h = ENTITY_QUAD_DIMENSIONS.hs[PLAYER];
+
+    float GetCenterX() { return x + rendering_quad.w / 2; };
+    float GetCenterY() { return y + rendering_quad.h / 2; };
 
     SDL_Texture* texture;
 private:
@@ -60,20 +59,13 @@ private:
     float current_yv = 0;
     int   v = 110;
 
-    CollisionBoxes* map_cb;
+    SOARects* map_cb;
 
+    std::string curr_animation = "idle";
+    float       animation_tick = 0;
+    int         curr_animation_frame = 1;
 
-    // AnimationsData animations_data = {
-    //     16, 16,
-    //     {{"idle",0}, {"running",1}},
-    //     { 4,      6       },
-    //     { 0.3,    0.1     },
-    //     { 0,      4       }
-    // };
-
-    // CurrentAnimationData current_animation = {"idle", 0, 0, 0, animations_data.num_frames[0], animations_data.speeds[0]};
-
-    SDL_Rect     current_spritesheet_quad = {0, 0, quad_w, quad_h};
+    SDL_Rect     spritesheet_quad = {0, 0, quad_w, quad_h};
     SDL_Rect     rendering_quad = {x, y, quad_w, quad_h};
     SDL_RendererFlip is_flipped = SDL_FLIP_NONE;
 };

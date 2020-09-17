@@ -19,7 +19,8 @@ void Player::InitPos() {
 }
 
 void Player::Draw() {
-    SDL_RenderCopyEx(global_window_data.rdr, texture, & current_spritesheet_quad, & rendering_quad, NULL, NULL, is_flipped);
+    UpdateAnimationQuad(curr_animation, curr_animation_frame, PLAYER, & spritesheet_quad.x, & spritesheet_quad.y);
+    SDL_RenderCopyEx(global_window_data.rdr, texture, & spritesheet_quad, & rendering_quad, NULL, NULL, is_flipped);
 }
 
 void Player::Update() {
@@ -72,21 +73,21 @@ void Player::CollisionUpdate() {
     bool collided_y = false;
 
     for (unsigned int i = 0; i < map_cb->ws.size(); i++) {
-        if (AABB(x + collision_info.offset_x, y + collision_info.offset_y, collision_info.w, collision_info.h, map_cb->xs[i], map_cb->ys[i], map_cb->ws[i], map_cb->hs[i])) {
-            if (old_y + collision_info.offset_y >= map_cb->ys[i] + map_cb->hs[i]) {
-                y = map_cb->ys[i] + map_cb->hs[i] - collision_info.offset_y;
+        if (AABB(x + ENTITY_COLLISION_DATA.xs[PLAYER], y + ENTITY_COLLISION_DATA.ys[PLAYER], ENTITY_COLLISION_DATA.ws[PLAYER], ENTITY_COLLISION_DATA.hs[PLAYER], map_cb->xs[i], map_cb->ys[i], map_cb->ws[i], map_cb->hs[i])) {
+            if (old_y + ENTITY_COLLISION_DATA.ys[PLAYER] >= map_cb->ys[i] + map_cb->hs[i]) {
+                y = map_cb->ys[i] + map_cb->hs[i] - ENTITY_COLLISION_DATA.ys[PLAYER];
                 collided_y = true;
             }
-            if (old_x + collision_info.offset_x >= map_cb->xs[i] + map_cb->ws[i]) {
-                x = map_cb->xs[i] + map_cb->ws[i] - collision_info.offset_x;
+            if (old_x + ENTITY_COLLISION_DATA.xs[PLAYER] >= map_cb->xs[i] + map_cb->ws[i]) {
+                x = map_cb->xs[i] + map_cb->ws[i] - ENTITY_COLLISION_DATA.xs[PLAYER];
                 collided_x = true;
             }
-            if (old_y + collision_info.offset_y + collision_info.h <= map_cb->ys[i]) {
-                y = map_cb->ys[i] - collision_info.offset_y - collision_info.h;
+            if (old_y + ENTITY_COLLISION_DATA.ys[PLAYER] + ENTITY_COLLISION_DATA.hs[PLAYER] <= map_cb->ys[i]) {
+                y = map_cb->ys[i] - ENTITY_COLLISION_DATA.ys[PLAYER] - ENTITY_COLLISION_DATA.hs[PLAYER];
                 collided_y = true;
             }
-            if (old_x + collision_info.offset_x + collision_info.w <= map_cb->xs[i]) {
-                x = map_cb->xs[i] - collision_info.offset_x - collision_info.w;
+            if (old_x + ENTITY_COLLISION_DATA.xs[PLAYER] + ENTITY_COLLISION_DATA.ws[PLAYER] <= map_cb->xs[i]) {
+                x = map_cb->xs[i] - ENTITY_COLLISION_DATA.xs[PLAYER] - ENTITY_COLLISION_DATA.ws[PLAYER];
                 collided_x = true;
             }
         }
@@ -109,33 +110,18 @@ void Player::CollisionUpdate() {
     }
 }
 
-// void Player::AnimationUpdate() {
-//     current_animation.timer -= *dt;
-//     if (current_animation.timer < 0) {
+void Player::AnimationUpdate() {
 
-//         current_animation.timer = current_animation.speed;
-//         current_animation.index = (current_animation.index + 1) % current_animation.num_frames;
+    AnimationTick(dt, & curr_animation, & animation_tick, & curr_animation_frame, PLAYER);
 
-//         current_spritesheet_quad.x = (current_animation.index + current_animation.offset) * current_spritesheet_quad.w;
-//     }
+    if (current_xv || current_yv) {
+        if (curr_animation != "running") SetAnimation(& curr_animation, "running", & animation_tick, & curr_animation_frame, PLAYER);
+    }
+    else if (curr_animation != "idle") {
+        SetAnimation(& curr_animation, "idle", & animation_tick, & curr_animation_frame, PLAYER);
+    }
 
-//     if (current_xv || current_yv) SetAnimationIfShould("running");
-//     else                          SetAnimationIfShould("idle");
-// }
-
-// void Player::SetAnimationIfShould(std::string name) {
-
-//     if (name != current_animation.name) {
-//         current_animation.name = name;
-//         int index = animations_data.names[name];
-
-//         current_animation.timer = 0;
-//         current_animation.speed      = animations_data.speeds[index];
-//         current_animation.num_frames = animations_data.num_frames[index];
-//         current_animation.offset     = animations_data.offsets[index];
-
-//     }
-// }
+}
 
 void Player::DestroyTexture() {
     SDL_DestroyTexture(texture);

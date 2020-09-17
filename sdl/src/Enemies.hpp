@@ -9,7 +9,7 @@
 
 #include "utils/random.hpp"
 #include "utils/LoadImage.hpp"
-#include "utils/AnimationsData.hpp"
+// #include "utils/AnimationsData.hpp"
 #include "GlobalWindowData.hpp"
 
 #include "Map.hpp"

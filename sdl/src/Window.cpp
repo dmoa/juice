@@ -5,7 +5,6 @@ Window::Window() {
     SDL_UpdateWindowSurface(window);
     global_window_data.rdr = SDL_CreateRenderer(window, -1, NULL);
 
-
     gameplay_texture = SDL_CreateTexture(global_window_data.rdr, SDL_GetWindowPixelFormat(window), SDL_TEXTUREACCESS_TARGET, 768, 768);
     other_texture = SDL_CreateTexture(global_window_data.rdr, SDL_GetWindowPixelFormat(window), SDL_TEXTUREACCESS_TARGET, 1000, 1000);
     SDL_SetTextureBlendMode(other_texture, SDL_BLENDMODE_BLEND);
@@ -16,10 +15,13 @@ Window::Window() {
 }
 
 void Window::Clear() {
+
     SDL_SetRenderDrawColor(global_window_data.rdr, 100, 100, 0, 0);
     SDL_RenderClear(global_window_data.rdr);
+
     SDL_SetRenderTarget(global_window_data.rdr, other_texture);
     SDL_RenderClear(global_window_data.rdr);
+
     SDL_SetRenderDrawColor(global_window_data.rdr, 255, 255, 255, 255);
 }
 

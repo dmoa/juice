@@ -14,7 +14,7 @@
 #include "utils/pyth.hpp"
 #include "utils/random.hpp"
 #include "utils/AABB.hpp"
-#include "utils/CollisionBoxes.hpp"
+#include "utils/SOARects.hpp"
 
 #include "GlobalWindowData.hpp"
 #include "ECS/ECS.hpp"
@@ -23,13 +23,14 @@ class Player;
 class ECS;
 
 class Map {
+
 public:
     void LoadTexture();
     void ReloadTilesetTexture();
     void GivePlayerDeltaECS(Player* _player, float* _dt, ECS* _ecs);
     void CreateMapTexture();
     void CreateCollisionBoxes();
-    CollisionBoxes* GetCollisionBoxes() { return & collision_boxes; }
+    SOARects* GetCollisionBoxes() { return & collision_boxes; }
     int GetMapWidth () { return tiles_wide * tile_length; };
     int GetMapHeight() { return tiles_high * tile_length; };
     void DrawBase();
@@ -51,7 +52,7 @@ private:
     const int opacity_distance = 50; // minimum distance from player before objects become transparent
     std::map<int, float> object_opacities;
 
-    CollisionBoxes collision_boxes;
+    SOARects collision_boxes;
 
 
     int AddEntityIfPossible(int x, int y, ENTITY_NAME name);

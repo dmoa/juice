@@ -90,7 +90,6 @@ int main(int argc, char* argv[]) {
         }
 
         clock.tick();
-        ecs.UpdateAnimation();
 
         if (DEV_PAUSED) {
             gameplay_camera.DevUpdate();

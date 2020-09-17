@@ -2,7 +2,7 @@
 
 #include <vector>
 
-struct CollisionBoxes {
+struct SOARects {
     std::vector<int> xs;
     std::vector<int> ys;
     std::vector<int> ws;
