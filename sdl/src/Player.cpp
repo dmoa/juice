@@ -109,33 +109,33 @@ void Player::CollisionUpdate() {
     }
 }
 
-void Player::AnimationUpdate() {
-    current_animation.timer -= *dt;
-    if (current_animation.timer < 0) {
+// void Player::AnimationUpdate() {
+//     current_animation.timer -= *dt;
+//     if (current_animation.timer < 0) {
 
-        current_animation.timer = current_animation.speed;
-        current_animation.index = (current_animation.index + 1) % current_animation.num_frames;
+//         current_animation.timer = current_animation.speed;
+//         current_animation.index = (current_animation.index + 1) % current_animation.num_frames;
 
-        current_spritesheet_quad.x = (current_animation.index + current_animation.offset) * current_spritesheet_quad.w;
-    }
+//         current_spritesheet_quad.x = (current_animation.index + current_animation.offset) * current_spritesheet_quad.w;
+//     }
 
-    if (current_xv || current_yv) SetAnimationIfShould("running");
-    else                          SetAnimationIfShould("idle");
-}
+//     if (current_xv || current_yv) SetAnimationIfShould("running");
+//     else                          SetAnimationIfShould("idle");
+// }
 
-void Player::SetAnimationIfShould(std::string name) {
+// void Player::SetAnimationIfShould(std::string name) {
 
-    if (name != current_animation.name) {
-        current_animation.name = name;
-        int index = animations_data.names[name];
+//     if (name != current_animation.name) {
+//         current_animation.name = name;
+//         int index = animations_data.names[name];
 
-        current_animation.timer = 0;
-        current_animation.speed      = animations_data.speeds[index];
-        current_animation.num_frames = animations_data.num_frames[index];
-        current_animation.offset     = animations_data.offsets[index];
+//         current_animation.timer = 0;
+//         current_animation.speed      = animations_data.speeds[index];
+//         current_animation.num_frames = animations_data.num_frames[index];
+//         current_animation.offset     = animations_data.offsets[index];
 
-    }
-}
+//     }
+// }
 
 void Player::DestroyTexture() {
     SDL_DestroyTexture(texture);

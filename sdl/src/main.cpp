@@ -24,8 +24,8 @@
 GlobalWindowData global_window_data = {640, 640, 4, NULL};
 
 // @TODO
-// AddEntity returns an id, as it has the counter for the number of objects.
-// That way, when adding an enemy in enemies, we can easily add stuff to the map.
+// Seperate UpdateAnimation Function which takes pointers to timer, current_animation, current_frame, type.
+// Set Animation Function as well.
 
 int main(int argc, char* argv[]) {
     SDL_InitSubSystem(SDL_INIT_JOYSTICK);
@@ -90,6 +90,7 @@ int main(int argc, char* argv[]) {
         }
 
         clock.tick();
+        ecs.UpdateAnimation();
 
         if (DEV_PAUSED) {
             gameplay_camera.DevUpdate();

@@ -65,15 +65,15 @@ private:
     CollisionBoxes* map_cb;
 
 
-    AnimationsData animations_data = {
-        16, 16,
-        {{"idle",0}, {"running",1}},
-        { 4,      6       },
-        { 0.3,    0.1     },
-        { 0,      4       }
-    };
+    // AnimationsData animations_data = {
+    //     16, 16,
+    //     {{"idle",0}, {"running",1}},
+    //     { 4,      6       },
+    //     { 0.3,    0.1     },
+    //     { 0,      4       }
+    // };
 
-    CurrentAnimationData current_animation = {"idle", 0, 0, 0, animations_data.num_frames[0], animations_data.speeds[0]};
+    // CurrentAnimationData current_animation = {"idle", 0, 0, 0, animations_data.num_frames[0], animations_data.speeds[0]};
 
     SDL_Rect     current_spritesheet_quad = {0, 0, quad_w, quad_h};
     SDL_Rect     rendering_quad = {x, y, quad_w, quad_h};
