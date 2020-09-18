@@ -23,10 +23,6 @@
 
 GlobalWindowData global_window_data = {640, 640, 4, NULL};
 
-// @TODO
-// Seperate UpdateAnimation Function which takes pointers to timer, current_animation, current_frame, type.
-// Set Animation Function as well.
-
 int main(int argc, char* argv[]) {
     SDL_InitSubSystem(SDL_INIT_JOYSTICK);
     IMG_Init(IMG_INIT_PNG);
@@ -60,7 +56,7 @@ int main(int argc, char* argv[]) {
     map.CreateCollisionBoxes();
 
     enemies.CreateTextures();
-    enemies.GiveDeltaMap(& clock.dt, & map);
+    enemies.GiveDeltaMapECS(& clock.dt, & map, & ecs);
     enemies.CreateEnemies();
 
     SDL_Event event;

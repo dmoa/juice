@@ -13,7 +13,7 @@ class Enemies;
 struct ECS {
 
     void GiveMapPlayerEnemies(Map* _map, Player* _player, Enemies* _enemies);
-    int AddEntity(float x, float y, ENTITY_NAME name, ENTITY_TYPE type, int id = -1);
+    int AddEntity(float x, float y, ENTITY_NAME name, ENTITY_TYPE type);
     void Draw();
 
     Map* map;

@@ -124,10 +124,20 @@ void Map::DrawBase() {
     SDL_RenderCopy(global_window_data.rdr, static_saved_drawn_data, NULL, NULL);
 }
 
-void Map::DrawObject(float x, float y, ENTITY_NAME name, int id) {
-    int i = name;
-    SDL_Rect quad = {ENTITY_QUAD_DIMENSIONS.xs[i], ENTITY_QUAD_DIMENSIONS.ys[i], ENTITY_QUAD_DIMENSIONS.ws[i], ENTITY_QUAD_DIMENSIONS.hs[i]};
-    SDL_Rect pos = {x, y, ENTITY_QUAD_DIMENSIONS.ws[i], ENTITY_QUAD_DIMENSIONS.hs[i]};
+void Map::DrawObject(int id) {
+    ENTITY_NAME name = ecs->entities.names[id];
+
+    SDL_Rect pos;
+    SDL_Rect quad;
+
+    pos.x = ecs->entities.xs[id];
+    pos.y = ecs->entities.ys[id];
+
+    quad.x = ENTITY_QUAD_DIMENSIONS.xs[name];
+    quad.y = ENTITY_QUAD_DIMENSIONS.ys[name];
+
+    quad.w = pos.w = ENTITY_QUAD_DIMENSIONS.ws[name];
+    quad.h = pos.h = ENTITY_QUAD_DIMENSIONS.hs[name];
 
     SDL_SetTextureAlphaMod(texture, object_opacities[id]);
     SDL_RenderCopy(global_window_data.rdr, texture, & quad, & pos);
@@ -139,9 +149,9 @@ void Map::Update() {
     // info.second = opacity
     for (auto & info : object_opacities) {
         if (pyth(ecs->entities.xs[info.first] + ENTITY_QUAD_DIMENSIONS.ws[ecs->entities.names[info.first]] / 2, ecs->entities.ys[info.first] + ENTITY_QUAD_DIMENSIONS.hs[ecs->entities.names[info.first]] / 2, player->GetCenterX(), player->GetCenterY()) < opacity_distance) {
-            info.second = max(object_opacities[ecs->entities.ids[info.first]] - (*dt) * 500, 130.f);
+            info.second = max(object_opacities[info.first] - (*dt) * 500, 130.f);
         } else {
-            info.second = min(object_opacities[ecs->entities.ids[info.first]] + (*dt) * 200, 255.f);
+            info.second = min(object_opacities[info.first] + (*dt) * 200, 255.f);
         }
     }
 }

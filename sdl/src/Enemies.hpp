@@ -9,36 +9,35 @@
 
 #include "utils/random.hpp"
 #include "utils/LoadImage.hpp"
-// #include "utils/AnimationsData.hpp"
 #include "GlobalWindowData.hpp"
 
 #include "Map.hpp"
 
 #include "ECS/ECS.hpp"
 
+
+struct SOA_CurrAnimations {
+    std::vector<std::string> names;
+    std::vector<float>       ticks;
+    std::vector<int>         cur_frames;
+    std::map<int, int>       id_to_index;
+};
+
+
 class Enemies {
 public:
     void CreateTextures();
-    void GiveDeltaMap(float* _dt, Map* _map);
+    void GiveDeltaMapECS(float* _dt, Map* _map, ECS* _ecs);
     void CreateEnemies();
-    void DrawEnemy(float x, float y, int id);
+    void DrawEnemy(int id);
     void Update();
 private:
     float* dt;
     Map*   map;
+    ECS*   ecs;
 
-    // std::map<EntityType, AnimationsData> enemies_animations_data = {
-    //     {
-    //         SPIDER,
-    //         {
-    //             32, 32,
-    //             {{"idle",0}, {"running",1}},
-    //             { 5,      6       },
-    //             { 0.2,    0.1     },
-    //             { 0,      1       }
-    //         }
-    //     }
-    // };
 
-    //std::map<EnemyType, SDL_Texture*> textures;
+    SOA_CurrAnimations cur_animations;
+
+    SDL_Texture* spider_texture;
 };

@@ -34,7 +34,7 @@ public:
     int GetMapWidth () { return tiles_wide * tile_length; };
     int GetMapHeight() { return tiles_high * tile_length; };
     void DrawBase();
-    void DrawObject(float x, float y, ENTITY_NAME name, int id);
+    void DrawObject(int id);
     void Update();
     void DestroyTextures();
 
