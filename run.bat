@@ -1,0 +1,1 @@
+start /w bin/main.exe
