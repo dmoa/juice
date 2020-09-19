@@ -1,0 +1,1 @@
+clang++ -std=c++11 -w -Wno-narrowing src/*.cpp src/ECS/*.cpp src/ECS/Data/*.cpp src/ECS/Animation/*.cpp src/utils/*.cpp -o bin/mac/main.app -F/Library/Frameworks -framework SDL2 -framework SDL2_image -framework SDL2_ttf && ./bin/mac/main.app

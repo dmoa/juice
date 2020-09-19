@@ -5,7 +5,7 @@
 #define ROOT2 1.41421356237;
 
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
+#include <SDL2_image/SDL_image.h>
 
 #include "utils/LoadImage.hpp"
 #include "utils/Controls.hpp"
@@ -66,6 +66,6 @@ private:
     int         curr_animation_frame = 1;
 
     SDL_Rect     spritesheet_quad = {0, 0, quad_w, quad_h};
-    SDL_Rect     rendering_quad = {x, y, quad_w, quad_h};
+    SDL_Rect     rendering_quad = {-1, -1, quad_w, quad_h};
     SDL_RendererFlip is_flipped = SDL_FLIP_NONE;
 };

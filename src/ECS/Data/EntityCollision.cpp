@@ -1,5 +1,3 @@
-#pragma once
-
 #include "../EntityInfo.hpp"
 
 // x offset from draw position,

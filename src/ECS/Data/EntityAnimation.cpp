@@ -1,5 +1,3 @@
-#pragma once
-
 #include "../EntityInfo.hpp"
 
 std::map<ENTITY_NAME, SOAAnimations> ENTITY_ANIMATION_DATA = {
