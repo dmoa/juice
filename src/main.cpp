@@ -1,8 +1,6 @@
 #include <time.h>
 
-#include <SDL2/SDL.h>
-#include <SDL2_ttf/SDL_ttf.h>
-#include <SDL2_image/SDL_image.h>
+#include "sdl.h"
 
 #include "utils/Controls.hpp"
 #include "utils/Text.hpp"

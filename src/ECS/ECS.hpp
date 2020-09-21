@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../sdl.h"
+
 #include "EntityInfo.hpp"
 #include "SOA_Entities.hpp"
 

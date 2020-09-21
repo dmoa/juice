@@ -4,8 +4,7 @@
 #include <map>
 #define ROOT2 1.41421356237;
 
-#include <SDL2/SDL.h>
-#include <SDL2_image/SDL_image.h>
+#include "sdl.h"
 
 #include "utils/LoadImage.hpp"
 #include "utils/Controls.hpp"
