@@ -70,6 +70,7 @@ int main(int argc, char* argv[]) {
                     if (event.key.keysym.sym == SDLK_ESCAPE) quit = true;
                     if (event.key.keysym.sym == SDLK_LCTRL)  DEV_PAUSED = ! DEV_PAUSED;
                     if (event.key.keysym.sym == SDLK_r)      map.ReloadTilesetTexture();
+                    if (event.key.keysym.sym == SDLK_SPACE)  player.Attack();
                     break;
                 case SDL_WINDOWEVENT:
                     if (event.window.event == SDL_WINDOWEVENT_RESIZED) {

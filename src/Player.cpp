@@ -7,6 +7,10 @@ void Player::LoadTexture() {
     is_flipped = SDL_FLIP_HORIZONTAL;
 }
 
+void Player::DestroyTexture() {
+    SDL_DestroyTexture(texture);
+}
+
 void Player::GiveMapDeltaECS(Map* _map, float* _dt, ECS* _ecs) {
     dt = _dt;
     map = _map;
@@ -112,17 +116,26 @@ void Player::CollisionUpdate() {
 
 void Player::AnimationUpdate() {
 
-    AnimationTick(dt, & curr_animation, & animation_tick, & curr_animation_frame, PLAYER);
+    bool finished_anim = AnimationTick(dt, & curr_animation, & animation_tick, & curr_animation_frame, PLAYER);
 
-    if (current_xv || current_yv) {
-        if (curr_animation != "running") SetAnimation(& curr_animation, "running", & animation_tick, & curr_animation_frame, PLAYER);
-    }
-    else if (curr_animation != "idle") {
-        SetAnimation(& curr_animation, "idle", & animation_tick, & curr_animation_frame, PLAYER);
+    if (! is_attacking || (is_attacking && finished_anim)) {
+        if (current_xv || current_yv) {
+            if (curr_animation != "running") SetAnimation(& curr_animation, "running", & animation_tick, & curr_animation_frame, PLAYER);
+        }
+        else if (curr_animation != "idle") {
+            SetAnimation(& curr_animation, "idle", & animation_tick, & curr_animation_frame, PLAYER);
+        }
     }
 
 }
 
-void Player::DestroyTexture() {
-    SDL_DestroyTexture(texture);
+void Player::Attack() {
+    is_attacking = true;
+    if (curr_animation != "attack") {
+        SetAnimation(& curr_animation, "attack", & animation_tick, & curr_animation_frame, PLAYER);
+    }
 }
+
+
+// @TODO
+// set is_attacking to false when the animation stops being attack.

@@ -22,14 +22,19 @@ class ECS;
 class Player {
 public:
     void LoadTexture();
+    void DestroyTexture();
+
     void GiveMapDeltaECS(Map* _map, float* _dt, ECS* _ecs);
     void InitPos();
+
     void Draw();
+
     void Update();
     void CollisionUpdate();
     void AnimationUpdate();
-    void SetAnimationIfShould(std::string name);
-    void DestroyTexture();
+
+    void Attack();
+
 
 
     float x = 30;
@@ -57,6 +62,8 @@ private:
     float current_xv = 0;
     float current_yv = 0;
     int   v = 110;
+
+    bool is_attacking;
 
     SOARects* map_cb;
 

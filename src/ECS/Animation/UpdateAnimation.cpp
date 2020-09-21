@@ -1,6 +1,6 @@
 #include "UpdateAnimation.hpp"
 
-void AnimationTick(float* dt, std::string* curr_anim, float* tick, int* curr_frame, ENTITY_NAME name) {
+bool AnimationTick(float* dt, std::string* curr_anim, float* tick, int* curr_frame, ENTITY_NAME name) {
     *tick -= (*dt);
 
     int animation_type_index = ENTITY_ANIMATION_DATA[name].animation_types[*curr_anim];
@@ -9,6 +9,11 @@ void AnimationTick(float* dt, std::string* curr_anim, float* tick, int* curr_fra
         *tick = ENTITY_ANIMATION_DATA[name].speeds[animation_type_index];
         *curr_frame = (*curr_frame + 1) % ENTITY_ANIMATION_DATA[name].num_frames[animation_type_index];
     }
+
+    // return true if the animation has finished (restarted).
+    if (*curr_frame == 0) return true;
+
+    return false;
 }
 
 void SetAnimation(std::string* curr_anim, std::string new_anim, float* tick, int* curr_frame, ENTITY_NAME name) {
