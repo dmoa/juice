@@ -34,8 +34,8 @@ struct Player {
 
     void Attack();
 
-    float x = 30;
-    float y = 50;
+    float x = 10;
+    float y = 10;
 
     const int quad_w = ENTITY_QUAD_DIMENSIONS.ws[PLAYER];
     const int quad_h = ENTITY_QUAD_DIMENSIONS.hs[PLAYER];

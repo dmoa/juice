@@ -7,6 +7,7 @@
 #include "GlobalWindowData.hpp"
 #include "Player.hpp"
 #include "Map.hpp"
+#include "utils/min.hpp"
 
 struct Camera {
 public:
@@ -18,7 +19,6 @@ private:
     Player* player;
     Map* map;
     float* dt;
-
     float real_x = 0.f;
     float real_y = 0.f;
     SDL_Rect viewport = {real_x, real_y, global_window_data.w / global_window_data.scale, global_window_data.h / global_window_data.scale};
