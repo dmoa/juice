@@ -52,9 +52,24 @@ void Player::Update() {
         }
     }
 
-    if (current_xv && current_yv) { // ensures player doesn't go faster when moving diagonally
+    if (CTS::Action1() && ! holding_action_button && ! is_attacking) {
+        Attack();
+    }
+    holding_action_button = CTS::Action1();
+
+
+    // ensures player doesn't go faster when moving diagonally
+    if (current_xv && current_yv) {
         current_xv /= ROOT2;
         current_yv /= ROOT2;
+    }
+
+
+    if (cooldown_tick > 0) cooldown_tick -= *dt;
+    // player is slower when attacking
+    if (is_attacking) {
+        current_xv *= 0.4;
+        current_yv *= 0.4;
     }
 
     old_x = x;
@@ -118,9 +133,13 @@ void Player::AnimationUpdate() {
 
     bool finished_anim = AnimationTick(dt, & curr_animation, & animation_tick, & curr_animation_frame, PLAYER);
 
-    if (! is_attacking || (is_attacking && finished_anim)) {
+    is_attacking = is_attacking && !finished_anim;
+
+    if (! is_attacking) {
         if (current_xv || current_yv) {
-            if (curr_animation != "running") SetAnimation(& curr_animation, "running", & animation_tick, & curr_animation_frame, PLAYER);
+            if (curr_animation != "running") {
+                SetAnimation(& curr_animation, "running", & animation_tick, & curr_animation_frame, PLAYER);
+            }
         }
         else if (curr_animation != "idle") {
             SetAnimation(& curr_animation, "idle", & animation_tick, & curr_animation_frame, PLAYER);
@@ -131,9 +150,8 @@ void Player::AnimationUpdate() {
 
 void Player::Attack() {
     is_attacking = true;
-    if (curr_animation != "attack") {
-        SetAnimation(& curr_animation, "attack", & animation_tick, & curr_animation_frame, PLAYER);
-    }
+    cooldown_tick = cooldown;
+    SetAnimation(& curr_animation, "attack", & animation_tick, & curr_animation_frame, PLAYER);
 }
 
 

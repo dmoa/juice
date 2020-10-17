@@ -9,6 +9,7 @@ namespace CTS {
     bool Right();
     bool Up();
     bool Down();
+    bool Action1();
 
     void LoadInput();
     extern const Uint8* keys_down;

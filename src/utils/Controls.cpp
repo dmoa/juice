@@ -13,6 +13,11 @@ namespace CTS {
     bool Down() {
         return keys_down[SDL_SCANCODE_DOWN] || keys_down[SDL_SCANCODE_S] || SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_LEFTY) > axis_min;
     }
+    bool Action1() {
+        // @TODO
+        // add A button for controller here
+        return keys_down[SDL_SCANCODE_SPACE];
+    }
 
     void LoadInput() {
         keys_down = SDL_GetKeyboardState(NULL);

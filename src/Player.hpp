@@ -19,8 +19,7 @@
 class Map;
 class ECS;
 
-class Player {
-public:
+struct Player {
     void LoadTexture();
     void DestroyTexture();
 
@@ -35,8 +34,6 @@ public:
 
     void Attack();
 
-
-
     float x = 30;
     float y = 50;
 
@@ -47,7 +44,7 @@ public:
     float GetCenterY() { return y + rendering_quad.h / 2; };
 
     SDL_Texture* texture;
-private:
+
     float* dt;
     Map* map;
     ECS* ecs;
@@ -63,7 +60,10 @@ private:
     float current_yv = 0;
     int   v = 110;
 
+    bool holding_action_button = false;
     bool is_attacking;
+    float cooldown = 0.39;
+    float cooldown_tick = cooldown;
 
     SOARects* map_cb;
 
@@ -75,3 +75,6 @@ private:
     SDL_Rect     rendering_quad = {-1, -1, quad_w, quad_h};
     SDL_RendererFlip is_flipped = SDL_FLIP_NONE;
 };
+
+
+// @TODO try instead of stopping the player, to make the attack only available when still

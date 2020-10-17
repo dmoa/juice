@@ -67,11 +67,20 @@ int main(int argc, char* argv[]) {
                     quit = true;
                     break;
                 case SDL_KEYDOWN:
-                    if (event.key.keysym.sym == SDLK_ESCAPE) quit = true;
-                    if (event.key.keysym.sym == SDLK_LCTRL)  DEV_PAUSED = ! DEV_PAUSED;
-                    if (event.key.keysym.sym == SDLK_r)      map.ReloadTilesetTexture();
-                    if (event.key.keysym.sym == SDLK_SPACE)  player.Attack();
-                    break;
+                    switch (event.key.keysym.sym) {
+                        case SDLK_ESCAPE:
+                            quit = true;
+                            break;
+                        case SDLK_LCTRL:
+                            DEV_PAUSED = ! DEV_PAUSED;
+                            break;
+                        case SDLK_r:
+                            map.ReloadTilesetTexture();
+                            SDL_DestroyTexture(player.texture);
+                            player.LoadTexture();
+                            break;
+                        default: break;
+                    }
                 case SDL_WINDOWEVENT:
                     if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
                         global_window_data.w = event.window.data1;
@@ -106,7 +115,7 @@ int main(int argc, char* argv[]) {
         window.SetDrawOther();
 
         print.Draw(std::to_string( clock.average_fps ), 2, 0);
-        print.Draw("Hello Sailor!", 2, 10);
+        print.Draw(player.curr_animation, 2, 10);
 
         window.Present(gameplay_camera.GetViewport());
     }
