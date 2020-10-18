@@ -148,7 +148,7 @@ void Map::Update() {
     // info.first  = entity id
     // info.second = opacity
     for (auto & info : object_opacities) {
-        if (pyth(ecs->entities.xs[info.first] + ENTITY_QUAD_DIMENSIONS.ws[ecs->entities.names[info.first]] / 2, ecs->entities.ys[info.first] + ENTITY_QUAD_DIMENSIONS.hs[ecs->entities.names[info.first]] / 2, player->GetCenterX(), player->GetCenterY()) < opacity_distance) {
+        if (pyth_s(ecs->entities.xs[info.first] + ENTITY_QUAD_DIMENSIONS.ws[ecs->entities.names[info.first]] / 2, ecs->entities.ys[info.first] + ENTITY_QUAD_DIMENSIONS.hs[ecs->entities.names[info.first]] / 2, player->GetCenterX(), player->GetCenterY()) < opacity_distance*opacity_distance) {
             info.second = max(object_opacities[info.first] - (*dt) * 500, 130.f);
         } else {
             info.second = min(object_opacities[info.first] + (*dt) * 200, 255.f);

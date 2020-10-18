@@ -10,7 +10,7 @@
 
 #include "utils/min.hpp"
 #include "utils/max.hpp"
-#include "utils/pyth.hpp"
+#include "utils/pyth_s.hpp"
 #include "utils/random.hpp"
 #include "utils/AABB.hpp"
 #include "utils/SOARects.hpp"
