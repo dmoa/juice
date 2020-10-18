@@ -12,10 +12,21 @@ SDL_Rect* Camera::GetViewport() {
 
 void Camera::Update() {
 
-    float x_diff = (player->GetCenterX() - global_window_data.w / global_window_data.scale / 2) - real_x;
-    float y_diff = (player->GetCenterY() - global_window_data.h / global_window_data.scale / 2) - real_y;
-    real_x += x_diff * (*dt) * 3;
-    real_y += y_diff * (*dt) * 3;
+    int proposed_x = player->GetCenterX() - global_window_data.w / global_window_data.scale / 2;
+    int proposed_y = player->GetCenterY() - global_window_data.h / global_window_data.scale / 2;
+
+    if (proposed_x - real_x > max_distance_from_player) {
+        real_x = proposed_x - max_distance_from_player;
+    }
+    if (proposed_x - real_x < - max_distance_from_player) {
+        real_x = proposed_x + max_distance_from_player;
+    }
+    if (proposed_y - real_y > max_distance_from_player) {
+        real_y = proposed_y - max_distance_from_player;
+    }
+    if (proposed_y - real_y < - max_distance_from_player) {
+        real_y = proposed_y + max_distance_from_player;
+    }
 
     if (real_x < 0) real_x = 0;
     if (real_y < 0) real_y = 0;
