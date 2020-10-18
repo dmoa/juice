@@ -15,18 +15,10 @@ void Camera::Update() {
     int proposed_x = player->GetCenterX() - global_window_data.w / global_window_data.scale / 2;
     int proposed_y = player->GetCenterY() - global_window_data.h / global_window_data.scale / 2;
 
-    if (proposed_x - real_x > max_distance_from_player) {
-        real_x = proposed_x - max_distance_from_player;
-    }
-    if (proposed_x - real_x < - max_distance_from_player) {
-        real_x = proposed_x + max_distance_from_player;
-    }
-    if (proposed_y - real_y > max_distance_from_player) {
-        real_y = proposed_y - max_distance_from_player;
-    }
-    if (proposed_y - real_y < - max_distance_from_player) {
-        real_y = proposed_y + max_distance_from_player;
-    }
+    if (proposed_x - real_x >   max_distance_from_player) real_x = proposed_x - max_distance_from_player;
+    if (proposed_x - real_x < - max_distance_from_player) real_x = proposed_x + max_distance_from_player;
+    if (proposed_y - real_y >   max_distance_from_player) real_y = proposed_y - max_distance_from_player;
+    if (proposed_y - real_y < - max_distance_from_player) real_y = proposed_y + max_distance_from_player;
 
     if (real_x < 0) real_x = 0;
     if (real_y < 0) real_y = 0;
