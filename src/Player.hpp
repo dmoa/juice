@@ -2,7 +2,7 @@
 
 #include <string>
 #include <map>
-#define ROOT2 1.41421356237;
+#define ROOT2 1.41421356237
 
 #include "sdl.h"
 

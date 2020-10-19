@@ -137,12 +137,10 @@ void Player::AnimationUpdate() {
 
     if (! is_attacking) {
         if (current_xv || current_yv) {
-            if (curr_animation != "running") {
-                SetAnimation(& curr_animation, "running", & animation_tick, & curr_animation_frame, PLAYER);
-            }
+            SetAnimationIf(& curr_animation, "running", & animation_tick, & curr_animation_frame, PLAYER);
         }
-        else if (curr_animation != "idle") {
-            SetAnimation(& curr_animation, "idle", & animation_tick, & curr_animation_frame, PLAYER);
+        else {
+            SetAnimationIf(& curr_animation, "idle", & animation_tick, & curr_animation_frame, PLAYER);
         }
     }
 

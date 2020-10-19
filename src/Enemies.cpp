@@ -45,16 +45,13 @@ void Enemies::Update() {
     for (auto & info : cur_animations.id_to_index) {
         int j = info.second;
         int id = info.first;
-
         int distance_from_player_squared = pyth_s(ecs->entities.xs[id] + ENTITY_QUAD_DIMENSIONS.ws[ecs->entities.names[id]] / 2, ecs->entities.ys[id] + ENTITY_QUAD_DIMENSIONS.hs[ecs->entities.names[id]] / 2, player->GetCenterX(), player->GetCenterY());
+
         if (distance_from_player_squared < activation_distance*activation_distance) {
-            if (cur_animations.names[j] != "running") {
-                SetAnimation(& cur_animations.names[j], "running", & cur_animations.ticks[j], & cur_animations.cur_frames[j], ecs->entities.names[id]);
-            }
+            SetAnimationIf(& cur_animations.names[j], "running", & cur_animations.ticks[j], & cur_animations.cur_frames[j], ecs->entities.names[id]);
+
         } else if (distance_from_player_squared > deactivation_distance*deactivation_distance) {
-            if (cur_animations.names[j] != "idle") {
-                SetAnimation(& cur_animations.names[j], "idle", & cur_animations.ticks[j], & cur_animations.cur_frames[j], ecs->entities.names[id]);
-            }
+            SetAnimationIf(& cur_animations.names[j], "idle", & cur_animations.ticks[j], & cur_animations.cur_frames[j], ecs->entities.names[id]);
         }
 
         AnimationTick(dt, & cur_animations.names[j], & cur_animations.ticks[j], & cur_animations.cur_frames[j], ecs->entities.names[id]);
