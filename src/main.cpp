@@ -17,7 +17,7 @@
 #include "Map.hpp"
 #include "Enemies.hpp"
 
-GlobalWindowData global_window_data = {640, 640, 4, NULL};
+GlobalWindowData global_window_data = {1800, 1000, 4, NULL};
 
 int main(int argc, char* argv[]) {
     SDL_InitSubSystem(SDL_INIT_JOYSTICK);
@@ -52,7 +52,7 @@ int main(int argc, char* argv[]) {
     map.CreateCollisionBoxes();
 
     enemies.CreateTextures();
-    enemies.GiveDeltaMapECS(& clock.dt, & map, & ecs);
+    enemies.GiveDeltaMapECSPlayer(& clock.dt, & map, & ecs, & player);
     enemies.CreateEnemies();
 
     SDL_Event event;
@@ -101,7 +101,6 @@ int main(int argc, char* argv[]) {
             enemies.Update();
             gameplay_camera.Update();
         }
-
 
         // DRAW
 
