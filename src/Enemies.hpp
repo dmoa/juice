@@ -21,7 +21,6 @@ struct SOA_CurrAnimations {
     std::vector<std::string> names;
     std::vector<float>       ticks;
     std::vector<int>         cur_frames;
-    std::map<int, int>       id_to_index;
 };
 
 
@@ -31,6 +30,8 @@ struct Enemies {
     void CreateEnemies();
     void DrawEnemy(int id);
     void Update();
+    void UpdateEnemyAnimation(int id, int j);
+    void UpdateEnemyMovement(int id, int j);
 
 
     float*  dt;
@@ -38,9 +39,17 @@ struct Enemies {
     ECS*    ecs;
     Player* player;
 
-    int activation_distance = 50;
-    int deactivation_distance = 80;
+    const int activation_distance   = 50;
+    const int deactivation_distance = 80;
+    const int attack_distance       = 25;
+
+    // Components on top of ECS for enemy only
+
+    std::map<int, int> id_to_index;
+    std::vector<bool>  is_right; // direction
     SOA_CurrAnimations cur_animations;
+
+
 
     SDL_Texture* spider_texture;
 };

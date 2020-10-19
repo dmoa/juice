@@ -19,8 +19,8 @@ private:
     Player* player;
     Map* map;
     float* dt;
-    int real_x = 0;
-    int real_y = 0;
+    float real_x = 0;
+    float real_y = 0;
     int max_distance_from_player = 30;
     SDL_Rect viewport = {real_x, real_y, global_window_data.w / global_window_data.scale, global_window_data.h / global_window_data.scale};
 
