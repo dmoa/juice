@@ -38,6 +38,8 @@ int main(int argc, char* argv[]) {
     Map map;
     Enemies enemies;
 
+    clock.tick(); // avoid large dt initially
+
     gameplay_camera.GivePlayerMapDelta(& player, & map, & clock.dt);
 
     ecs.GiveMapPlayerEnemies(& map, & player, & enemies);

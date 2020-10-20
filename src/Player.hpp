@@ -40,8 +40,8 @@ struct Player {
     const int quad_w = ENTITY_QUAD_DIMENSIONS.ws[PLAYER];
     const int quad_h = ENTITY_QUAD_DIMENSIONS.hs[PLAYER];
 
-    float GetCenterX() { return x + rendering_quad.w / 2; };
-    float GetCenterY() { return y + rendering_quad.h / 2; };
+    float GetDrawCenterX() { return x + rendering_quad.w / 2; };
+    float GetDrawCenterY() { return y + rendering_quad.h / 2; };
 
     SDL_Texture* texture;
 
