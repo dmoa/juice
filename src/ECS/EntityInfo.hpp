@@ -24,6 +24,7 @@ struct AnimationInfo {
 };
 
 struct CurrAnimation {
+    ANIMATION_TYPE type;
     float          tick;
     int            frame;
 };

@@ -4,7 +4,6 @@ bool AnimationTick(ENTITY_NAME e_name, CurrAnimation* anim, float* dt) {
 
     anim->tick -= (*dt);
 
-        *curr_frame = (*curr_frame + 1) % ENTITY_ANIMATION_DATA[name].num_frames[animation_type_index];
 
     if (anim->tick < 0) {
         anim->tick = ANIMATION_DATA[e_name][anim->type].speed;
