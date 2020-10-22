@@ -82,8 +82,8 @@ void Player::Update() {
     AnimationUpdate();
 
     // updating pos in the draw objects, so that it can calculate the draw order.
-    ecs->entities.xs[id] = x;
-    ecs->entities.ys[id] = y;
+    ecs->entities[id].x = x;
+    ecs->entities[id].y = y;
 }
 
 void Player::CollisionUpdate() {
@@ -91,22 +91,22 @@ void Player::CollisionUpdate() {
     bool collided_x = false;
     bool collided_y = false;
 
-    for (unsigned int i = 0; i < map_cb->ws.size(); i++) {
-        if (AABB(x + ENTITY_COLLISION_DATA.xs[PLAYER], y + ENTITY_COLLISION_DATA.ys[PLAYER], ENTITY_COLLISION_DATA.ws[PLAYER], ENTITY_COLLISION_DATA.hs[PLAYER], map_cb->xs[i], map_cb->ys[i], map_cb->ws[i], map_cb->hs[i])) {
-            if (old_y + ENTITY_COLLISION_DATA.ys[PLAYER] >= map_cb->ys[i] + map_cb->hs[i]) {
-                y = map_cb->ys[i] + map_cb->hs[i] - ENTITY_COLLISION_DATA.ys[PLAYER];
+    for (unsigned int i = 0; i < map_cb->size(); i++) {
+        if (AABB(x + ENTITY_COLLISION_DATA[PLAYER].x, y + ENTITY_COLLISION_DATA[PLAYER].y, ENTITY_COLLISION_DATA[PLAYER].w, ENTITY_COLLISION_DATA[PLAYER].h, (*map_cb)[i].x, (*map_cb)[i].y, (*map_cb)[i].w, (*map_cb)[i].h)) {
+            if (old_y + ENTITY_COLLISION_DATA[PLAYER].y >= (*map_cb)[i].y + (*map_cb)[i].h) {
+                y = (*map_cb)[i].y + (*map_cb)[i].h - ENTITY_COLLISION_DATA[PLAYER].y;
                 collided_y = true;
             }
-            if (old_x + ENTITY_COLLISION_DATA.xs[PLAYER] >= map_cb->xs[i] + map_cb->ws[i]) {
-                x = map_cb->xs[i] + map_cb->ws[i] - ENTITY_COLLISION_DATA.xs[PLAYER];
+            if (old_x + ENTITY_COLLISION_DATA[PLAYER].x >= (*map_cb)[i].x + (*map_cb)[i].w) {
+                x = (*map_cb)[i].x + (*map_cb)[i].w - ENTITY_COLLISION_DATA[PLAYER].x;
                 collided_x = true;
             }
-            if (old_y + ENTITY_COLLISION_DATA.ys[PLAYER] + ENTITY_COLLISION_DATA.hs[PLAYER] <= map_cb->ys[i]) {
-                y = map_cb->ys[i] - ENTITY_COLLISION_DATA.ys[PLAYER] - ENTITY_COLLISION_DATA.hs[PLAYER];
+            if (old_y + ENTITY_COLLISION_DATA[PLAYER].y + ENTITY_COLLISION_DATA[PLAYER].h <= (*map_cb)[i].y) {
+                y = (*map_cb)[i].y - ENTITY_COLLISION_DATA[PLAYER].y - ENTITY_COLLISION_DATA[PLAYER].h;
                 collided_y = true;
             }
-            if (old_x + ENTITY_COLLISION_DATA.xs[PLAYER] + ENTITY_COLLISION_DATA.ws[PLAYER] <= map_cb->xs[i]) {
-                x = map_cb->xs[i] - ENTITY_COLLISION_DATA.xs[PLAYER] - ENTITY_COLLISION_DATA.ws[PLAYER];
+            if (old_x + ENTITY_COLLISION_DATA[PLAYER].x + ENTITY_COLLISION_DATA[PLAYER].w <= (*map_cb)[i].x) {
+                x = (*map_cb)[i].x - ENTITY_COLLISION_DATA[PLAYER].x - ENTITY_COLLISION_DATA[PLAYER].w;
                 collided_x = true;
             }
         }
@@ -151,7 +151,3 @@ void Player::Attack() {
     cooldown_tick = cooldown;
     SetAnimation(& curr_animation, "attack", & animation_tick, & curr_animation_frame, PLAYER);
 }
-
-
-// @TODO
-// set is_attacking to false when the animation stops being attack.

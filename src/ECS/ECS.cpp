@@ -10,13 +10,11 @@ void ECS::GiveMapPlayerEnemies(Map* _map, Player* _player, Enemies* _enemies) {
 
 int ECS::AddEntity(float x, float y, ENTITY_NAME name, ENTITY_TYPE type) {
 
-    entities.xs.push_back(x);
-    entities.ys.push_back(y);
-    entities.names.push_back(name);
-    entities.types.push_back(type);
-    draw_order_indexes.push_back(entities.xs.size() - 1);
+    entities.push_back({x, y, name});
+    entity_types.push_back(type);
+    draw_order_indexes.push_back(entities.size() - 1);
 
-    return entities.xs.size() - 1;
+    return entities.size() - 1;
 }
 
 void ECS::Draw() {
@@ -29,10 +27,10 @@ void ECS::Draw() {
             // indexes and names of enemies
             int i1 = draw_order_indexes[j];
             int i2 = draw_order_indexes[j+1];
-            int name1 = entities.names[i1];
-            int name2 = entities.names[i2];
+            int name1 = entities[i1].name;
+            int name2 = entities[i2].name;
 
-            if (entities.ys[i1] + ENTITY_COLLISION_DATA.ys[name1] + ENTITY_COLLISION_DATA.hs[name1] > entities.ys[i2] + ENTITY_COLLISION_DATA.ys[name2] + ENTITY_COLLISION_DATA.hs[name2]) {
+            if (entities[i1].y + ENTITY_COLLISION_DATA[name1].y + ENTITY_COLLISION_DATA[name1].h > entities[i2].y + ENTITY_COLLISION_DATA[name2].y + ENTITY_COLLISION_DATA[name2].h) {
 
                 draw_order_indexes[j]   = i2;
                 draw_order_indexes[j+1] = i1;
@@ -43,9 +41,7 @@ void ECS::Draw() {
     for (unsigned int i = 0; i < draw_order_indexes.size(); i++) {
         int j = draw_order_indexes[i];
 
-        ENTITY_NAME name = entities.names[j];
-
-        switch (entities.types[j]) {
+        switch (entity_types[j]) {
             case PLAYER_TYPE:
                 player->Draw();
                 break;
@@ -56,7 +52,7 @@ void ECS::Draw() {
                 enemies->DrawEnemy(j);
                 break;
             default:
-                SDL_Log("Entity not being drawn!, x: %i, y: %i, name: %i, id: %i, type: %i", entities.xs[j], entities.ys[j], (int) entities.names[j], j, (int) entities.types[j]);
+                SDL_Log("Entity not being drawn!, x: %i, y: %i, name: %i, id: %i, type: %i", entities[j].x, entities[j].y, (int) entities[j].name, j, (int) entity_types[j]);
                 break;
         }
 

@@ -32,10 +32,10 @@ void Enemies::DrawEnemy(int id) {
     SDL_Rect pos;
 
     UpdateAnimationQuad(cur_animations.names[i], cur_animations.cur_frames[i], SPIDER, & quad.x, & quad.y);
-    quad.w = pos.w = ENTITY_QUAD_DIMENSIONS.ws[ecs->entities.names[id]];
-    quad.h = pos.h = ENTITY_QUAD_DIMENSIONS.hs[ecs->entities.names[id]];
-    pos.x = ecs->entities.xs[id];
-    pos.y = ecs->entities.ys[id];
+    quad.w = pos.w = ENTITY_QUAD_DIMENSIONS[ecs->entities[id].name].w;
+    quad.h = pos.h = ENTITY_QUAD_DIMENSIONS[ecs->entities[id].name].h;
+    pos.x = ecs->entities[id].x;
+    pos.y = ecs->entities[id].y;
 
     SDL_RenderCopyEx(global_window_data.rdr, spider_texture, & quad, & pos, NULL, NULL, is_right[i] ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL);
 }
@@ -55,17 +55,17 @@ void Enemies::UpdateEnemyAnimation(int id, int j) {
     int distance_from_player_squared = pyth_s(ecs->GetCenterX(id), ecs->GetCenterY(id), ecs->GetCenterX(player->id), ecs->GetCenterY(player->id));
 
     if (distance_from_player_squared < attack_distance*attack_distance) {
-        SetAnimationIf(& cur_animations.names[j], "attack", & cur_animations.ticks[j], & cur_animations.cur_frames[j], ecs->entities.names[id]);
+        SetAnimationIf(& cur_animations.names[j], "attack", & cur_animations.ticks[j], & cur_animations.cur_frames[j], ecs->entities[id].name);
     }
     else if (distance_from_player_squared < activation_distance*activation_distance) {
-        SetAnimationIf(& cur_animations.names[j], "running", & cur_animations.ticks[j], & cur_animations.cur_frames[j], ecs->entities.names[id]);
+        SetAnimationIf(& cur_animations.names[j], "running", & cur_animations.ticks[j], & cur_animations.cur_frames[j], ecs->entities[id].name);
     }
     else if (distance_from_player_squared > deactivation_distance*deactivation_distance) {
-        SetAnimationIf(& cur_animations.names[j], "idle", & cur_animations.ticks[j], & cur_animations.cur_frames[j], ecs->entities.names[id]);
+        SetAnimationIf(& cur_animations.names[j], "idle", & cur_animations.ticks[j], & cur_animations.cur_frames[j], ecs->entities[id].name);
     }
 
 
-    AnimationTick(dt, & cur_animations.names[j], & cur_animations.ticks[j], & cur_animations.cur_frames[j], ecs->entities.names[id]);
+    AnimationTick(dt, & cur_animations.names[j], & cur_animations.ticks[j], & cur_animations.cur_frames[j], ecs->entities[id].name);
 }
 
 void Enemies::UpdateEnemyMovement(int id, int j) {
@@ -85,8 +85,8 @@ void Enemies::UpdateEnemyMovement(int id, int j) {
             yv *= cap_v;
 
 
-            ecs->entities.xs[id] += xv * (*dt);
-            ecs->entities.ys[id] += yv * (*dt);
+            ecs->entities[id].x += xv * (*dt);
+            ecs->entities[id].y += yv * (*dt);
         }
     }
 }

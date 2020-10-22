@@ -12,7 +12,7 @@ std::map<ENTITY_NAME, SOAAnimations> ENTITY_ANIMATION_DATA = {
         SPIDER, {
             {{"idle",0}, {"running",1}, {"attack",2}},
             {  5,          6,             4         },
-            {  0.2,        0.1,           0.2       },
+            {  0.2,        0.1,           0.25      },
         }
     }
 };

@@ -37,8 +37,8 @@ struct Player {
     float x = 10;
     float y = 10;
 
-    const int quad_w = ENTITY_QUAD_DIMENSIONS.ws[PLAYER];
-    const int quad_h = ENTITY_QUAD_DIMENSIONS.hs[PLAYER];
+    const int quad_w = ENTITY_QUAD_DIMENSIONS[PLAYER].w;
+    const int quad_h = ENTITY_QUAD_DIMENSIONS[PLAYER].h;
 
     float GetDrawCenterX() { return x + rendering_quad.w / 2; };
     float GetDrawCenterY() { return y + rendering_quad.h / 2; };
@@ -65,7 +65,7 @@ struct Player {
     float cooldown = 0.39;
     float cooldown_tick = cooldown;
 
-    SOARects* map_cb;
+    std::vector<SDL_Rect>* map_cb;
 
     std::string curr_animation = "idle";
     float       animation_tick = 0;

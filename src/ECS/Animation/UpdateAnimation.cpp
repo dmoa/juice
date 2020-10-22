@@ -17,6 +17,7 @@ bool AnimationTick(float* dt, std::string* curr_anim, float* tick, int* curr_fra
 }
 
 void SetAnimation(std::string* curr_anim, std::string new_anim, float* tick, int* curr_frame, ENTITY_NAME name) {
+
     *curr_anim = new_anim;
 
     int animation_type_index = ENTITY_ANIMATION_DATA[name].animation_types[*curr_anim];
@@ -32,6 +33,6 @@ void SetAnimationIf(std::string* curr_anim, std::string new_anim, float* tick, i
 void UpdateAnimationQuad(std::string curr_anim, int curr_frame, ENTITY_NAME name, int* x, int* y) {
     int animation_type_index = ENTITY_ANIMATION_DATA[name].animation_types[curr_anim];
 
-    *x = ENTITY_QUAD_DIMENSIONS.ws[name] * curr_frame;
-    *y = ENTITY_QUAD_DIMENSIONS.hs[name] * animation_type_index;
+    *x = ENTITY_QUAD_DIMENSIONS[name].w * curr_frame;
+    *y = ENTITY_QUAD_DIMENSIONS[name].h * animation_type_index;
 }

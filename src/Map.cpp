@@ -3,8 +3,7 @@
 #include "ECS/ECS.hpp"
 
 void Map::LoadTexture() {
-    texture = IMG_LoadTexture(global_window_data.rdr, "assets/tileset.png");
-    if (!texture) SDL_Log("tileset.png not found");
+    texture = LoadImage(global_window_data.rdr, "assets/tileset.png");
 }
 
 void Map::ReloadTilesetTexture() {
@@ -96,28 +95,16 @@ void Map::CreateCollisionBoxes() {
     // EDGE WATER TILES
 
     // top left to top bottom
-    collision_boxes.xs.push_back(0);
-    collision_boxes.ys.push_back(0);
-    collision_boxes.ws.push_back(tile_length);
-    collision_boxes.hs.push_back((tiles_high - 1) * tile_length);
+    collision_boxes.push_back({0, 0, tile_length, (tiles_high - 1) * tile_length});
 
     // top left to top right
-    collision_boxes.xs.push_back(tile_length);
-    collision_boxes.ys.push_back(0);
-    collision_boxes.ws.push_back((tiles_wide - 1) * tile_length);
-    collision_boxes.hs.push_back(tile_length);
+    collision_boxes.push_back({tile_length, 0, (tiles_wide - 1) * tile_length, tile_length});
 
     // top right to bottom right
-    collision_boxes.xs.push_back((tiles_wide - 1) * tile_length);
-    collision_boxes.ys.push_back(tile_length);
-    collision_boxes.ws.push_back(tile_length);
-    collision_boxes.hs.push_back((tiles_high - 1) * tile_length);
+    collision_boxes.push_back({(tiles_wide - 1) * tile_length, tile_length, tile_length, (tiles_high - 1) * tile_length});
 
     // bottom left to bottom right
-    collision_boxes.xs.push_back(0);
-    collision_boxes.ys.push_back((tiles_high - 1) * tile_length);
-    collision_boxes.ws.push_back((tiles_wide - 1) * tile_length);
-    collision_boxes.hs.push_back(tile_length);
+    collision_boxes.push_back({0, (tiles_high - 1) * tile_length, (tiles_wide - 1) * tile_length, tile_length});
 }
 
 void Map::DrawBase() {
@@ -125,19 +112,19 @@ void Map::DrawBase() {
 }
 
 void Map::DrawObject(int id) {
-    ENTITY_NAME name = ecs->entities.names[id];
+    ENTITY_NAME name = ecs->entities[id].name;
 
     SDL_Rect pos;
     SDL_Rect quad;
 
-    pos.x = ecs->entities.xs[id];
-    pos.y = ecs->entities.ys[id];
+    pos.x = ecs->entities[id].x;
+    pos.y = ecs->entities[id].y;
 
-    quad.x = ENTITY_QUAD_DIMENSIONS.xs[name];
-    quad.y = ENTITY_QUAD_DIMENSIONS.ys[name];
+    quad.x = ENTITY_QUAD_DIMENSIONS[name].x;
+    quad.y = ENTITY_QUAD_DIMENSIONS[name].y;
 
-    quad.w = pos.w = ENTITY_QUAD_DIMENSIONS.ws[name];
-    quad.h = pos.h = ENTITY_QUAD_DIMENSIONS.hs[name];
+    quad.w = pos.w = ENTITY_QUAD_DIMENSIONS[name].w;
+    quad.h = pos.h = ENTITY_QUAD_DIMENSIONS[name].h;
 
     SDL_SetTextureAlphaMod(texture, object_opacities[id]);
     SDL_RenderCopy(global_window_data.rdr, texture, & quad, & pos);
@@ -145,13 +132,14 @@ void Map::DrawObject(int id) {
 
 
 void Map::Update() {
-    // info.first  = entity id
     // info.second = opacity
     for (auto & info : object_opacities) {
-        if (pyth_s(ecs->entities.xs[info.first] + ENTITY_QUAD_DIMENSIONS.ws[ecs->entities.names[info.first]] / 2, ecs->entities.ys[info.first] + ENTITY_QUAD_DIMENSIONS.hs[ecs->entities.names[info.first]] / 2, player->GetDrawCenterX(), player->GetDrawCenterY()) < opacity_distance*opacity_distance) {
-            info.second = max(object_opacities[info.first] - (*dt) * 500, 130.f);
+        int id = info.first;
+
+        if (pyth_s(ecs->entities[id].x + ENTITY_QUAD_DIMENSIONS[ecs->entities[id].name].w / 2, ecs->entities[id].y  + ENTITY_QUAD_DIMENSIONS[ecs->entities[id].name].h / 2, player->GetDrawCenterX(), player->GetDrawCenterY()) < opacity_distance*opacity_distance) {
+            info.second = max(object_opacities[id] - (*dt) * 500, 130.f);
         } else {
-            info.second = min(object_opacities[info.first] + (*dt) * 200, 255.f);
+            info.second = min(object_opacities[id] + (*dt) * 200, 255.f);
         }
     }
 }
@@ -162,8 +150,8 @@ void Map::DestroyTextures() {
 }
 
 int Map::AddEntityIfPossible(int x, int y, ENTITY_NAME name) {
-    for (unsigned int i = 0; i < ecs->entities.ys.size(); i++) {
-        if (AABB(x, y, ENTITY_QUAD_DIMENSIONS.ws[name], ENTITY_QUAD_DIMENSIONS.hs[name], ecs->entities.xs[i], ecs->entities.ys[i], ENTITY_QUAD_DIMENSIONS.ws[ecs->entities.names[i]], ENTITY_QUAD_DIMENSIONS.hs[ecs->entities.names[i]])) {
+    for (unsigned int i = 0; i < ecs->entities.size(); i++) {
+        if (AABB(x, y, ENTITY_QUAD_DIMENSIONS[name].w, ENTITY_QUAD_DIMENSIONS[name].h, ecs->entities[i].x, ecs->entities[i].y, ENTITY_QUAD_DIMENSIONS[ecs->entities[i].name].w, ENTITY_QUAD_DIMENSIONS[ecs->entities[i].name].h)) {
             return -1;
         }
     }
