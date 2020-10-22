@@ -23,7 +23,7 @@ void Player::InitPos() {
 }
 
 void Player::Draw() {
-    UpdateAnimationQuad(curr_animation, curr_animation_frame, PLAYER, & spritesheet_quad.x, & spritesheet_quad.y);
+    UpdateAnimationQuad(PLAYER, & curr_anim, & spritesheet_quad.x, & spritesheet_quad.y);
     SDL_RenderCopyEx(global_window_data.rdr, texture, & spritesheet_quad, & rendering_quad, NULL, NULL, is_flipped);
 }
 
@@ -131,16 +131,16 @@ void Player::CollisionUpdate() {
 
 void Player::AnimationUpdate() {
 
-    bool finished_anim = AnimationTick(dt, & curr_animation, & animation_tick, & curr_animation_frame, PLAYER);
+    bool finished_anim = AnimationTick(PLAYER, & curr_anim, dt);
 
-    is_attacking = is_attacking && !finished_anim;
+    is_attacking = is_attacking && ! finished_anim;
 
     if (! is_attacking) {
         if (current_xv || current_yv) {
-            SetAnimationIf(& curr_animation, "running", & animation_tick, & curr_animation_frame, PLAYER);
+            SetAnimationIf(PLAYER, & curr_anim, RUN);
         }
         else {
-            SetAnimationIf(& curr_animation, "idle", & animation_tick, & curr_animation_frame, PLAYER);
+            SetAnimationIf(PLAYER, & curr_anim, IDLE);
         }
     }
 
@@ -149,5 +149,5 @@ void Player::AnimationUpdate() {
 void Player::Attack() {
     is_attacking = true;
     cooldown_tick = cooldown;
-    SetAnimation(& curr_animation, "attack", & animation_tick, & curr_animation_frame, PLAYER);
+    SetAnimation(PLAYER, & curr_anim, ATTACK);
 }

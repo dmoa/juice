@@ -1,38 +1,33 @@
 #include "UpdateAnimation.hpp"
 
-bool AnimationTick(float* dt, std::string* curr_anim, float* tick, int* curr_frame, ENTITY_NAME name) {
-    *tick -= (*dt);
+bool AnimationTick(ENTITY_NAME e_name, CurrAnimation* anim, float* dt) {
 
-    int animation_type_index = ENTITY_ANIMATION_DATA[name].animation_types[*curr_anim];
+    anim->tick -= (*dt);
 
-    if (*tick < 0) {
-        *tick = ENTITY_ANIMATION_DATA[name].speeds[animation_type_index];
         *curr_frame = (*curr_frame + 1) % ENTITY_ANIMATION_DATA[name].num_frames[animation_type_index];
+
+    if (anim->tick < 0) {
+        anim->tick = ANIMATION_DATA[e_name][anim->type].speed;
+        anim->frame = (anim->frame + 1) % ANIMATION_DATA[e_name][anim->type].num_frames;
     }
 
-    // return true if the animation has finished (restarted).
-    if (*curr_frame == 0) return true;
+    // return true if the animation has finished (or started again).
+    if (anim->frame == 0) return true;
 
     return false;
 }
 
-void SetAnimation(std::string* curr_anim, std::string new_anim, float* tick, int* curr_frame, ENTITY_NAME name) {
-
-    *curr_anim = new_anim;
-
-    int animation_type_index = ENTITY_ANIMATION_DATA[name].animation_types[*curr_anim];
-
-    *tick = ENTITY_ANIMATION_DATA[name].speeds[animation_type_index];
-    *curr_frame = 1;
+void SetAnimation(ENTITY_NAME e_name, CurrAnimation* anim, ANIMATION_TYPE new_type) {
+    anim->type = new_type;
+    anim->tick = ANIMATION_DATA[e_name][new_type].speed;
+    anim->frame = 1;
 }
 
-void SetAnimationIf(std::string* curr_anim, std::string new_anim, float* tick, int* curr_frame, ENTITY_NAME name) {
-    if (*curr_anim != new_anim) SetAnimation(curr_anim, new_anim, tick, curr_frame, name);
+void SetAnimationIf(ENTITY_NAME e_name, CurrAnimation* anim, ANIMATION_TYPE new_type) {
+    if (anim->type != new_type) SetAnimation(e_name, anim, new_type);
 }
 
-void UpdateAnimationQuad(std::string curr_anim, int curr_frame, ENTITY_NAME name, int* x, int* y) {
-    int animation_type_index = ENTITY_ANIMATION_DATA[name].animation_types[curr_anim];
-
-    *x = ENTITY_QUAD_DIMENSIONS[name].w * curr_frame;
-    *y = ENTITY_QUAD_DIMENSIONS[name].h * animation_type_index;
+void UpdateAnimationQuad(ENTITY_NAME e_name, CurrAnimation* anim, int* x, int* y) {
+    *x = ENTITY_QUAD_DIMENSIONS[e_name].w * anim->frame;
+    *y = ENTITY_QUAD_DIMENSIONS[e_name].h * ANIMATION_DATA[e_name][anim->type].spreadsheet_index_y;
 }

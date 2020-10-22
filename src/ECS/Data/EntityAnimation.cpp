@@ -1,18 +1,19 @@
 #include "../EntityInfo.hpp"
 
-std::map<ENTITY_NAME, SOAAnimations> ENTITY_ANIMATION_DATA = {
+
+std::unordered_map<ENTITY_NAME, std::unordered_map<ANIMATION_TYPE, AnimationInfo> > ANIMATION_DATA = {
     {
         PLAYER, {
-            {{"idle",0}, {"running",1}, {"attack",2}},
-            {  4,          6,             3         },
-            {  0.3,        0.1,           0.13      },
+            {IDLE,   {4, 0.3,  0}},
+            {RUN,    {6, 0.1,  1}},
+            {ATTACK, {3, 0.13, 2}}
         }
     },
     {
         SPIDER, {
-            {{"idle",0}, {"running",1}, {"attack",2}},
-            {  5,          6,             4         },
-            {  0.2,        0.1,           0.25      },
+            {IDLE,   {5, 0.2,  0}},
+            {ATTACK, {4, 0.25, 1}},
+            {RUN,    {6, 0.1,  2}},
         }
     }
 };

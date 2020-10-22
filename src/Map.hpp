@@ -5,6 +5,7 @@
 #include <time.h>
 #include <math.h>
 #include <algorithm>
+#include <map>
 
 #include "sdl.h"
 

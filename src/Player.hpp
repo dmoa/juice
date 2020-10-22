@@ -54,22 +54,20 @@ struct Player {
     // so it can figure out the correct draw order.
     int id;
 
-    float old_x = 50;
-    float old_y = 50;
+    float old_x = x;
+    float old_y = y;
     float current_xv = 0;
     float current_yv = 0;
     int   v = 110;
 
     bool holding_action_button = false;
-    bool is_attacking;
+    bool is_attacking = false;
     float cooldown = 0.39;
     float cooldown_tick = cooldown;
 
     std::vector<SDL_Rect>* map_cb;
 
-    std::string curr_animation = "idle";
-    float       animation_tick = 0;
-    int         curr_animation_frame = 1;
+    CurrAnimation curr_anim = {IDLE, 0, 0};
 
     SDL_Rect     spritesheet_quad = {0, 0, quad_w, quad_h};
     SDL_Rect     rendering_quad = {-1, -1, quad_w, quad_h};
