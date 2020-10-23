@@ -116,7 +116,6 @@ int main(int argc, char* argv[]) {
         window.SetDrawOther();
 
         print.Draw(std::to_string( clock.average_fps ), 2, 0);
-        print.Draw(player.curr_animation, 2, 10);
 
         window.Present(gameplay_camera.GetViewport());
     }

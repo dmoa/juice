@@ -17,11 +17,6 @@
 #include "ECS/ECS.hpp"
 
 
-struct SOA_CurrAnimations {
-    std::vector<std::string> names;
-    std::vector<float>       ticks;
-    std::vector<int>         cur_frames;
-};
 
 
 struct Enemies {
@@ -47,7 +42,7 @@ struct Enemies {
 
     std::map<int, int> id_to_index;
     std::vector<bool>  is_right; // direction
-    SOA_CurrAnimations cur_animations;
+    std::vector<CurrAnimation> cur_anim;
 
 
 

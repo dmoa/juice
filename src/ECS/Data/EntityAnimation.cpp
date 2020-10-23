@@ -12,8 +12,8 @@ std::unordered_map<ENTITY_NAME, std::unordered_map<ANIMATION_TYPE, AnimationInfo
     {
         SPIDER, {
             {IDLE,   {5, 0.2,  0}},
-            {ATTACK, {4, 0.25, 1}},
-            {RUN,    {6, 0.1,  2}},
+            {RUN,    {6, 0.1,  1}},
+            {ATTACK, {4, 0.25, 2}},
         }
     }
 };
