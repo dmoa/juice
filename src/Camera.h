@@ -2,9 +2,8 @@
 
 #include "sdl.h"
 
-#include "utils/Controls.h"
-
 #include "Globals/All.h"
+
 #include "Player.h"
 #include "Map.h"
 #include "utils/min.h"

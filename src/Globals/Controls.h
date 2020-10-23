@@ -2,7 +2,7 @@
 
 #include <SDL2/SDL.h>
 
-#include "GetGameController.h"
+#include "../utils/GetGameController.h"
 
 namespace CTS {
     bool Left();
@@ -11,7 +11,6 @@ namespace CTS {
     bool Down();
     bool Action1();
 
-    void LoadInput();
     extern const Uint8* keys_down;
     extern SDL_GameController* controller;
     // minimum angle for axis to be considered "moved"

@@ -4,6 +4,8 @@
 
 inline SDL_GameController* GetGameController() {
 
+    SDL_InitSubSystem(SDL_INIT_JOYSTICK);
+
     SDL_GameController* controller = NULL;
 
     // go through every joystick attatched to the computer

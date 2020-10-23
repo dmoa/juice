@@ -16,14 +16,10 @@ namespace CTS {
     bool Action1() {
         // @TODO
         // add A button for controller here
-        return keys_down[SDL_SCANCODE_SPACE];
+        return keys_down[SDL_SCANCODE_SPACE] || SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_B);
     }
 
-    void LoadInput() {
-        keys_down = SDL_GetKeyboardState(NULL);
-        controller = GetGameController();
-    }
-    const Uint8* keys_down = NULL;
-    SDL_GameController* controller = NULL;
+    const Uint8* keys_down = SDL_GetKeyboardState(NULL);
+    SDL_GameController* controller = GetGameController();
     const int axis_min = 12000;
 };

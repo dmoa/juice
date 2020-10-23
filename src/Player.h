@@ -6,12 +6,11 @@
 
 #include "sdl.h"
 
+#include "Globals/All.h"
+
 #include "utils/LoadImage.h"
-#include "utils/Controls.h"
 #include "utils/AABB.h"
 #include "utils/SOARects.h"
-
-#include "Globals/All.h"
 
 #include "ECS/Animation/UpdateAnimation.h"
 

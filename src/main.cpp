@@ -2,7 +2,6 @@
 
 #include "sdl.h"
 
-#include "utils/Controls.h"
 #include "utils/Text.h"
 #include "utils/Clock.cpp"
 #include "utils/PrintOnScreen.h"
@@ -21,11 +20,9 @@
 GlobalWindowData global_window_data = {1800, 1000, 4, NULL};
 
 int main(int argc, char* argv[]) {
-    SDL_InitSubSystem(SDL_INIT_JOYSTICK);
     IMG_Init(IMG_INIT_PNG);
     TTF_Init();
     Text::LoadFont();
-    CTS::LoadInput();
     srand(time(0));
 
     bool DEV_PAUSED = false;
