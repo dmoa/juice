@@ -2,20 +2,19 @@
 
 #include "sdl.h"
 
-#include "utils/Controls.hpp"
+#include "utils/Controls.h"
 
-#include "GlobalWindowData.hpp"
-#include "Player.hpp"
-#include "Map.hpp"
-#include "utils/min.hpp"
+#include "Globals/All.h"
+#include "Player.h"
+#include "Map.h"
+#include "utils/min.h"
 
 struct Camera {
-public:
     void GivePlayerMapDelta(Player* _player, Map* _map, float* _dt);
     SDL_Rect* GetViewport();
     void Update();
     void DevUpdate();
-private:
+
     Player* player;
     Map* map;
     float* dt;

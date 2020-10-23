@@ -1,4 +1,4 @@
-#include "UpdateAnimation.hpp"
+#include "UpdateAnimation.h"
 
 bool AnimationTick(ENTITY_NAME e_name, CurrAnimation* anim, float* dt) {
 
@@ -27,6 +27,6 @@ void SetAnimationIf(ENTITY_NAME e_name, CurrAnimation* anim, ANIMATION_TYPE new_
 }
 
 void UpdateAnimationQuad(ENTITY_NAME e_name, CurrAnimation* anim, int* x, int* y) {
-    *x = ENTITY_QUAD_DIMENSIONS[e_name].w * anim->frame;
-    *y = ENTITY_QUAD_DIMENSIONS[e_name].h * ANIMATION_DATA[e_name][anim->type].spreadsheet_index_y;
+    *x = QUAD_DIMENSIONS[e_name].w * anim->frame;
+    *y = QUAD_DIMENSIONS[e_name].h * ANIMATION_DATA[e_name][anim->type].spreadsheet_index_y;
 }

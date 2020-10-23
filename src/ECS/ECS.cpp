@@ -1,6 +1,7 @@
-#include "ECS.hpp"
-#include "../Map.hpp"
-#include "../Player.hpp"
+#include "ECS.h"
+#include "../Map.h"
+#include "../Player.h"
+#include "../Enemies.h"
 
 void ECS::GiveMapPlayerEnemies(Map* _map, Player* _player, Enemies* _enemies) {
     map = _map;
@@ -30,7 +31,7 @@ void ECS::Draw() {
             int name1 = entities[i1].name;
             int name2 = entities[i2].name;
 
-            if (entities[i1].y + ENTITY_COLLISION_DATA[name1].y + ENTITY_COLLISION_DATA[name1].h > entities[i2].y + ENTITY_COLLISION_DATA[name2].y + ENTITY_COLLISION_DATA[name2].h) {
+            if (entities[i1].y + COLLISION_DATA[name1].y + COLLISION_DATA[name1].h > entities[i2].y + COLLISION_DATA[name2].y + COLLISION_DATA[name2].h) {
 
                 draw_order_indexes[j]   = i2;
                 draw_order_indexes[j+1] = i1;

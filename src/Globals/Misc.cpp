@@ -1,4 +1,4 @@
-#include "../EntityInfo.hpp"
+#include "Entity.h"
 
 // We use these to generate the correct enums when
 // generating map objects in map.cpp.

@@ -1,6 +1,6 @@
-#include "../EntityInfo.hpp"
+#include "Entity.h"
 
-const SDL_Rect ENTITY_QUAD_DIMENSIONS [] = {
+const SDL_Rect QUAD_DIMENSIONS [] = {
     {0, 0, 24, 18},
     {0, 32, 16, 32},
     {16, 32, 16, 32},

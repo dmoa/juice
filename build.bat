@@ -1,2 +1,2 @@
 @echo off
-g++.exe -std=c++11 src/*.cpp src/ECS/*.cpp src/ECS/Data/*.cpp src/ECS/Animation/*.cpp src/utils/*.cpp -I"C:\dev\SDL\64\include" -L"C:\dev\SDL\64\lib" -w -Wl,-subsystem,windows -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image -lws2_32 -o bin/main.exe && CALL run.bat
+g++.exe -std=c++0x src/*.cpp src/ECS/*.cpp src/ECS/Animation/*.cpp src/utils/*.cpp src/Globals/* -I"C:\dev\SDL\64\include" -L"C:\dev\SDL\64\lib" -w -Wl,-subsystem,windows -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image -lws2_32 -o bin/main.exe && CALL run.bat

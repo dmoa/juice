@@ -1,6 +1,6 @@
-#include "Player.hpp"
-#include "Map.hpp"
-#include "ECS/ECS.hpp"
+#include "Player.h"
+#include "Map.h"
+#include "ECS/ECS.h"
 
 void Player::LoadTexture() {
     texture = LoadImage(global_window_data.rdr, "assets/player/red.png");
@@ -92,21 +92,21 @@ void Player::CollisionUpdate() {
     bool collided_y = false;
 
     for (unsigned int i = 0; i < map_cb->size(); i++) {
-        if (AABB(x + ENTITY_COLLISION_DATA[PLAYER].x, y + ENTITY_COLLISION_DATA[PLAYER].y, ENTITY_COLLISION_DATA[PLAYER].w, ENTITY_COLLISION_DATA[PLAYER].h, (*map_cb)[i].x, (*map_cb)[i].y, (*map_cb)[i].w, (*map_cb)[i].h)) {
-            if (old_y + ENTITY_COLLISION_DATA[PLAYER].y >= (*map_cb)[i].y + (*map_cb)[i].h) {
-                y = (*map_cb)[i].y + (*map_cb)[i].h - ENTITY_COLLISION_DATA[PLAYER].y;
+        if (AABB(x + COLLISION_DATA[PLAYER].x, y + COLLISION_DATA[PLAYER].y, COLLISION_DATA[PLAYER].w, COLLISION_DATA[PLAYER].h, (*map_cb)[i].x, (*map_cb)[i].y, (*map_cb)[i].w, (*map_cb)[i].h)) {
+            if (old_y + COLLISION_DATA[PLAYER].y >= (*map_cb)[i].y + (*map_cb)[i].h) {
+                y = (*map_cb)[i].y + (*map_cb)[i].h - COLLISION_DATA[PLAYER].y;
                 collided_y = true;
             }
-            if (old_x + ENTITY_COLLISION_DATA[PLAYER].x >= (*map_cb)[i].x + (*map_cb)[i].w) {
-                x = (*map_cb)[i].x + (*map_cb)[i].w - ENTITY_COLLISION_DATA[PLAYER].x;
+            if (old_x + COLLISION_DATA[PLAYER].x >= (*map_cb)[i].x + (*map_cb)[i].w) {
+                x = (*map_cb)[i].x + (*map_cb)[i].w - COLLISION_DATA[PLAYER].x;
                 collided_x = true;
             }
-            if (old_y + ENTITY_COLLISION_DATA[PLAYER].y + ENTITY_COLLISION_DATA[PLAYER].h <= (*map_cb)[i].y) {
-                y = (*map_cb)[i].y - ENTITY_COLLISION_DATA[PLAYER].y - ENTITY_COLLISION_DATA[PLAYER].h;
+            if (old_y + COLLISION_DATA[PLAYER].y + COLLISION_DATA[PLAYER].h <= (*map_cb)[i].y) {
+                y = (*map_cb)[i].y - COLLISION_DATA[PLAYER].y - COLLISION_DATA[PLAYER].h;
                 collided_y = true;
             }
-            if (old_x + ENTITY_COLLISION_DATA[PLAYER].x + ENTITY_COLLISION_DATA[PLAYER].w <= (*map_cb)[i].x) {
-                x = (*map_cb)[i].x - ENTITY_COLLISION_DATA[PLAYER].x - ENTITY_COLLISION_DATA[PLAYER].w;
+            if (old_x + COLLISION_DATA[PLAYER].x + COLLISION_DATA[PLAYER].w <= (*map_cb)[i].x) {
+                x = (*map_cb)[i].x - COLLISION_DATA[PLAYER].x - COLLISION_DATA[PLAYER].w;
                 collided_x = true;
             }
         }

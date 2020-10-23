@@ -1,4 +1,4 @@
-#include "Camera.hpp"
+#include "Camera.h"
 
 void Camera::GivePlayerMapDelta(Player* _player, Map* _map, float* _dt) {
     player = _player;

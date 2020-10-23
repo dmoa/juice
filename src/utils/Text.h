@@ -4,7 +4,7 @@
 
 #include "../sdl.h"
 
-#include "../GlobalWindowData.hpp"
+#include "../Globals/All.h"
 
 struct Text {
 public:

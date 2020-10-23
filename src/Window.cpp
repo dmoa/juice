@@ -1,4 +1,4 @@
-#include "Window.hpp"
+#include "Window.h"
 
 Window::Window() {
     window = SDL_CreateWindow("juice", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, global_window_data.w, global_window_data.h, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);

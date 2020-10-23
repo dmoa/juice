@@ -2,23 +2,20 @@
 
 #include "../sdl.h"
 
-#include "EntityInfo.hpp"
-#include "SOA_Entity.hpp"
+#include "../Globals/All.h"
+#include "SOA_Entity.h"
 
-#include "../Map.hpp"
-#include "../Player.hpp"
-#include "../Enemies.hpp"
-
-class Map;
-class Enemies;
+struct Map;
+struct Player;
+struct Enemies;
 
 struct ECS {
 
     void GiveMapPlayerEnemies(Map* _map, Player* _player, Enemies* _enemies);
     int AddEntity(float x, float y, ENTITY_NAME name, ENTITY_TYPE type);
 
-    inline float GetCenterX(int id) { return entities[id].x + ENTITY_COLLISION_DATA[entities[id].name].x + ENTITY_COLLISION_DATA[entities[id].name].w / 2; }
-    inline float GetCenterY(int id) { return entities[id].y + ENTITY_COLLISION_DATA[entities[id].name].y + ENTITY_COLLISION_DATA[entities[id].name].h / 2; }
+    inline float GetCenterX(int id) { return entities[id].x + COLLISION_DATA[entities[id].name].x + COLLISION_DATA[entities[id].name].w / 2; }
+    inline float GetCenterY(int id) { return entities[id].y + COLLISION_DATA[entities[id].name].y + COLLISION_DATA[entities[id].name].h / 2; }
 
     void Draw();
 

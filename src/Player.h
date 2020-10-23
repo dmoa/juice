@@ -6,18 +6,17 @@
 
 #include "sdl.h"
 
-#include "utils/LoadImage.hpp"
-#include "utils/Controls.hpp"
-#include "utils/AABB.hpp"
-#include "utils/SOARects.hpp"
+#include "utils/LoadImage.h"
+#include "utils/Controls.h"
+#include "utils/AABB.h"
+#include "utils/SOARects.h"
 
-#include "GlobalWindowData.hpp"
+#include "Globals/All.h"
 
-#include "ECS/ECS.hpp"
-#include "ECS/Animation/UpdateAnimation.hpp"
+#include "ECS/Animation/UpdateAnimation.h"
 
-class Map;
-class ECS;
+struct Map;
+struct ECS;
 
 struct Player {
     void LoadTexture();
@@ -37,8 +36,8 @@ struct Player {
     float x = 10;
     float y = 10;
 
-    const int quad_w = ENTITY_QUAD_DIMENSIONS[PLAYER].w;
-    const int quad_h = ENTITY_QUAD_DIMENSIONS[PLAYER].h;
+    const int quad_w = QUAD_DIMENSIONS[PLAYER].w;
+    const int quad_h = QUAD_DIMENSIONS[PLAYER].h;
 
     float GetDrawCenterX() { return x + rendering_quad.w / 2; };
     float GetDrawCenterY() { return y + rendering_quad.h / 2; };

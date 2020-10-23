@@ -1,8 +1,6 @@
 #pragma once
 
-#include <vector>
-
-#include "EntityInfo.hpp"
+#include "Classification.h"
 
 struct SOA_Entity {
     float x;

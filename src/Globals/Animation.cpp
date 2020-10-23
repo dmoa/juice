@@ -1,4 +1,4 @@
-#include "../EntityInfo.hpp"
+#include "Entity.h"
 
 
 std::unordered_map<ENTITY_NAME, std::unordered_map<ANIMATION_TYPE, AnimationInfo> > ANIMATION_DATA = {

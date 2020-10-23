@@ -1,8 +1,7 @@
 #pragma once
 
-#include "../EntityInfo.hpp"
-
-#include <SDL2/SDL.h>
+#include "../../sdl.h"
+#include "../../Globals/Entity.h"
 
 bool AnimationTick(ENTITY_NAME e_name, CurrAnimation* anim, float* dt);
 

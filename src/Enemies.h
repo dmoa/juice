@@ -6,18 +6,14 @@
 
 #include "sdl.h"
 
-#include "utils/random.hpp"
-#include "utils/LoadImage.hpp"
-#include "utils/pyth_s.hpp"
-#include "GlobalWindowData.hpp"
+#include "utils/random.h"
+#include "utils/LoadImage.h"
+#include "utils/pyth_s.h"
+#include "Globals/All.h"
 
-#include "Map.hpp"
-#include "Player.hpp"
-
-#include "ECS/ECS.hpp"
-
-
-
+struct Map;
+struct ECS;
+struct Player;
 
 struct Enemies {
     void CreateTextures();

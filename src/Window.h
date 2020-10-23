@@ -2,17 +2,17 @@
 
 #include "sdl.h"
 
-#include "GlobalWindowData.hpp"
+#include "Globals/Window.h"
 
-class Window {
-public:
+struct Window {
+
     Window();
     void Clear();
     void SetDrawGameplay();
     void SetDrawOther();
     void Present(SDL_Rect* gameplay_viewport);
     void Shutdown();
-private:
+
     SDL_Texture* gameplay_texture;
     SDL_Texture* other_texture;
     SDL_Rect other_texture_rect;

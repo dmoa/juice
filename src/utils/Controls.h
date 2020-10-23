@@ -2,7 +2,7 @@
 
 #include <SDL2/SDL.h>
 
-#include "GetGameController.hpp"
+#include "GetGameController.h"
 
 namespace CTS {
     bool Left();

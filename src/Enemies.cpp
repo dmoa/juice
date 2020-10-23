@@ -1,4 +1,7 @@
-#include "Enemies.hpp"
+#include "Enemies.h"
+#include "Player.h"
+#include "Map.h"
+#include "ECS/ECS.h"
 
 void Enemies::CreateTextures() {
    spider_texture = LoadImage(global_window_data.rdr, "assets/enemies/spider.png");
@@ -29,8 +32,8 @@ void Enemies::DrawEnemy(int id) {
     SDL_Rect pos;
 
     UpdateAnimationQuad(ecs->entities[id].name, & cur_anim[j], & quad.x, & quad.y);
-    quad.w = pos.w = ENTITY_QUAD_DIMENSIONS[ecs->entities[id].name].w;
-    quad.h = pos.h = ENTITY_QUAD_DIMENSIONS[ecs->entities[id].name].h;
+    quad.w = pos.w = QUAD_DIMENSIONS[ecs->entities[id].name].w;
+    quad.h = pos.h = QUAD_DIMENSIONS[ecs->entities[id].name].h;
     pos.x = ecs->entities[id].x;
     pos.y = ecs->entities[id].y;
 

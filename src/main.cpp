@@ -2,20 +2,21 @@
 
 #include "sdl.h"
 
-#include "utils/Controls.hpp"
-#include "utils/Text.hpp"
+#include "utils/Controls.h"
+#include "utils/Text.h"
 #include "utils/Clock.cpp"
-#include "utils/PrintOnScreen.hpp"
+#include "utils/PrintOnScreen.h"
 
-#include "Window.hpp"
-#include "GlobalWindowData.hpp"
-#include "Camera.hpp"
+#include "Globals/Window.h"
 
-#include "ECS/ECS.hpp"
+#include "Window.h"
+#include "Camera.h"
 
-#include "Player.hpp"
-#include "Map.hpp"
-#include "Enemies.hpp"
+#include "ECS/ECS.h"
+
+#include "Player.h"
+#include "Map.h"
+#include "Enemies.h"
 
 GlobalWindowData global_window_data = {1800, 1000, 4, NULL};
 

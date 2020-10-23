@@ -1,6 +1,6 @@
-#include "Map.hpp"
-#include "Player.hpp"
-#include "ECS/ECS.hpp"
+#include "Map.h"
+#include "Player.h"
+#include "ECS/ECS.h"
 
 void Map::LoadTexture() {
     texture = LoadImage(global_window_data.rdr, "assets/tileset.png");
@@ -120,11 +120,11 @@ void Map::DrawObject(int id) {
     pos.x = ecs->entities[id].x;
     pos.y = ecs->entities[id].y;
 
-    quad.x = ENTITY_QUAD_DIMENSIONS[name].x;
-    quad.y = ENTITY_QUAD_DIMENSIONS[name].y;
+    quad.x = QUAD_DIMENSIONS[name].x;
+    quad.y = QUAD_DIMENSIONS[name].y;
 
-    quad.w = pos.w = ENTITY_QUAD_DIMENSIONS[name].w;
-    quad.h = pos.h = ENTITY_QUAD_DIMENSIONS[name].h;
+    quad.w = pos.w = QUAD_DIMENSIONS[name].w;
+    quad.h = pos.h = QUAD_DIMENSIONS[name].h;
 
     SDL_SetTextureAlphaMod(texture, object_opacities[id]);
     SDL_RenderCopy(global_window_data.rdr, texture, & quad, & pos);
@@ -136,7 +136,7 @@ void Map::Update() {
     for (auto & info : object_opacities) {
         int id = info.first;
 
-        if (pyth_s(ecs->entities[id].x + ENTITY_QUAD_DIMENSIONS[ecs->entities[id].name].w / 2, ecs->entities[id].y  + ENTITY_QUAD_DIMENSIONS[ecs->entities[id].name].h / 2, player->GetDrawCenterX(), player->GetDrawCenterY()) < opacity_distance*opacity_distance) {
+        if (pyth_s(ecs->entities[id].x + QUAD_DIMENSIONS[ecs->entities[id].name].w / 2, ecs->entities[id].y  + QUAD_DIMENSIONS[ecs->entities[id].name].h / 2, player->GetDrawCenterX(), player->GetDrawCenterY()) < opacity_distance*opacity_distance) {
             info.second = max(object_opacities[id] - (*dt) * 500, 130.f);
         } else {
             info.second = min(object_opacities[id] + (*dt) * 200, 255.f);
@@ -151,7 +151,7 @@ void Map::DestroyTextures() {
 
 int Map::AddEntityIfPossible(int x, int y, ENTITY_NAME name) {
     for (unsigned int i = 0; i < ecs->entities.size(); i++) {
-        if (AABB(x, y, ENTITY_QUAD_DIMENSIONS[name].w, ENTITY_QUAD_DIMENSIONS[name].h, ecs->entities[i].x, ecs->entities[i].y, ENTITY_QUAD_DIMENSIONS[ecs->entities[i].name].w, ENTITY_QUAD_DIMENSIONS[ecs->entities[i].name].h)) {
+        if (AABB(x, y, QUAD_DIMENSIONS[name].w, QUAD_DIMENSIONS[name].h, ecs->entities[i].x, ecs->entities[i].y, QUAD_DIMENSIONS[ecs->entities[i].name].w, QUAD_DIMENSIONS[ecs->entities[i].name].h)) {
             return -1;
         }
     }

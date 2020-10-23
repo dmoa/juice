@@ -9,23 +9,21 @@
 
 #include "sdl.h"
 
-#include "utils/min.hpp"
-#include "utils/max.hpp"
-#include "utils/pyth_s.hpp"
-#include "utils/random.hpp"
-#include "utils/AABB.hpp"
-#include "utils/SOARects.hpp"
-#include "utils/LoadImage.hpp"
+#include "utils/min.h"
+#include "utils/max.h"
+#include "utils/pyth_s.h"
+#include "utils/random.h"
+#include "utils/AABB.h"
+#include "utils/SOARects.h"
+#include "utils/LoadImage.h"
 
-#include "GlobalWindowData.hpp"
-#include "ECS/ECS.hpp"
+#include "Globals/All.h"
 
-class Player;
-class ECS;
+struct Player;
+struct ECS;
 
-class Map {
+struct Map {
 
-public:
     void LoadTexture();
     void ReloadTilesetTexture();
     void GivePlayerDeltaECS(Player* _player, float* _dt, ECS* _ecs);
@@ -45,7 +43,7 @@ public:
     const int map_width   = tile_length * tiles_wide;
     const int map_height  = tile_length * tiles_high;
 
-private:
+
     float* dt;
     Player* player;
     ECS* ecs;
