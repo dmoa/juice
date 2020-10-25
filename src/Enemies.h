@@ -15,14 +15,19 @@ struct Map;
 struct ECS;
 struct Player;
 
+struct Enemy {
+    bool is_right;
+    CurrAnimation cur_anim;
+};
+
 struct Enemies {
     void CreateTextures();
     void GiveDeltaMapECSPlayer(float* _dt, Map* _map, ECS* _ecs, Player* _player);
     void CreateEnemies();
     void DrawEnemy(int id);
     void Update();
-    void UpdateEnemyAnimation(int id, int j);
-    void UpdateEnemyMovement(int id, int j);
+    void UpdateEnemyAnimation(int id, Enemy j);
+    void UpdateEnemyMovement(int id, Enemy j);
 
 
     float*  dt;
@@ -36,9 +41,7 @@ struct Enemies {
 
     // Components on top of ECS for enemy only
 
-    std::map<int, int> id_to_index;
-    std::vector<bool>  is_right; // direction
-    std::vector<CurrAnimation> cur_anim;
+    std::map<int, Enemy> enemies;
 
 
 

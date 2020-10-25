@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "Map.h"
+#include "Enemies.h"
 #include "ECS/ECS.h"
 
 void Player::LoadTexture() {
@@ -11,11 +12,12 @@ void Player::DestroyTexture() {
     SDL_DestroyTexture(texture);
 }
 
-void Player::GiveMapDeltaECS(Map* _map, float* _dt, ECS* _ecs) {
-    dt = _dt;
+void Player::GiveMapEnemiesECSDelta(Map* _map, Enemies* _enemies, ECS* _ecs, float* _dt) {
     map = _map;
     map_cb = map->GetCollisionBoxes();
+    enemies = _enemies;
     ecs = _ecs;
+    dt = _dt;
 }
 
 void Player::InitPos() {
@@ -148,6 +150,13 @@ void Player::AnimationUpdate() {
 
 void Player::Attack() {
     is_attacking = true;
+
+    for (auto & it : enemies->enemies) {
+        if (false) {
+            ecs->PopEntity(it.first);
+        }
+    }
+
     cooldown_tick = cooldown;
     SetAnimation(PLAYER, & curr_anim, ATTACK);
 }

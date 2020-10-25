@@ -11,11 +11,17 @@ void ECS::GiveMapPlayerEnemies(Map* _map, Player* _player, Enemies* _enemies) {
 
 int ECS::AddEntity(float x, float y, ENTITY_NAME name, ENTITY_TYPE type) {
 
-    entities.push_back({x, y, name});
-    entity_types.push_back(type);
-    draw_order_indexes.push_back(entities.size() - 1);
+    int id = entities.size();
 
-    return entities.size() - 1;
+    entities[id] = {x, y, name, type};
+    draw_order_indexes.push_back(id);
+
+    return id;
+}
+
+void ECS::PopEntity(int id) {
+    entities.erase(id);
+    draw_order_indexes.erase(std::remove(draw_order_indexes.begin(), draw_order_indexes.end(), id), draw_order_indexes.end());
 }
 
 void ECS::Draw() {
@@ -42,7 +48,7 @@ void ECS::Draw() {
     for (unsigned int i = 0; i < draw_order_indexes.size(); i++) {
         int j = draw_order_indexes[i];
 
-        switch (entity_types[j]) {
+        switch (entities[j].type) {
             case PLAYER_TYPE:
                 player->Draw();
                 break;
@@ -53,7 +59,7 @@ void ECS::Draw() {
                 enemies->DrawEnemy(j);
                 break;
             default:
-                SDL_Log("Entity not being drawn!, x: %i, y: %i, name: %i, id: %i, type: %i", entities[j].x, entities[j].y, (int) entities[j].name, j, (int) entity_types[j]);
+                SDL_Log("Entity not being drawn!, x: %i, y: %i, name: %i, id: %i, type: %i", entities[j].x, entities[j].y, (int) entities[j].name, j, (int) entities[j].type);
                 break;
         }
 

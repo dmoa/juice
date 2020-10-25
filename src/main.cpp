@@ -43,7 +43,7 @@ int main(int argc, char* argv[]) {
     ecs.GiveMapPlayerEnemies(& map, & player, & enemies);
 
     player.LoadTexture();
-    player.GiveMapDeltaECS(& map, & clock.dt, & ecs);
+    player.GiveMapEnemiesECSDelta(& map, & enemies, & ecs, & clock.dt);
     player.InitPos();
 
     map.LoadTexture();

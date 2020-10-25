@@ -15,13 +15,14 @@
 #include "ECS/Animation/UpdateAnimation.h"
 
 struct Map;
+struct Enemies;
 struct ECS;
 
 struct Player {
     void LoadTexture();
     void DestroyTexture();
 
-    void GiveMapDeltaECS(Map* _map, float* _dt, ECS* _ecs);
+    void GiveMapEnemiesECSDelta(Map* _map, Enemies* _enemies, ECS* _ecs, float* _dt);
     void InitPos();
 
     void Draw();
@@ -45,6 +46,7 @@ struct Player {
 
     float* dt;
     Map* map;
+    Enemies* enemies;
     ECS* ecs;
 
     // for lookup in ecs,
