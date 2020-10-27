@@ -20,6 +20,15 @@ int ECS::AddEntity(float x, float y, ENTITY_NAME name, ENTITY_TYPE type) {
 }
 
 void ECS::PopEntity(int id) {
+
+    switch (entities[id].type) {
+
+        case ENEMY_TYPE:
+            enemies->enemies.erase(id);
+            break;
+
+        default: break;
+    }
     entities.erase(id);
     draw_order_indexes.erase(std::remove(draw_order_indexes.begin(), draw_order_indexes.end(), id), draw_order_indexes.end());
 }

@@ -26,8 +26,8 @@ struct Enemies {
     void CreateEnemies();
     void DrawEnemy(int id);
     void Update();
-    void UpdateEnemyAnimation(int id, Enemy j);
-    void UpdateEnemyMovement(int id, Enemy j);
+    void UpdateEnemyAnimation(int id, Enemy* j);
+    void UpdateEnemyMovement(int id, Enemy* j);
 
 
     float*  dt;

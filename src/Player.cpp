@@ -151,9 +151,19 @@ void Player::AnimationUpdate() {
 void Player::Attack() {
     is_attacking = true;
 
-    for (auto & it : enemies->enemies) {
-        if (false) {
-            ecs->PopEntity(it.first);
+    for (auto it = enemies->enemies.begin(); it != enemies->enemies.end();) {
+
+        // we save the current iterator, as PopEntity deletes items in enemies->enemies.
+        // If we were to do i++ at the end of the loop, then i++ would freak out and crash
+        // because it doesn't know how to find the next item as the item it's currently pointing
+        // to just got deleted. We fix this by doing it++ previously, so that it can find the next
+        // item in advance.
+
+        auto current = it++;
+        Entity e = ecs->entities[current->first];
+
+        if (Entities_AABB(e.name, e.x, e.y, PLAYER, x, y)) {
+            ecs->PopEntity(current->first);
         }
     }
 
