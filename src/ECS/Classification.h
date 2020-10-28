@@ -20,5 +20,7 @@ enum ENTITY_NAME {
 enum ANIMATION_TYPE {
     IDLE,
     RUN,
-    ATTACK
+    ATTACK,
+    STUN,
+    TO_STUN
 };

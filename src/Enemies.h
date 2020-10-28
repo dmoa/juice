@@ -16,6 +16,7 @@ struct ECS;
 struct Player;
 
 struct Enemy {
+    int hp;
     bool is_right;
     CurrAnimation cur_anim;
 };

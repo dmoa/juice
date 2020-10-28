@@ -15,12 +15,12 @@ void Enemies::GiveDeltaMapECSPlayer(float* _dt, Map* _map, ECS* _ecs, Player* _p
 }
 
 void Enemies::CreateEnemies() {
-    for (int i = 0; i < 5; i ++) {
+    for (int i = 0; i < 30; i ++) {
 
-        // int id = ecs->AddEntity(random(50, map->map_width - 100), random(50, map->map_height - 100), SPIDER, ENEMY_TYPE);
-        int id = ecs->AddEntity(50, 50, SPIDER, ENEMY_TYPE);
+        int   id = ecs->AddEntity(random(50, map->map_width - 100), random(50, map->map_height - 100), SPIDER, ENEMY_TYPE);
         float tick = float(random(0, 200)) / 1000;
-        enemies[id] = {false, {IDLE, tick, 0}};
+
+        enemies[id] = {2, false, {IDLE, tick, 0}};
     }
 }
 
@@ -51,19 +51,32 @@ void Enemies::Update() {
 }
 
 void Enemies::UpdateEnemyAnimation(int id, Enemy* enemy) {
-    int distance_from_player_squared = pyth_s(ecs->GetCenterX(id), ecs->GetCenterY(id), ecs->GetCenterX(player->id), ecs->GetCenterY(player->id));
 
-    if (distance_from_player_squared < attack_distance*attack_distance) {
-        SetAnimationIf(ecs->entities[id].name, & enemy->cur_anim, ATTACK);
+    bool finished = AnimationTick(ecs->entities[id].name, & enemy->cur_anim, dt);
+
+    if (enemy->hp <= 1) {
+        if (enemy->cur_anim.type == TO_STUN && finished) {
+            SetAnimationIf(ecs->entities[id].name, & enemy->cur_anim, STUN);
+        }
+        if (enemy->cur_anim.type != STUN) {
+            SetAnimationIf(ecs->entities[id].name, & enemy->cur_anim, TO_STUN);
+        }
     }
-    else if (distance_from_player_squared < activation_distance*activation_distance) {
-        SetAnimationIf(ecs->entities[id].name, & enemy->cur_anim, RUN);
-    }
-    else if (distance_from_player_squared > deactivation_distance*deactivation_distance) {
-        SetAnimationIf(ecs->entities[id].name, & enemy->cur_anim, IDLE);
+    else {
+        int distance_from_player_squared = pyth_s(ecs->GetCenterX(id), ecs->GetCenterY(id), ecs->GetCenterX(player->id), ecs->GetCenterY(player->id));
+
+        if (distance_from_player_squared < attack_distance*attack_distance) {
+            SetAnimationIf(ecs->entities[id].name, & enemy->cur_anim, ATTACK);
+        }
+        else if (distance_from_player_squared < activation_distance*activation_distance) {
+            SetAnimationIf(ecs->entities[id].name, & enemy->cur_anim, RUN);
+        }
+        else if (distance_from_player_squared > deactivation_distance*deactivation_distance) {
+            SetAnimationIf(ecs->entities[id].name, & enemy->cur_anim, IDLE);
+        }
+
     }
 
-    AnimationTick(ecs->entities[id].name, & enemy->cur_anim, dt);
 }
 
 void Enemies::UpdateEnemyMovement(int id, Enemy* enemy) {

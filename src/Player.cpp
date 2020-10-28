@@ -155,7 +155,7 @@ void Player::Attack() {
 
         // we save the current iterator, as PopEntity deletes items in enemies->enemies.
         // If we were to do i++ at the end of the loop, then i++ would freak out and crash
-        // because it doesn't know how to find the next item as the item it's currently pointing
+        // because it doesn't know how to find the next item as the item it's current ly pointing
         // to just got deleted. We fix this by doing it++ previously, so that it can find the next
         // item in advance.
 
@@ -163,7 +163,12 @@ void Player::Attack() {
         Entity e = ecs->entities[current->first];
 
         if (Entities_AABB(e.name, e.x, e.y, PLAYER, x, y)) {
-            ecs->PopEntity(current->first);
+
+            current->second.hp--;
+            if (current->second.hp <= 0) {
+                ecs->PopEntity(current->first);
+            }
+
         }
     }
 
