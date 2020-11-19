@@ -1,6 +1,7 @@
 #include "UpdateAnimation.h"
 
 bool AnimationTick(ENTITY_NAME e_name, CurrAnimation* anim, float* dt) {
+    if (anim->type == ANIM_NONE) return false;
 
     anim->tick -= (*dt);
 
@@ -26,7 +27,11 @@ void SetAnimationIf(ENTITY_NAME e_name, CurrAnimation* anim, ANIMATION_TYPE new_
     if (anim->type != new_type) SetAnimation(e_name, anim, new_type);
 }
 
-void UpdateAnimationQuad(ENTITY_NAME e_name, CurrAnimation* anim, int* x, int* y) {
-    *x = QUAD_DIMENSIONS[e_name].w * anim->frame;
-    *y = QUAD_DIMENSIONS[e_name].h * ANIMATION_DATA[e_name][anim->type].spreadsheet_index_y;
+void UpdateAnimationQuad(ENTITY_NAME e_name, CurrAnimation* anim, SDL_Rect* quad) {
+    *quad = {
+        QUAD_DIMENSIONS[e_name].w * anim->frame,
+        QUAD_DIMENSIONS[e_name].h * ANIMATION_DATA[e_name][anim->type].spreadsheet_index_y,
+        QUAD_DIMENSIONS[e_name].w,
+        QUAD_DIMENSIONS[e_name].h
+    };
 }

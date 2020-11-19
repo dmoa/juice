@@ -17,5 +17,10 @@ std::unordered_map<ENTITY_NAME, std::unordered_map<ANIMATION_TYPE, AnimationInfo
             {TO_STUN, {3, 0.18, 3}},
             {STUN,    {6, 0.14, 4}}
         }
+    },
+    {
+        COBWEB, {
+            {EXPAND, {0,0,0}}
+        }
     }
 };

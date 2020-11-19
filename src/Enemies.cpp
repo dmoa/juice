@@ -29,11 +29,8 @@ void Enemies::DrawEnemy(int id) {
     SDL_Rect quad;
     SDL_Rect pos;
 
-    UpdateAnimationQuad(ecs->entities[id].name, & enemies[id].cur_anim, & quad.x, & quad.y);
-    quad.w = pos.w = QUAD_DIMENSIONS[ecs->entities[id].name].w;
-    quad.h = pos.h = QUAD_DIMENSIONS[ecs->entities[id].name].h;
-    pos.x = ecs->entities[id].x;
-    pos.y = ecs->entities[id].y;
+    UpdateAnimationQuad(ecs->entities[id].name, & enemies[id].cur_anim, & quad);
+    pos = {ecs->entities[id].x, ecs->entities[id].y, quad.w, quad.h};
 
     SDL_RenderCopyEx(global_window_data.rdr, spider_texture, & quad, & pos, NULL, NULL, enemies[id].is_right ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL);
 }

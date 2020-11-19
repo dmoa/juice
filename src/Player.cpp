@@ -25,7 +25,7 @@ void Player::InitPos() {
 }
 
 void Player::Draw() {
-    UpdateAnimationQuad(PLAYER, & curr_anim, & spritesheet_quad.x, & spritesheet_quad.y);
+    UpdateAnimationQuad(PLAYER, & curr_anim, & spritesheet_quad);
     SDL_RenderCopyEx(global_window_data.rdr, texture, & spritesheet_quad, & rendering_quad, NULL, NULL, is_flipped);
 }
 

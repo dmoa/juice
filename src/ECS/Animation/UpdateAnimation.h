@@ -9,4 +9,4 @@ void SetAnimation(ENTITY_NAME e_name, CurrAnimation* anim, ANIMATION_TYPE new_ty
 
 void SetAnimationIf(ENTITY_NAME e_name, CurrAnimation* anim, ANIMATION_TYPE new_type);
 
-void UpdateAnimationQuad(ENTITY_NAME e_name, CurrAnimation* anim, int* x, int* y);
+void UpdateAnimationQuad(ENTITY_NAME e_name, CurrAnimation* anim, SDL_Rect* rect);

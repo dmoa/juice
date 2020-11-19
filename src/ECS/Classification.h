@@ -3,7 +3,8 @@
 enum ENTITY_TYPE {
     PLAYER_TYPE,
     MAP_TYPE,
-    ENEMY_TYPE
+    ENEMY_TYPE,
+    MINIOBJECT_TYPE
 };
 
 enum ENTITY_NAME {
@@ -14,13 +15,17 @@ enum ENTITY_NAME {
     LOG,
     STONE,
 
-    SPIDER
+    SPIDER,
+
+    COBWEB
 };
 
 enum ANIMATION_TYPE {
+    ANIM_NONE,
     IDLE,
     RUN,
     ATTACK,
     STUN,
-    TO_STUN
+    TO_STUN,
+    EXPAND
 };
