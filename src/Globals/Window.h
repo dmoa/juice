@@ -7,6 +7,7 @@ struct GlobalWindowData {
     int h;
     int scale;
     SDL_Renderer* rdr;
+    int pixel_format;
 };
 
 extern GlobalWindowData global_window_data;

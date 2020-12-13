@@ -53,7 +53,6 @@ struct Map {
 
     std::vector<SDL_Rect> collision_boxes;
 
-
     int AddEntityIfPossible(int x, int y, ENTITY_NAME name);
 
     SDL_Texture* static_saved_drawn_data = SDL_CreateTexture(global_window_data.rdr, NULL, SDL_TEXTUREACCESS_TARGET, tiles_wide * tile_length, tiles_high * tile_length);

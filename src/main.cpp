@@ -1,10 +1,12 @@
 #include <time.h>
 
+#define NO_STDIO_REDIRECT
 #include "sdl.h"
 
 #include "utils/Text.h"
 #include "utils/Clock.cpp"
 #include "utils/PrintOnScreen.h"
+#include "utils/LoadImage.h"
 
 #include "Globals/Window.h"
 
@@ -17,7 +19,7 @@
 #include "Map.h"
 #include "Enemies.h"
 
-GlobalWindowData global_window_data = {1800, 1000, 4, NULL};
+GlobalWindowData global_window_data = {1800, 1000, 4, NULL, NULL};
 
 int main(int argc, char* argv[]) {
     IMG_Init(IMG_INIT_PNG);
@@ -54,6 +56,8 @@ int main(int argc, char* argv[]) {
     enemies.CreateTextures();
     enemies.GiveDeltaMapECSPlayer(& clock.dt, & map, & ecs, & player);
     enemies.CreateEnemies();
+
+    SDL_Texture* example = LoadAse(global_window_data.rdr, "assets/player/red.ase");
 
     SDL_Event event;
     bool quit = false;
@@ -110,6 +114,7 @@ int main(int argc, char* argv[]) {
 
         map.DrawBase();
         ecs.Draw();
+        SDL_RenderCopy(global_window_data.rdr, example, NULL, NULL);
 
         window.SetDrawOther();
 
