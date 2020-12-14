@@ -14,22 +14,17 @@ inline SDL_Texture* LoadImage(SDL_Renderer* renderer, std::string path) {
 }
 
 static SDL_Texture* LoadAse(SDL_Renderer* renderer, std::string file_path) {
-    Ase_Output output = AseLoad(file_path);
+    Ase_Output* output = Ase_Load(file_path);
 
-    SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormat(0, 100, 100, 8, SDL_PIXELFORMAT_INDEX8);
+    SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormatFrom(output->pixels, output->frame_width * output->num_frames, output->frame_height, 8, output->frame_width * output->num_frames, SDL_PIXELFORMAT_INDEX8);
     if (! surface) SDL_Log("Surface could not be created!, %s\n", SDL_GetError());
-
-//    ((SDL_Color*)surface->format->palette->colors)[1] = {255, 0, 0, 255};
-    SDL_Color r = {255, 0, 0, 0};
-    SDL_SetPaletteColors(surface->format->palette, & r, 0, 1);
-    for (int i = 0; i < 100; i ++) {
-        ((u8*)surface->pixels)[i] = 0;
-    }
+    SDL_SetPaletteColors(surface->format->palette, (SDL_Color*) & output->palette.entries, 0, output->palette.num_entries);
 
     SDL_Texture* texture = SDL_CreateTextureFromSurface(global_window_data.rdr, surface);
-    if (! texture) SDL_Log("Texture could not be created!, %s\n", file_path.c_str());
+    if (! texture) SDL_Log("Texture could not be created!, %s, %s\n", SDL_GetError(), file_path.c_str());
 
-
+    Ase_Destroy_Output(output);
+    SDL_FreeSurface(surface);
 
     return texture;
 }

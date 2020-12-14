@@ -112,9 +112,12 @@ int main(int argc, char* argv[]) {
 
         window.SetDrawGameplay();
 
-        map.DrawBase();
-        ecs.Draw();
-        SDL_RenderCopy(global_window_data.rdr, example, NULL, NULL);
+        //map.DrawBase();
+        //ecs.Draw();
+        SDL_DestroyTexture(example);
+        example = LoadAse(global_window_data.rdr, "assets/player/red.ase");
+        SDL_Rect pos = {0, 0, 576, 24};
+        SDL_RenderCopy(global_window_data.rdr, example, NULL, & pos);
 
         window.SetDrawOther();
 
