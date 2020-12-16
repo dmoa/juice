@@ -15,7 +15,7 @@
 #include "utils/random.h"
 #include "utils/AABB.h"
 #include "utils/SOARects.h"
-#include "utils/LoadImage.h"
+#include "utils/AssetLoader.h"
 
 #include "Globals/All.h"
 

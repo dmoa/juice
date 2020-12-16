@@ -1,12 +1,11 @@
 #include <time.h>
 
-#define NO_STDIO_REDIRECT
 #include "sdl.h"
 
 #include "utils/Text.h"
 #include "utils/Clock.cpp"
 #include "utils/PrintOnScreen.h"
-#include "utils/LoadImage.h"
+#include "utils/AssetLoader.h"
 
 #include "Globals/Window.h"
 
@@ -57,7 +56,7 @@ int main(int argc, char* argv[]) {
     enemies.GiveDeltaMapECSPlayer(& clock.dt, & map, & ecs, & player);
     enemies.CreateEnemies();
 
-    SDL_Texture* example = LoadAse(global_window_data.rdr, "assets/player/red.ase");
+    Asset_Ase* example = LoadAsset_Ase(global_window_data.rdr, "assets/player/red.ase");
 
     SDL_Event event;
     bool quit = false;
@@ -114,10 +113,10 @@ int main(int argc, char* argv[]) {
 
         //map.DrawBase();
         //ecs.Draw();
-        SDL_DestroyTexture(example);
-        example = LoadAse(global_window_data.rdr, "assets/player/red.ase");
+        DestroyAsset_Ase(example);
+        example = LoadAsset_Ase(global_window_data.rdr, "assets/player/red.ase");
         SDL_Rect pos = {0, 0, 576, 24};
-        SDL_RenderCopy(global_window_data.rdr, example, NULL, & pos);
+        SDL_RenderCopy(global_window_data.rdr, example->texture, NULL, & pos);
 
         window.SetDrawOther();
 

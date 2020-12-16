@@ -143,6 +143,7 @@ struct Ase_Output {
     int frame_width;
     int frame_height;
     Palette_Chunk palette;
+    int num_tags;
     Ase_Tag* tags;
     u16* frame_durations;
     int num_frames;
@@ -274,11 +275,11 @@ static Ase_Output* Ase_Load(std::string file_path) {
                     }
 
                     case TAGS: {
-                        int size = GetU16(buffer_p + 6);
-                        output->tags = new Ase_Tag [size];
+                        output->num_tags = GetU16(buffer_p + 6);
+                        output->tags = new Ase_Tag [output->num_tags];
 
                         int tag_buffer_offset = 0;
-                        for (int k = 0; k < size; k ++) {
+                        for (int k = 0; k < output->num_tags; k ++) {
 
                             output->tags[k].from = GetU16(buffer_p + tag_buffer_offset + 16);
                             output->tags[k].to = GetU16(buffer_p + tag_buffer_offset + 18);

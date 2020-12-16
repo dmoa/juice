@@ -8,7 +8,7 @@
 
 #include "Globals/All.h"
 
-#include "utils/LoadImage.h"
+#include "utils/AssetLoader.h"
 #include "utils/AABB.h"
 #include "utils/SOARects.h"
 

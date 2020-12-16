@@ -4,7 +4,7 @@
 
 #include "sdl.h"
 #include "Globals/All.h"
-#include "utils/LoadImage.h"
+#include "utils/AssetLoader.h"
 
 #include "ECS/Animation/UpdateAnimation.h"
 

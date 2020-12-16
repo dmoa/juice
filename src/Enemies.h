@@ -7,7 +7,7 @@
 #include "sdl.h"
 
 #include "utils/random.h"
-#include "utils/LoadImage.h"
+#include "utils/AssetLoader.h"
 #include "utils/pyth_s.h"
 #include "Globals/All.h"
 
