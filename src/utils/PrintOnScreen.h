@@ -1,6 +1,6 @@
 #pragma once
 
-#include <SDL2/SDL.h>
+#include <SDL_CP.h>
 
 struct PrintOnScreen {
     SDL_Rect rect = {5, 0, 50, 50};

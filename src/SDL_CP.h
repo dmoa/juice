@@ -1,5 +1,7 @@
 #pragma once
 
+// SDL cross platform includes
+
 #include <SDL2/SDL.h>
 
 #ifdef _WIN32

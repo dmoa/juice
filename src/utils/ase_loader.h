@@ -55,7 +55,7 @@ Let me know if you want something added,
 #include <string>
 #include <math.h>
 #include "int.h"
-#include "../sdl.h"
+#include <SDL_CP.h>
 #include "decompressor.h"
 
 static u16 GetU16(char* memory) {

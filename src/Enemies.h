@@ -4,11 +4,10 @@
 #include <map>
 #include <string>
 
-#include "sdl.h"
+#include <SDL_CP.h>
 
-#include "utils/random.h"
+#include "utils/extramath.h"
 #include "utils/AssetLoader.h"
-#include "utils/pyth_s.h"
 #include "Globals/All.h"
 
 struct Map;

@@ -1,9 +1,14 @@
+#pragma once
+
 #include <time.h>
 
-#include "sdl.h"
+#include <SDL_CP.h>
+
+#define CONTROLS_IMPLEMENTATION
+#include "Globals/Controls.h"
 
 #include "utils/Text.h"
-#include "utils/Clock.cpp"
+#include "utils/Clock.h"
 #include "utils/PrintOnScreen.h"
 #include "utils/AssetLoader.h"
 
@@ -18,9 +23,12 @@
 #include "Map.h"
 #include "Enemies.h"
 
+
 GlobalWindowData global_window_data = {1800, 1000, 4, NULL, NULL};
 
 int main(int argc, char* argv[]) {
+    SDL_Init(SDL_INIT_EVERYTHING);
+
     IMG_Init(IMG_INIT_PNG);
     TTF_Init();
     Text::LoadFont();

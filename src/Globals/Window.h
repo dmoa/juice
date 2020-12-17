@@ -1,6 +1,6 @@
 #pragma once
 
-#include <SDL2/SDL.h>
+#include <SDL_CP.h>
 
 struct GlobalWindowData {
     int w;

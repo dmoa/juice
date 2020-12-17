@@ -4,8 +4,6 @@
 
 inline SDL_GameController* GetGameController() {
 
-    SDL_InitSubSystem(SDL_INIT_JOYSTICK);
-
     SDL_GameController* controller = NULL;
 
     // go through every joystick attatched to the computer
@@ -17,7 +15,6 @@ inline SDL_GameController* GetGameController() {
             // then set the controller to this joystick
             controller = SDL_GameControllerOpen(i);
 
-
             // if it managed to set it, exit the function
             if (controller) {
                 return controller;
@@ -26,8 +23,6 @@ inline SDL_GameController* GetGameController() {
             else {
                 SDL_Log("Could not open SDL gamecontroller: %s\n", SDL_GetError());
             }
-
-
         }
     }
 

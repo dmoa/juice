@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../sdl.h"
+#include <SDL_CP.h>
 #include "../../Globals/Entity.h"
 
 bool AnimationTick(ENTITY_NAME e_name, CurrAnimation* anim, float* dt);

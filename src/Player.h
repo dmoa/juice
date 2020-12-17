@@ -4,19 +4,23 @@
 #include <map>
 #define ROOT2 1.41421356237
 
-#include "sdl.h"
+#include <SDL_CP.h>
 
 #include "Globals/All.h"
 
 #include "utils/AssetLoader.h"
-#include "utils/AABB.h"
-#include "utils/SOARects.h"
+#include "utils/extramath.h"
 
 #include "ECS/Animation/UpdateAnimation.h"
+
 
 struct Map;
 struct Enemies;
 struct ECS;
+
+inline bool Entities_AABB(ENTITY_NAME e1, float x1, float y1, ENTITY_NAME e2, float x2, float y2) {
+    return AABB(x1 + COLLISION_DATA[e1].x, y1 + COLLISION_DATA[e1].y, COLLISION_DATA[e1].w, COLLISION_DATA[e1].h, x2 + COLLISION_DATA[e2].x, y2 + COLLISION_DATA[e2].y, COLLISION_DATA[e2].w, COLLISION_DATA[e2].h);
+}
 
 struct Player {
     void LoadTexture();

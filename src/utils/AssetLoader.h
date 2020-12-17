@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "../sdl.h"
+#include <SDL_CP.h>
 #include "int.h"
 #include "../Globals/Window.h"
 #include "ase_loader.h"
@@ -23,7 +23,7 @@ struct Asset_Ase {
     int num_frames;
 };
 
-static Asset_Ase* LoadAsset_Ase(SDL_Renderer* renderer, std::string file_path) {
+inline Asset_Ase* LoadAsset_Ase(SDL_Renderer* renderer, std::string file_path) {
     Ase_Output* output = Ase_Load(file_path);
 
     SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormatFrom(output->pixels, output->frame_width * output->num_frames, output->frame_height, 8, output->frame_width * output->num_frames, SDL_PIXELFORMAT_INDEX8);

@@ -7,14 +7,9 @@
 #include <algorithm>
 #include <map>
 
-#include "sdl.h"
+#include <SDL_CP.h>
 
-#include "utils/min.h"
-#include "utils/max.h"
-#include "utils/pyth_s.h"
-#include "utils/random.h"
-#include "utils/AABB.h"
-#include "utils/SOARects.h"
+#include "utils/extramath.h"
 #include "utils/AssetLoader.h"
 
 #include "Globals/All.h"

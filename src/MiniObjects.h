@@ -2,7 +2,7 @@
 
 #include <map>
 
-#include "sdl.h"
+#include <SDL_CP.h>
 #include "Globals/All.h"
 #include "utils/AssetLoader.h"
 

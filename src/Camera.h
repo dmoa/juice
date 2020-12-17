@@ -1,12 +1,12 @@
 #pragma once
 
-#include "sdl.h"
+#include <SDL_CP.h>
 
 #include "Globals/All.h"
 
 #include "Player.h"
 #include "Map.h"
-#include "utils/min.h"
+#include "utils/extramath.h"
 
 struct Camera {
     void GivePlayerMapDelta(Player* _player, Map* _map, float* _dt);

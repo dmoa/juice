@@ -4,8 +4,7 @@
 #include <string>
 #include <unordered_map>
 
-#include "../utils/SOARects.h"
-#include "../sdl.h"
+#include <SDL_CP.h>
 #include "../ECS/Classification.h"
 
 // for ANIMATION_DATA only.
