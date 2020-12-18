@@ -30,10 +30,13 @@ Parses:
     - All pixel data
 
 Chunks Supported:
-    - CEL
+    - CEL 0x2005
         - No opacity support
     - PALETTE 0x2019
         - No name support
+    - SLICE 0x2022
+        - Does not support 9 patches or pivot flags
+        - Loads only first slice key
 
 
 - Only supports indexed color mode
@@ -54,6 +57,7 @@ Let me know if you want something added,
 #include <fstream>
 #include <string>
 #include <math.h>
+#include <vector>
 #include <SDL_CP.h>
 #include "decompressor.h"
 
@@ -143,8 +147,13 @@ struct Ase_Tag {
 // but will need to change in the future as there won't always be 256 entries.
 struct Palette_Chunk {
     u32 num_entries;
-    u8  color_key;
+    u8 color_key;
     SDL_Color entries [256];
+};
+
+struct Slice {
+    std::string name;
+    SDL_Rect quad;
 };
 
 struct Ase_Output {
@@ -153,10 +162,15 @@ struct Ase_Output {
     int frame_width;
     int frame_height;
     Palette_Chunk palette;
-    int num_tags;
+
     Ase_Tag* tags;
+    int num_tags;
+
     u16* frame_durations;
     int num_frames;
+
+    Slice* slices;
+    u32 num_slices;
 };
 
 
@@ -172,6 +186,7 @@ static Ase_Output* Ase_Load(std::string file_path) {
 
         char buffer [length];
         file.read(buffer, length);
+        file.close();
         char* buffer_p = & buffer[HEADER_SIZE];
 
 
@@ -194,13 +209,20 @@ static Ase_Output* Ase_Load(std::string file_path) {
             GetU16(& buffer[42])
         };
 
-        Ase_Output* output        = new Ase_Output();
-        output->frame_width       = header.width;
-        output->frame_height      = header.height;
+        Ase_Output* output = new Ase_Output();
+        output->pixels = new u8 [header.width * header.height * header.num_frames];
+        output->frame_width = header.width;
+        output->frame_height = header.height;
         output->palette.color_key = header.palette_entry;
-        output->num_frames        = header.num_frames;
-        output->pixels            = new u8 [header.width * header.height * header.num_frames];
-        output->frame_durations   = new u16 [header.num_frames];
+
+        output->frame_durations = new u16 [header.num_frames];
+        output->num_frames = header.num_frames;
+
+        // Aseprite doesn't tell us upfront how many slices we're given,
+        // so there's no way really of creating the array of size X before
+        // we receive all the slices. Vector is used temporarily, but then
+        // converted into Slice* for output.
+        std::vector<Slice> temp_slices;
 
         // helps us with formulating output but not all data needed for output
         Ase_Frame frames [header.num_frames];
@@ -266,7 +288,7 @@ static Ase_Output* Ase_Load(std::string file_path) {
                             exit(-1);
                         }
 
-                        u16 width  = GetU16(buffer_p + 22);
+                        u16 width = GetU16(buffer_p + 22);
                         u16 height = GetU16(buffer_p + 24);
                         u8 pixels [width * height];
 
@@ -294,7 +316,7 @@ static Ase_Output* Ase_Load(std::string file_path) {
                         for (int k = 0; k < output->num_tags; k ++) {
 
                             output->tags[k].from = GetU16(buffer_p + tag_buffer_offset + 16);
-                            output->tags[k].to = GetU16(buffer_p + tag_buffer_offset + 18);
+                            output->tags[k].to   = GetU16(buffer_p + tag_buffer_offset + 18);
 
                             int slen = GetU16(buffer_p + tag_buffer_offset + 33);
                             output->tags[k].name = "";
@@ -308,15 +330,48 @@ static Ase_Output* Ase_Load(std::string file_path) {
                         break;
                     }
 
+                    case SLICE: {
+                        u32 num_keys = GetU32(buffer_p + 6);
+                        u32 flag = GetU32(buffer_p + 10);
+                        if (flag != 0) {
+                            SDL_Log("Flag %i not supported! Asset: %s", flag, file_path.c_str());
+                            exit(-1);
+                        }
+
+                        int slen = GetU16(buffer_p + 18);
+                        std::string name = "";
+                        for (int a = 0; a < slen; a++) {
+                            name += *(buffer_p + 20 + a);
+                        }
+
+                        // For now, we assume that the slice is the same
+                        // throughout all the frames, so we don't care about
+                        // the starting frame_number.
+                        // int frame_number = GetU32(buffer_p + 20 + slen);
+
+                        SDL_Rect quad = {
+                            (s32) GetU32(buffer_p + slen + 24),
+                            (s32) GetU32(buffer_p + slen + 28),
+                            GetU32(buffer_p + slen + 32),
+                            GetU32(buffer_p + slen + 36)
+                        };
+
+                        temp_slices.push_back({name, quad});
+
+                        break;
+                    }
                     default: break;
                 }
-
                 buffer_p += chunk_size;
             }
-
-
         }
-        file.close();
+
+        output->slices = new Slice [temp_slices.size()];
+        for (int i = 0; i < temp_slices.size(); i ++) {
+            output->slices[i] = temp_slices[i];
+        }
+        output->num_slices = temp_slices.size();
+
         return output;
 
 
@@ -330,5 +385,6 @@ inline void Ase_Destroy_Output(Ase_Output* output) {
     delete [] output->pixels;
     delete [] output->frame_durations;
     delete [] output->tags;
+    delete [] output->slices;
     delete output;
 }
