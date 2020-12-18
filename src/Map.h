@@ -10,7 +10,7 @@
 #include <SDL_CP.h>
 
 #include "utils/extramath.h"
-#include "utils/AssetLoader.h"
+#include "Asset/AssetLoader.h"
 
 #include "Globals/All.h"
 

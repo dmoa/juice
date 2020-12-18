@@ -8,7 +8,8 @@
 
 #include "Globals/All.h"
 
-#include "utils/AssetLoader.h"
+#include "Asset/AssetLoader.h"
+#include "Asset/Animation.h"
 #include "utils/extramath.h"
 
 #include "ECS/Animation/UpdateAnimation.h"
@@ -23,8 +24,8 @@ inline bool Entities_AABB(ENTITY_NAME e1, float x1, float y1, ENTITY_NAME e2, fl
 }
 
 struct Player {
-    void LoadTexture();
-    void DestroyTexture();
+    void LoadAsset();
+    void DestroyAsset();
 
     void GiveMapEnemiesECSDelta(Map* _map, Enemies* _enemies, ECS* _ecs, float* _dt);
     void InitPos();
@@ -40,13 +41,8 @@ struct Player {
     float x = 10;
     float y = 10;
 
-    const int quad_w = QUAD_DIMENSIONS[PLAYER].w;
-    const int quad_h = QUAD_DIMENSIONS[PLAYER].h;
-
     float GetDrawCenterX() { return x + rendering_quad.w / 2; };
     float GetDrawCenterY() { return y + rendering_quad.h / 2; };
-
-    SDL_Texture* texture;
 
     float* dt;
     Map* map;
@@ -71,12 +67,9 @@ struct Player {
 
     std::vector<SDL_Rect>* map_cb;
 
-    CurrAnimation curr_anim = {IDLE, 0, 0};
+    Asset_Ase* asset;
+    CurAnimation cur_anim;
 
-    SDL_Rect     spritesheet_quad = {0, 0, quad_w, quad_h};
-    SDL_Rect     rendering_quad = {-1, -1, quad_w, quad_h};
+    SDL_Rect     rendering_quad;
     SDL_RendererFlip is_flipped = SDL_FLIP_NONE;
 };
-
-
-// @TODO try instead of stopping the player, to make the attack only available when still

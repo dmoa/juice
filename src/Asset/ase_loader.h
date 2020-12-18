@@ -54,17 +54,26 @@ Let me know if you want something added,
 #include <fstream>
 #include <string>
 #include <math.h>
-#include "int.h"
 #include <SDL_CP.h>
 #include "decompressor.h"
 
-static u16 GetU16(char* memory) {
+
+typedef int64_t  s64;
+typedef int32_t  s32;
+typedef int16_t  s16;
+typedef int8_t   s8;
+typedef uint64_t u64;
+typedef uint32_t u32;
+typedef uint16_t u16;
+typedef uint8_t  u8;
+
+inline u16 GetU16(char* memory) {
 	u8* p = (u8*)(memory);
 	return (((u16)p[1]) << 8) |
 		   (((u16)p[0]));
 }
 
-static u32 GetU32(void* memory) {
+inline u32 GetU32(void* memory) {
 	u8* p = (u8*)(memory);
 	return (((u32)p[3]) << 24) |
 		   (((u32)p[2]) << 16) |
@@ -134,6 +143,7 @@ struct Ase_Tag {
 // but will need to change in the future as there won't always be 256 entries.
 struct Palette_Chunk {
     u32 num_entries;
+    u8  color_key;
     SDL_Color entries [256];
 };
 
@@ -148,6 +158,7 @@ struct Ase_Output {
     u16* frame_durations;
     int num_frames;
 };
+
 
 static Ase_Output* Ase_Load(std::string file_path) {
 
@@ -183,12 +194,13 @@ static Ase_Output* Ase_Load(std::string file_path) {
             GetU16(& buffer[42])
         };
 
-        Ase_Output* output = new Ase_Output();
-        output->frame_width  = header.width;
-        output->frame_height = header.height;
-        output->num_frames   = header.num_frames;
-        output->pixels = new u8 [header.width * header.height * header.num_frames];
-        output->frame_durations = new u16 [header.num_frames];
+        Ase_Output* output        = new Ase_Output();
+        output->frame_width       = header.width;
+        output->frame_height      = header.height;
+        output->palette.color_key = header.palette_entry;
+        output->num_frames        = header.num_frames;
+        output->pixels            = new u8 [header.width * header.height * header.num_frames];
+        output->frame_durations   = new u16 [header.num_frames];
 
         // helps us with formulating output but not all data needed for output
         Ase_Frame frames [header.num_frames];

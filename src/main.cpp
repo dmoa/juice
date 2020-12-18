@@ -10,7 +10,7 @@
 #include "utils/Text.h"
 #include "utils/Clock.h"
 #include "utils/PrintOnScreen.h"
-#include "utils/AssetLoader.h"
+#include "Asset/AssetLoader.h"
 
 #include "Globals/Window.h"
 
@@ -51,7 +51,7 @@ int main(int argc, char* argv[]) {
 
     ecs.GiveMapPlayerEnemies(& map, & player, & enemies);
 
-    player.LoadTexture();
+    player.LoadAsset();
     player.GiveMapEnemiesECSDelta(& map, & enemies, & ecs, & clock.dt);
     player.InitPos();
 
@@ -63,8 +63,6 @@ int main(int argc, char* argv[]) {
     enemies.CreateTextures();
     enemies.GiveDeltaMapECSPlayer(& clock.dt, & map, & ecs, & player);
     enemies.CreateEnemies();
-
-    Asset_Ase* example = LoadAsset_Ase(global_window_data.rdr, "assets/player/red.ase");
 
     SDL_Event event;
     bool quit = false;
@@ -87,8 +85,8 @@ int main(int argc, char* argv[]) {
                             break;
                         case SDLK_r:
                             map.ReloadTilesetTexture();
-                            SDL_DestroyTexture(player.texture);
-                            player.LoadTexture();
+                            player.DestroyAsset();
+                            player.LoadAsset();
                             break;
                         default: break;
                     }
@@ -119,12 +117,8 @@ int main(int argc, char* argv[]) {
 
         window.SetDrawGameplay();
 
-        //map.DrawBase();
-        //ecs.Draw();
-        DestroyAsset_Ase(example);
-        example = LoadAsset_Ase(global_window_data.rdr, "assets/player/red.ase");
-        SDL_Rect pos = {0, 0, 576, 24};
-        SDL_RenderCopy(global_window_data.rdr, example->texture, NULL, & pos);
+        map.DrawBase();
+        ecs.Draw();
 
         window.SetDrawOther();
 
@@ -133,7 +127,7 @@ int main(int argc, char* argv[]) {
         window.Present(gameplay_camera.GetViewport());
     }
 
-    player.DestroyTexture();
+    player.DestroyAsset();
     map.DestroyTextures();
 
     Text::DestroyFont();

@@ -1,9 +1,9 @@
 #pragma once
 
 #include <string>
+#include <unordered_map>
 
 #include <SDL_CP.h>
-#include "int.h"
 #include "../Globals/Window.h"
 #include "ase_loader.h"
 
@@ -13,50 +13,57 @@ inline SDL_Texture* LoadImage(SDL_Renderer* renderer, std::string path) {
     return texture;
 }
 
+struct Tag_Range {
+    u16 from;
+    u16 to;
+};
+
 struct Asset_Ase {
     SDL_Texture* texture;
-    Ase_Tag* tags;
+    std::unordered_map<std::string, Tag_Range> tags;
     u16* frame_durations;
     int frame_width;
     int frame_height;
-    int num_tags;
     int num_frames;
 };
 
-inline Asset_Ase* LoadAsset_Ase(SDL_Renderer* renderer, std::string file_path) {
+inline Asset_Ase* LoadAsset_Ase(std::string file_path) {
     Ase_Output* output = Ase_Load(file_path);
 
     SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormatFrom(output->pixels, output->frame_width * output->num_frames, output->frame_height, 8, output->frame_width * output->num_frames, SDL_PIXELFORMAT_INDEX8);
     if (! surface) SDL_Log("Surface could not be created!, %s\n", SDL_GetError());
     SDL_SetPaletteColors(surface->format->palette, (SDL_Color*) & output->palette.entries, 0, output->palette.num_entries);
+    SDL_SetColorKey(surface, SDL_TRUE, output->palette.color_key);
 
     SDL_Texture* texture = SDL_CreateTextureFromSurface(global_window_data.rdr, surface);
     if (! texture) SDL_Log("Texture could not be created!, %s, %s\n", SDL_GetError(), file_path.c_str());
     SDL_FreeSurface(surface);
 
+    Asset_Ase* asset = new Asset_Ase {
+        texture,
+        {},
+        output->frame_durations,
+        output->frame_width,
+        output->frame_height,
+        output->num_frames
+    };
+
+    for (int i = 0; i < output->num_tags; i++) {
+        asset->tags[output->tags[i].name] = {output->tags[i].from, output->tags[i].to};
+    }
+
     // Not using Ase_Destroy_Output() because we still want to use
     // the tags and frame durations from output. Instead, we only delete the pixels
     // and the output container because the pixel data has been copied into SDL_Texture.
     delete [] output->pixels;
+    delete [] output->tags;
     delete output;
-
-
-    Asset_Ase* asset = new Asset_Ase {
-        texture,
-        output->tags,
-        output->frame_durations,
-        output->frame_width,
-        output->frame_height,
-        output->num_tags,
-        output->num_frames
-    };
 
     return asset;
 }
 
 inline void DestroyAsset_Ase(Asset_Ase* a) {
     SDL_DestroyTexture(a->texture);
-    delete [] a->tags;
     delete [] a->frame_durations;
     delete a;
 }

@@ -3,21 +3,24 @@
 #include "Enemies.h"
 #include "ECS/ECS.h"
 
-void Player::LoadTexture() {
-    texture = LoadImage(global_window_data.rdr, "assets/player/red.png");
+void Player::LoadAsset() {
+    asset = LoadAsset_Ase("assets/player/red.ase");
     is_flipped = SDL_FLIP_HORIZONTAL;
+    _SetAnimation(& cur_anim, asset, "idle");
+    rendering_quad.w = cur_anim.quad.w;
+    rendering_quad.h = cur_anim.quad.h;
 }
 
-void Player::DestroyTexture() {
-    SDL_DestroyTexture(texture);
+void Player::DestroyAsset() {
+    DestroyAsset_Ase(asset);
 }
 
 void Player::GiveMapEnemiesECSDelta(Map* _map, Enemies* _enemies, ECS* _ecs, float* _dt) {
-    map = _map;
-    map_cb = map->GetCollisionBoxes();
+    map     = _map;
+    map_cb  = _map->GetCollisionBoxes();
     enemies = _enemies;
-    ecs = _ecs;
-    dt = _dt;
+    ecs     = _ecs;
+    dt      = _dt;
 }
 
 void Player::InitPos() {
@@ -25,8 +28,7 @@ void Player::InitPos() {
 }
 
 void Player::Draw() {
-    UpdateAnimationQuad(PLAYER, & curr_anim, & spritesheet_quad);
-    SDL_RenderCopyEx(global_window_data.rdr, texture, & spritesheet_quad, & rendering_quad, NULL, NULL, is_flipped);
+    SDL_RenderCopyEx(global_window_data.rdr, asset->texture, & cur_anim.quad, & rendering_quad, NULL, NULL, is_flipped);
 }
 
 void Player::Update() {
@@ -80,7 +82,8 @@ void Player::Update() {
     y += current_yv * (*dt);
 
     CollisionUpdate();
-    rendering_quad = {x, y, 24, 18};
+    rendering_quad.x = x;
+    rendering_quad.y = y;
     AnimationUpdate();
 
     // updating pos in the draw objects, so that it can calculate the draw order.
@@ -133,16 +136,17 @@ void Player::CollisionUpdate() {
 
 void Player::AnimationUpdate() {
 
-    bool finished_anim = AnimationTick(PLAYER, & curr_anim, dt);
+
+    bool finished_anim = UpdateAnimation(& cur_anim, asset, dt);
 
     is_attacking = is_attacking && ! finished_anim;
 
     if (! is_attacking) {
         if (current_xv || current_yv) {
-            SetAnimationIf(PLAYER, & curr_anim, RUN);
+            _SetAnimationIf(& cur_anim, asset, "move");
         }
         else {
-            SetAnimationIf(PLAYER, & curr_anim, IDLE);
+            _SetAnimationIf(& cur_anim, asset, "idle");
         }
     }
 
@@ -173,5 +177,5 @@ void Player::Attack() {
     }
 
     cooldown_tick = cooldown;
-    SetAnimation(PLAYER, & curr_anim, ATTACK);
+    _SetAnimation(& cur_anim, asset, "kick");
 }
