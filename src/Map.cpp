@@ -3,7 +3,7 @@
 #include "ECS/ECS.h"
 
 void Map::LoadTexture() {
-    texture = LoadImage(global_window_data.rdr, "assets/tileset.png");
+    texture = LoadImage(g_window.rdr, "assets/tileset.png");
 }
 
 void Map::ReloadTilesetTexture() {
@@ -11,14 +11,14 @@ void Map::ReloadTilesetTexture() {
     LoadTexture();
 }
 
-void Map::GivePlayerDeltaECS(Player* _player, float* _dt, ECS* _ecs) {
+void Map::PassPointers(Player* _player, float* _dt, ECS* _ecs) {
     player = _player;
     dt = _dt;
     ecs = _ecs;
 };
 
 void Map::CreateMapTexture() {
-    SDL_SetRenderTarget(global_window_data.rdr, static_saved_drawn_data);
+    SDL_SetRenderTarget(g_window.rdr, static_saved_drawn_data);
 
     SDL_Rect iter_quad = {0, 0, tile_length, tile_length};
     SDL_Rect iter_pos  = {0, 0, tile_length, tile_length};
@@ -30,7 +30,7 @@ void Map::CreateMapTexture() {
             iter_pos.x = i * tile_length;
             iter_pos.y = j * tile_length;
             iter_quad.x = (rand() % 5) * tile_length;
-            SDL_RenderCopy(global_window_data.rdr, texture, & iter_quad, & iter_pos);
+            SDL_RenderCopy(g_window.rdr, texture, & iter_quad, & iter_pos);
         }
     }
 
@@ -40,40 +40,40 @@ void Map::CreateMapTexture() {
     iter_quad.x = 48;
 
     iter_pos.x = iter_pos.y = 0;
-    SDL_RenderCopy(global_window_data.rdr, texture, & iter_quad, & iter_pos);
+    SDL_RenderCopy(g_window.rdr, texture, & iter_quad, & iter_pos);
     iter_pos.x = (tiles_wide - 1) * tile_length;
-    SDL_RenderCopy(global_window_data.rdr, texture, & iter_quad, & iter_pos);
+    SDL_RenderCopy(g_window.rdr, texture, & iter_quad, & iter_pos);
     iter_pos.x = 0;
     iter_pos.y = (tiles_high - 1) * tile_length;
-    SDL_RenderCopy(global_window_data.rdr, texture, & iter_quad, & iter_pos);
+    SDL_RenderCopy(g_window.rdr, texture, & iter_quad, & iter_pos);
     iter_pos.x = (tiles_wide - 1) * tile_length;
-    SDL_RenderCopy(global_window_data.rdr, texture, & iter_quad, & iter_pos);
+    SDL_RenderCopy(g_window.rdr, texture, & iter_quad, & iter_pos);
 
     iter_pos.y = 0;
     iter_quad.x = 80;
     for (int i = 1; i < tiles_wide - 1; i++) {
         iter_pos.x = i * tile_length;
-        SDL_RenderCopy(global_window_data.rdr, texture, & iter_quad, & iter_pos);
+        SDL_RenderCopy(g_window.rdr, texture, & iter_quad, & iter_pos);
     }
 
     iter_quad.x = 32;
     iter_pos.x = 0;
     for (int i = 1; i < tiles_high - 1; i++) {
         iter_pos.y = i * tile_length;
-        SDL_RenderCopyEx(global_window_data.rdr, texture, & iter_quad, & iter_pos, NULL, NULL, SDL_FLIP_HORIZONTAL);
+        SDL_RenderCopyEx(g_window.rdr, texture, & iter_quad, & iter_pos, NULL, NULL, SDL_FLIP_HORIZONTAL);
     }
 
     iter_pos.x = (tiles_wide - 1) * tile_length;
     for (int i = 1; i < tiles_high - 1; i++) {
         iter_pos.y = i * tile_length;
-        SDL_RenderCopy(global_window_data.rdr, texture, & iter_quad, & iter_pos);
+        SDL_RenderCopy(g_window.rdr, texture, & iter_quad, & iter_pos);
     }
 
     iter_quad.x = 80;
     iter_pos.y = (tiles_high - 1) * tile_length;
     for (int i = 1; i < tiles_wide - 1; i++) {
         iter_pos.x = i * tile_length;
-        SDL_RenderCopyEx(global_window_data.rdr, texture, & iter_quad, & iter_pos, NULL, NULL, SDL_FLIP_VERTICAL);
+        SDL_RenderCopyEx(g_window.rdr, texture, & iter_quad, & iter_pos, NULL, NULL, SDL_FLIP_VERTICAL);
     }
 
     // TREES, LOGS AND STONES
@@ -87,7 +87,7 @@ void Map::CreateMapTexture() {
         if (entity_id != -1) object_opacities[entity_id] = 255.f;
     }
 
-    SDL_SetRenderTarget(global_window_data.rdr, NULL);
+    SDL_SetRenderTarget(g_window.rdr, NULL);
 }
 
 void Map::CreateCollisionBoxes() {
@@ -108,7 +108,7 @@ void Map::CreateCollisionBoxes() {
 }
 
 void Map::DrawBase() {
-    SDL_RenderCopy(global_window_data.rdr, static_saved_drawn_data, NULL, NULL);
+    SDL_RenderCopy(g_window.rdr, static_saved_drawn_data, NULL, NULL);
 }
 
 void Map::DrawObject(int id) {
@@ -127,7 +127,7 @@ void Map::DrawObject(int id) {
     quad.h = pos.h = QUAD_DIMENSIONS[name].h;
 
     SDL_SetTextureAlphaMod(texture, object_opacities[id]);
-    SDL_RenderCopy(global_window_data.rdr, texture, & quad, & pos);
+    SDL_RenderCopy(g_window.rdr, texture, & quad, & pos);
 }
 
 

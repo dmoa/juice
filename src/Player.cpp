@@ -15,7 +15,7 @@ void Player::DestroyAsset() {
     DestroyAsset_Ase(asset);
 }
 
-void Player::GiveMapEnemiesECSDelta(Map* _map, Enemies* _enemies, ECS* _ecs, float* _dt) {
+void Player::PassPointers(Map* _map, Enemies* _enemies, ECS* _ecs, float* _dt) {
     map     = _map;
     map_cb  = _map->GetCollisionBoxes();
     enemies = _enemies;
@@ -28,7 +28,7 @@ void Player::InitPos() {
 }
 
 void Player::Draw() {
-    SDL_RenderCopyEx(global_window_data.rdr, asset->texture, & cur_anim.quad, & rendering_quad, NULL, NULL, is_flipped);
+    SDL_RenderCopyEx(g_window.rdr, asset->texture, & cur_anim.quad, & rendering_quad, NULL, NULL, is_flipped);
 }
 
 void Player::Update() {
@@ -135,10 +135,7 @@ void Player::CollisionUpdate() {
 }
 
 void Player::AnimationUpdate() {
-
-
     bool finished_anim = UpdateAnimation(& cur_anim, asset, dt);
-
     is_attacking = is_attacking && ! finished_anim;
 
     if (! is_attacking) {
@@ -149,7 +146,6 @@ void Player::AnimationUpdate() {
             _SetAnimationIf(& cur_anim, asset, "idle");
         }
     }
-
 }
 
 void Player::Attack() {

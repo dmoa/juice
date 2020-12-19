@@ -28,5 +28,5 @@ struct MiniObjects {
     ECS*   ecs;
 
     std::map<int, Obj> objects;
-    SDL_Texture* cobweb_texture = LoadImage(global_window_data.rdr, "assets/enemies/cobweb.png");
+    SDL_Texture* cobweb_texture = LoadImage(g_window.rdr, "assets/enemies/cobweb.png");
 };

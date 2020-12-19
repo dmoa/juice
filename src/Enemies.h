@@ -22,7 +22,7 @@ struct Enemy {
 
 struct Enemies {
     void CreateTextures();
-    void GiveDeltaMapECSPlayer(float* _dt, Map* _map, ECS* _ecs, Player* _player);
+    void PassPointers(float* _dt, Map* _map, ECS* _ecs, Player* _player);
     void CreateEnemies();
     void DrawEnemy(int id);
     void Update();

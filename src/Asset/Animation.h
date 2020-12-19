@@ -32,12 +32,14 @@ inline bool UpdateAnimation(CurAnimation* anim, Asset_Ase* asset, float* dt) {
     if (anim->tick < 0) {
 
         Tag_Range t = asset->tags[anim->name];
-        anim->frame_i = (anim->frame_i - t.from + 1) % (t.to - t.from) + t.from;
+        anim->frame_i = (anim->frame_i - t.from + 1) % (t.to - t.from + 1) + t.from;
         anim->tick = asset->frame_durations[anim->frame_i];
 
         anim->quad.x = anim->frame_i * asset->frame_width;
 
-        return true;
+        // Return true if an animation cycle has finished
+        if (anim->frame_i - t.from == 0) return true;
     }
+
     return false;
 }

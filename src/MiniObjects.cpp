@@ -12,7 +12,7 @@ void MiniObjects::Draw(int id) {
     UpdateAnimationQuad(ecs->entities[id].name, & objects[id].cur_anim, & quad);
     pos = {ecs->entities[id].x, ecs->entities[id].y, quad.w, quad.h};
 
-    SDL_RenderCopyEx(global_window_data.rdr, cobweb_texture, & quad, & pos, NULL, NULL, objects[id].is_right ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL);
+    SDL_RenderCopyEx(g_window.rdr, cobweb_texture, & quad, & pos, NULL, NULL, objects[id].is_right ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL);
 }
 
 void MiniObjects::Update() {

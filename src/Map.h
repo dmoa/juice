@@ -21,7 +21,7 @@ struct Map {
 
     void LoadTexture();
     void ReloadTilesetTexture();
-    void GivePlayerDeltaECS(Player* _player, float* _dt, ECS* _ecs);
+    void PassPointers(Player* _player, float* _dt, ECS* _ecs);
     void CreateMapTexture();
     void CreateCollisionBoxes();
     std::vector<SDL_Rect>* GetCollisionBoxes() { return & collision_boxes; }
@@ -50,6 +50,6 @@ struct Map {
 
     int AddEntityIfPossible(int x, int y, ENTITY_NAME name);
 
-    SDL_Texture* static_saved_drawn_data = SDL_CreateTexture(global_window_data.rdr, NULL, SDL_TEXTUREACCESS_TARGET, tiles_wide * tile_length, tiles_high * tile_length);
+    SDL_Texture* static_saved_drawn_data = SDL_CreateTexture(g_window.rdr, NULL, SDL_TEXTUREACCESS_TARGET, tiles_wide * tile_length, tiles_high * tile_length);
     SDL_Texture* texture;
 };

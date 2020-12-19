@@ -10,4 +10,4 @@ struct GlobalWindowData {
     int pixel_format;
 };
 
-extern GlobalWindowData global_window_data;
+extern GlobalWindowData g_window;

@@ -12,8 +12,8 @@ SDL_Rect* Camera::GetViewport() {
 
 void Camera::Update() {
 
-    int proposed_x = player->GetDrawCenterX() - global_window_data.w / global_window_data.scale / 2;
-    int proposed_y = player->GetDrawCenterY() - global_window_data.h / global_window_data.scale / 2;
+    int proposed_x = player->GetDrawCenterX() - g_window.w / g_window.scale / 2;
+    int proposed_y = player->GetDrawCenterY() - g_window.h / g_window.scale / 2;
 
     if (proposed_x - real_x >   max_distance_from_player) real_x = proposed_x - max_distance_from_player;
     if (proposed_x - real_x < - max_distance_from_player) real_x = proposed_x + max_distance_from_player;
@@ -22,14 +22,14 @@ void Camera::Update() {
 
     if (real_x < 0) real_x = 0;
     if (real_y < 0) real_y = 0;
-    if (real_x + global_window_data.w / global_window_data.scale > map->GetMapWidth()) {
-        real_x = map->GetMapWidth() - global_window_data.w / global_window_data.scale;
+    if (real_x + g_window.w / g_window.scale > map->GetMapWidth()) {
+        real_x = map->GetMapWidth() - g_window.w / g_window.scale;
     }
-    if (real_y + global_window_data.h / global_window_data.scale > map->GetMapHeight()) {
-        real_y = map->GetMapWidth() - global_window_data.h / global_window_data.scale;
+    if (real_y + g_window.h / g_window.scale > map->GetMapHeight()) {
+        real_y = map->GetMapWidth() - g_window.h / g_window.scale;
     }
 
-    viewport = {real_x, real_y, global_window_data.w / global_window_data.scale, global_window_data.h / global_window_data.scale};
+    viewport = {real_x, real_y, g_window.w / g_window.scale, g_window.h / g_window.scale};
 }
 
 void Camera::DevUpdate() {
@@ -45,5 +45,5 @@ void Camera::DevUpdate() {
     if (CTS::Up()) {
         real_y -= pan_v * (*dt);
     }
-    viewport = {real_x, real_y, global_window_data.w / global_window_data.scale, global_window_data.h / global_window_data.scale};
+    viewport = {real_x, real_y, g_window.w / g_window.scale, g_window.h / g_window.scale};
 }

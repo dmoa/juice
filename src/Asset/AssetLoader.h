@@ -38,7 +38,7 @@ inline Asset_Ase* LoadAsset_Ase(std::string file_path) {
     SDL_SetPaletteColors(surface->format->palette, (SDL_Color*) & output->palette.entries, 0, output->palette.num_entries);
     SDL_SetColorKey(surface, SDL_TRUE, output->palette.color_key);
 
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(global_window_data.rdr, surface);
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(g_window.rdr, surface);
     if (! texture) SDL_Log("Texture could not be created!, %s, %s\n", SDL_GetError(), file_path.c_str());
     SDL_FreeSurface(surface);
 
@@ -70,6 +70,7 @@ inline Asset_Ase* LoadAsset_Ase(std::string file_path) {
     // and the output container because the pixel data has been copied into SDL_Texture.
     delete [] output->pixels;
     delete [] output->tags;
+    delete [] output->slices;
     delete output;
 
     return asset;
@@ -78,5 +79,6 @@ inline Asset_Ase* LoadAsset_Ase(std::string file_path) {
 inline void DestroyAsset_Ase(Asset_Ase* a) {
     SDL_DestroyTexture(a->texture);
     delete [] a->frame_durations;
+    delete a->collision_box;
     delete a;
 }

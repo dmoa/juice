@@ -9,7 +9,7 @@ struct PrintOnScreen {
         rect.x = x; rect.y = y;
         fps_texture = Text::CreateTexture(text);
         SDL_QueryTexture(fps_texture, NULL, NULL, & rect.w, & rect.h);
-        SDL_RenderCopy(global_window_data.rdr, fps_texture, NULL, & rect);
+        SDL_RenderCopy(g_window.rdr, fps_texture, NULL, & rect);
         SDL_DestroyTexture(fps_texture);
     }
 };

@@ -16,7 +16,7 @@ void Text::DestroyFont() {
 SDL_Texture* Text::CreateTexture(std::string text) {
     SDL_Surface* temp_surface = TTF_RenderText_Solid(main_font, text.c_str(), white_color);
     if (!temp_surface) SDL_Log("failed to create surface\n");
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(global_window_data.rdr, temp_surface);
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(g_window.rdr, temp_surface);
 
     SDL_FreeSurface(temp_surface);
 

@@ -27,7 +27,7 @@ struct Player {
     void LoadAsset();
     void DestroyAsset();
 
-    void GiveMapEnemiesECSDelta(Map* _map, Enemies* _enemies, ECS* _ecs, float* _dt);
+    void PassPointers(Map* _map, Enemies* _enemies, ECS* _ecs, float* _dt);
     void InitPos();
 
     void Draw();

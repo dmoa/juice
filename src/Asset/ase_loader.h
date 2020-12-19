@@ -52,7 +52,6 @@ Let me know if you want something added,
 
 #pragma once
 
-
 #include <stdio.h>
 #include <fstream>
 #include <string>
@@ -60,16 +59,6 @@ Let me know if you want something added,
 #include <vector>
 #include <SDL_CP.h>
 #include "decompressor.h"
-
-
-typedef int64_t  s64;
-typedef int32_t  s32;
-typedef int16_t  s16;
-typedef int8_t   s8;
-typedef uint64_t u64;
-typedef uint32_t u32;
-typedef uint16_t u16;
-typedef uint8_t  u8;
 
 inline u16 GetU16(char* memory) {
 	u8* p = (u8*)(memory);

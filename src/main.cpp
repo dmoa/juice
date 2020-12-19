@@ -24,15 +24,15 @@
 #include "Enemies.h"
 
 
-GlobalWindowData global_window_data = {1800, 1000, 4, NULL, NULL};
+GlobalWindowData g_window = {1800, 1000, 4, NULL, NULL};
 
 int main(int argc, char* argv[]) {
     SDL_Init(SDL_INIT_EVERYTHING);
-
     IMG_Init(IMG_INIT_PNG);
     TTF_Init();
-    Text::LoadFont();
     srand(time(0));
+    Text::LoadFont();
+    CTS::Init();
 
     bool DEV_PAUSED = false;
 
@@ -52,16 +52,16 @@ int main(int argc, char* argv[]) {
     ecs.GiveMapPlayerEnemies(& map, & player, & enemies);
 
     player.LoadAsset();
-    player.GiveMapEnemiesECSDelta(& map, & enemies, & ecs, & clock.dt);
+    player.PassPointers(& map, & enemies, & ecs, & clock.dt);
     player.InitPos();
 
     map.LoadTexture();
-    map.GivePlayerDeltaECS(& player, & clock.dt, & ecs);
+    map.PassPointers(& player, & clock.dt, & ecs);
     map.CreateMapTexture();
     map.CreateCollisionBoxes();
 
     enemies.CreateTextures();
-    enemies.GiveDeltaMapECSPlayer(& clock.dt, & map, & ecs, & player);
+    enemies.PassPointers(& clock.dt, & map, & ecs, & player);
     enemies.CreateEnemies();
 
     SDL_Event event;
@@ -80,9 +80,6 @@ int main(int argc, char* argv[]) {
                         case SDLK_ESCAPE:
                             quit = true;
                             break;
-                        case SDLK_LCTRL:
-                            DEV_PAUSED = ! DEV_PAUSED;
-                            break;
                         case SDLK_r:
                             map.ReloadTilesetTexture();
                             player.DestroyAsset();
@@ -92,13 +89,15 @@ int main(int argc, char* argv[]) {
                     }
                 case SDL_WINDOWEVENT:
                     if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
-                        global_window_data.w = event.window.data1;
-                        global_window_data.h = event.window.data2;
+                        g_window.w = event.window.data1;
+                        g_window.h = event.window.data2;
                     }
                     break;
                 default: break;
             }
         }
+
+        if (CTS::ActionDev()) DEV_PAUSED = ! DEV_PAUSED;
 
         clock.tick();
 

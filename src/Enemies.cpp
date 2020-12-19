@@ -4,10 +4,10 @@
 #include "ECS/ECS.h"
 
 void Enemies::CreateTextures() {
-   spider_texture = LoadImage(global_window_data.rdr, "assets/enemies/spider.png");
+   spider_texture = LoadImage(g_window.rdr, "assets/enemies/spider.png");
 }
 
-void Enemies::GiveDeltaMapECSPlayer(float* _dt, Map* _map, ECS* _ecs, Player* _player) {
+void Enemies::PassPointers(float* _dt, Map* _map, ECS* _ecs, Player* _player) {
     dt     = _dt;
     map    = _map;
     ecs    = _ecs;
@@ -32,7 +32,7 @@ void Enemies::DrawEnemy(int id) {
     UpdateAnimationQuad(ecs->entities[id].name, & enemies[id].cur_anim, & quad);
     pos = {ecs->entities[id].x, ecs->entities[id].y, quad.w, quad.h};
 
-    SDL_RenderCopyEx(global_window_data.rdr, spider_texture, & quad, & pos, NULL, NULL, enemies[id].is_right ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL);
+    SDL_RenderCopyEx(g_window.rdr, spider_texture, & quad, & pos, NULL, NULL, enemies[id].is_right ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL);
 }
 
 void Enemies::Update() {
