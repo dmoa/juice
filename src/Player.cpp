@@ -97,21 +97,21 @@ void Player::CollisionUpdate() {
     bool collided_y = false;
 
     for (unsigned int i = 0; i < map_cb->size(); i++) {
-        if (AABB(x + COLLISION_DATA[PLAYER].x, y + COLLISION_DATA[PLAYER].y, COLLISION_DATA[PLAYER].w, COLLISION_DATA[PLAYER].h, (*map_cb)[i].x, (*map_cb)[i].y, (*map_cb)[i].w, (*map_cb)[i].h)) {
-            if (old_y + COLLISION_DATA[PLAYER].y >= (*map_cb)[i].y + (*map_cb)[i].h) {
-                y = (*map_cb)[i].y + (*map_cb)[i].h - COLLISION_DATA[PLAYER].y;
+        if (AABB(x + asset->collision_box->x, y + asset->collision_box->y, asset->collision_box->w, asset->collision_box->h, (*map_cb)[i].x, (*map_cb)[i].y, (*map_cb)[i].w, (*map_cb)[i].h)) {
+            if (old_y + asset->collision_box->y >= (*map_cb)[i].y + (*map_cb)[i].h) {
+                y = (*map_cb)[i].y + (*map_cb)[i].h - asset->collision_box->y;
                 collided_y = true;
             }
-            if (old_x + COLLISION_DATA[PLAYER].x >= (*map_cb)[i].x + (*map_cb)[i].w) {
-                x = (*map_cb)[i].x + (*map_cb)[i].w - COLLISION_DATA[PLAYER].x;
+            if (old_x + asset->collision_box->x >= (*map_cb)[i].x + (*map_cb)[i].w) {
+                x = (*map_cb)[i].x + (*map_cb)[i].w - asset->collision_box->x;
                 collided_x = true;
             }
-            if (old_y + COLLISION_DATA[PLAYER].y + COLLISION_DATA[PLAYER].h <= (*map_cb)[i].y) {
-                y = (*map_cb)[i].y - COLLISION_DATA[PLAYER].y - COLLISION_DATA[PLAYER].h;
+            if (old_y + asset->collision_box->y + asset->collision_box->h <= (*map_cb)[i].y) {
+                y = (*map_cb)[i].y - asset->collision_box->y - asset->collision_box->h;
                 collided_y = true;
             }
-            if (old_x + COLLISION_DATA[PLAYER].x + COLLISION_DATA[PLAYER].w <= (*map_cb)[i].x) {
-                x = (*map_cb)[i].x - COLLISION_DATA[PLAYER].x - COLLISION_DATA[PLAYER].w;
+            if (old_x + asset->collision_box->x + asset->collision_box->w <= (*map_cb)[i].x) {
+                x = (*map_cb)[i].x - asset->collision_box->x - asset->collision_box->w;
                 collided_x = true;
             }
         }

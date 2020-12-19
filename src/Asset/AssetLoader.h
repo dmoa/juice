@@ -20,13 +20,16 @@ struct Tag_Range {
 
 struct Asset_Ase {
     SDL_Texture* texture;
-    std::unordered_map<std::string, Tag_Range> tags;
-    u16* frame_durations;
     int frame_width;
     int frame_height;
     int num_frames;
+
+    std::unordered_map<std::string, Tag_Range> tags;
+    u16* frame_durations;
+    SDL_Rect* collision_box;
 };
 
+// @TODO Add Slice to Asset_Ase, and add it in DestroyAsset_Ase
 inline Asset_Ase* LoadAsset_Ase(std::string file_path) {
     Ase_Output* output = Ase_Load(file_path);
 
@@ -41,15 +44,25 @@ inline Asset_Ase* LoadAsset_Ase(std::string file_path) {
 
     Asset_Ase* asset = new Asset_Ase {
         texture,
-        {},
-        output->frame_durations,
         output->frame_width,
         output->frame_height,
-        output->num_frames
+        output->num_frames,
+
+        {},
+        output->frame_durations,
+        new SDL_Rect
     };
 
     for (int i = 0; i < output->num_tags; i++) {
         asset->tags[output->tags[i].name] = {output->tags[i].from, output->tags[i].to};
+    }
+
+    for (int i = 0; i < output->num_slices; i++) {
+        if (output->slices[i].name == "collision") {
+            *(asset->collision_box) = output->slices[i].quad;
+        } else {
+            SDL_Log("Asset_Ase slice %s not supported", output->slices[i].name.c_str());
+        }
     }
 
     // Not using Ase_Destroy_Output() because we still want to use
