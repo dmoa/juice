@@ -38,6 +38,8 @@ void ECS::Draw() {
     // bubble sort for draw order
 
     for (int _ = 0; _ < draw_order_indexes.size(); _ ++) {
+
+        bool has_swapped = false;
         for (int j = 0; j < draw_order_indexes.size() - _ - 1; j ++) {
 
             // indexes and names of enemies
@@ -47,11 +49,13 @@ void ECS::Draw() {
             int name2 = entities[i2].name;
 
             if (entities[i1].y + COLLISION_DATA[name1].y + COLLISION_DATA[name1].h > entities[i2].y + COLLISION_DATA[name2].y + COLLISION_DATA[name2].h) {
-
                 draw_order_indexes[j]   = i2;
                 draw_order_indexes[j+1] = i1;
+                has_swapped = true;
             }
         }
+        // If you haven't swapped any items, then the list is sorted, so no need to continue checking.
+        if (has_swapped) break;
     }
 
     for (unsigned int i = 0; i < draw_order_indexes.size(); i++) {
