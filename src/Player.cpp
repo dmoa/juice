@@ -155,7 +155,7 @@ void Player::Attack() {
 
         // we save the current iterator, as PopEntity deletes items in enemies->enemies.
         // If we were to do i++ at the end of the loop, then i++ would freak out and crash
-        // because it doesn't know how to find the next item as the item it's current ly pointing
+        // because it doesn't know how to find the next item as the item it's currently pointing
         // to just got deleted. We fix this by doing it++ previously, so that it can find the next
         // item in advance.
 

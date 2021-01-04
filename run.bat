@@ -1,1 +1,1 @@
-start /w bin/main.exe
+start /w bin/dev/main.exe
