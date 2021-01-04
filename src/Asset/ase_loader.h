@@ -93,6 +93,7 @@ inline u32 GetU32(void* memory) {
 #define USER_DATA 0x2020
 #define SLICE 0x2022
 
+#define INDEX_FORMAT 2 // indexed color format flag
 
 struct Ase_Header {
     u32 file_size;
@@ -163,21 +164,24 @@ struct Ase_Output {
 };
 
 
-static Ase_Output* Ase_Load(std::string file_path) {
+inline void Ase_Destroy_Output(Ase_Output* output);
 
-    std::ifstream file(file_path, std::ifstream::binary);
+static Ase_Output* Ase_Load(std::string path) {
+
+    std::ifstream file(path, std::ifstream::binary);
 
     if (file) {
 
         file.seekg(0, file.end);
-        const int length = file.tellg();
-        file.seekg(0, std::ios::beg);
+        const int file_size = file.tellg();
 
-        char buffer [length];
-        file.read(buffer, length);
-        file.close();
+        char buffer [file_size];
         char* buffer_p = & buffer[HEADER_SIZE];
 
+        // transfer data from file into buffer and close file
+        file.seekg(0, std::ios::beg);
+        file.read(buffer, file_size);
+        file.close();
 
         Ase_Header header = {
             GetU32(& buffer[0]),
@@ -198,14 +202,19 @@ static Ase_Output* Ase_Load(std::string file_path) {
             GetU16(& buffer[42])
         };
 
+        if (header.color_depth != 8) {
+            SDL_Log("File %s not in indexed color mode. Only indexed color mode supported. Exit.", path.c_str());
+            return NULL;
+        }
+
         Ase_Output* output = new Ase_Output();
         output->pixels = new u8 [header.width * header.height * header.num_frames];
-        output->frame_width = header.width;
+        output->frame_width  = header.width;
         output->frame_height = header.height;
         output->palette.color_key = header.palette_entry;
 
         output->frame_durations = new u16 [header.num_frames];
-        output->num_frames = header.num_frames;
+        output->num_frames   = header.num_frames;
 
         // Aseprite doesn't tell us upfront how many slices we're given,
         // so there's no way really of creating the array of size X before
@@ -213,7 +222,7 @@ static Ase_Output* Ase_Load(std::string file_path) {
         // converted into Slice* for output.
         std::vector<Slice> temp_slices;
 
-        // helps us with formulating output but not all data needed for output
+        // This helps us with formulating output but not all frame data is needed for output.
         Ase_Frame frames [header.num_frames];
 
         // fill the pixel indexes in the frame with transparent color index
@@ -221,6 +230,7 @@ static Ase_Output* Ase_Load(std::string file_path) {
             output->pixels[i] = header.palette_entry;
         }
 
+        // Each frame may have multiple chunks, so we first get frame data, then iterate over all the chunks that the frame has.
         for (int i = 0; i < header.num_frames; i++) {
 
             frames[i] = {
@@ -230,16 +240,15 @@ static Ase_Output* Ase_Load(std::string file_path) {
                 GetU16(buffer_p + 8),
                 GetU32(buffer_p + 12)
             };
-
             output->frame_durations[i] = frames[i].frame_duration;
 
             if (frames[i].magic_number != FRAME_MN) {
-                SDL_Log("Frame %i magic number not correct, corrupt file?\n", i);
-                exit(-1);
+                std::cout << "Frame " << i << " magic number not correct, corrupt file?" << std::endl;
+                Ase_Destroy_Output(output);
+                return NULL;
             }
 
             buffer_p += FRAME_SIZE;
-
 
             for (int j = 0; j < frames[i].new_num_chunks; j++) {
 
@@ -251,16 +260,18 @@ static Ase_Output* Ase_Load(std::string file_path) {
                     case PALETTE: {
 
                         output->palette.num_entries = GetU32(buffer_p + 6);
-                        // Specifies the range of unique colors in the palette.
+                        // specifies the range of unique colors in the palette
                         // There may be many repeated colors, so range -> efficient.
                         u32 first_to_change = GetU32(buffer_p + 10);
                         u32  last_to_change = GetU32(buffer_p + 14);
 
-                        for (int k = first_to_change; k < last_to_change + 1; k++) {
+                        for (int k = first_to_change; k < last_to_change; k++) {
 
+                            // We do not support color data with strings in it. Flag 1 means there's a name.
                             if (GetU16(buffer_p + 26) == 1) {
-                                SDL_Log("Name flag detected, cannot load! Color Index: %i\n", k);
-                                exit(-1);
+                                std::cout << "Name flag detected, cannot load! Color Index: " << k << std::endl;
+                                Ase_Destroy_Output(output);
+                                return NULL;
                             }
                             output->palette.entries[k] = {buffer_p[28 + k*6], buffer_p[29 + k*6], buffer_p[30 + k*6], buffer_p[31 + k*6]};
                         }
@@ -268,25 +279,29 @@ static Ase_Output* Ase_Load(std::string file_path) {
                     }
 
                     case CEL: {
+
                         s16 x_offset = GetU16(buffer_p + 8);
                         s16 y_offset = GetU16(buffer_p + 10);
                         u16 cel_type = GetU16(buffer_p + 13);
 
-                        if (cel_type != 2) {
-                            SDL_Log("Pixel format not supported! Exit.\n");
-                            exit(-1);
+                        if (cel_type != INDEX_FORMAT) {
+                            std::cout << "Pixel format not supported! Exit.\n";
+                            Ase_Destroy_Output(output);
+                            return NULL;
                         }
 
-                        u16 width = GetU16(buffer_p + 22);
+                        u16 width  = GetU16(buffer_p + 22);
                         u16 height = GetU16(buffer_p + 24);
                         u8 pixels [width * height];
 
                         unsigned int data_size = Decompressor_Feed(buffer_p + 26, 26 - chunk_size, pixels, width * height, true);
                         if (data_size == -1) {
-                            SDL_Log("Failed to decompress pixels! Exit.\n");
-                            exit(-1);
+                            std::cout << "Failed to decompress pixels! Exit.\n";
+                            Ase_Destroy_Output(output);
+                            return NULL;
                         }
 
+                        // transforming array of pixels onto larger array of pixels
                         const int pixel_offset = header.width * header.num_frames * y_offset + i * header.width + x_offset;
 
                         for (int k = 0; k < width * height; k ++) {
@@ -298,15 +313,17 @@ static Ase_Output* Ase_Load(std::string file_path) {
                     }
 
                     case TAGS: {
-                        output->num_tags = GetU16(buffer_p + 6);
-                        output->tags = new Ase_Tag [output->num_tags];
+                        int num_tags = GetU16(buffer_p + 6);
+                        output->tags = new Ase_Tag[num_tags];
 
+                        // iterate over each tag and append data to output->tags
                         int tag_buffer_offset = 0;
-                        for (int k = 0; k < output->num_tags; k ++) {
+                        for (int k = 0; k < num_tags; k ++) {
 
                             output->tags[k].from = GetU16(buffer_p + tag_buffer_offset + 16);
-                            output->tags[k].to   = GetU16(buffer_p + tag_buffer_offset + 18);
+                            output->tags[k].to = GetU16(buffer_p + tag_buffer_offset + 18);
 
+                            // get string
                             int slen = GetU16(buffer_p + tag_buffer_offset + 33);
                             output->tags[k].name = "";
                             for (int a = 0; a < slen; a ++) {
@@ -315,18 +332,18 @@ static Ase_Output* Ase_Load(std::string file_path) {
 
                             tag_buffer_offset += 19 + slen;
                         }
-
                         break;
                     }
-
                     case SLICE: {
                         u32 num_keys = GetU32(buffer_p + 6);
                         u32 flag = GetU32(buffer_p + 10);
                         if (flag != 0) {
-                            SDL_Log("Flag %i not supported! Asset: %s", flag, file_path.c_str());
-                            exit(-1);
+                            std::cout << "Flag " << flag << " not supported! Asset: " << path;
+                            Ase_Destroy_Output(output);
+                            return NULL;
                         }
 
+                        // get string
                         int slen = GetU16(buffer_p + 18);
                         std::string name = "";
                         for (int a = 0; a < slen; a++) {
@@ -355,6 +372,7 @@ static Ase_Output* Ase_Load(std::string file_path) {
             }
         }
 
+        // convert vector to array for output
         output->slices = new Slice [temp_slices.size()];
         for (int i = 0; i < temp_slices.size(); i ++) {
             output->slices[i] = temp_slices[i];
@@ -365,8 +383,8 @@ static Ase_Output* Ase_Load(std::string file_path) {
 
 
     } else {
-        SDL_Log("file could not be loaded, %s\n", file_path.c_str());
-        exit(-1);
+        std::cout << "file could not be loaded" << std::endl;
+        return NULL;
     }
 }
 
