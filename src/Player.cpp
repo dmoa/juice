@@ -4,9 +4,15 @@
 #include "ECS/ECS.h"
 
 void Player::LoadAsset() {
-    asset = LoadAsset_Ase("assets/player/red.ase");
+    asset = LoadAsset_Ase("assets/player/knight.ase");
     is_flipped = SDL_FLIP_HORIZONTAL;
-    _SetAnimation(& cur_anim, asset, "idle");
+    _SetAnimation(& cur_anim, asset, "Idle");
+
+    //SDL_Log("%i %i", (int) asset->tags["idle"].from, (int) asset->tags["idle"].to);
+    if (asset->tags.find("idle") == asset->tags.end()) {
+        SDL_Log("WOOOOH");
+    }
+
     rendering_quad.w = cur_anim.quad.w;
     rendering_quad.h = cur_anim.quad.h;
 }
@@ -140,10 +146,10 @@ void Player::AnimationUpdate() {
 
     if (! is_attacking) {
         if (current_xv || current_yv) {
-            _SetAnimationIf(& cur_anim, asset, "move");
+            _SetAnimationIf(& cur_anim, asset, "Run");
         }
         else {
-            _SetAnimationIf(& cur_anim, asset, "idle");
+            _SetAnimationIf(& cur_anim, asset, "Idle");
         }
     }
 }
@@ -173,5 +179,5 @@ void Player::Attack() {
     }
 
     cooldown_tick = cooldown;
-    _SetAnimation(& cur_anim, asset, "kick");
+    //_SetAnimation(& cur_anim, asset, "");
 }

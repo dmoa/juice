@@ -53,7 +53,9 @@ inline Asset_Ase* LoadAsset_Ase(std::string file_path) {
         new SDL_Rect
     };
 
+    SDL_Log("num tags = %i", output->num_tags);
     for (int i = 0; i < output->num_tags; i++) {
+        SDL_Log("%s", output->tags[i].name.c_str());
         asset->tags[output->tags[i].name] = {output->tags[i].from, output->tags[i].to};
     }
 

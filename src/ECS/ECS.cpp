@@ -55,7 +55,7 @@ void ECS::Draw() {
             }
         }
         // If you haven't swapped any items, then the list is sorted, so no need to continue checking.
-        if (! has_swapped) { 
+        if (! has_swapped) {
             break;
         }
     }
