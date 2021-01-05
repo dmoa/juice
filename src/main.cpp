@@ -1,7 +1,7 @@
 #pragma once
 
 #include <time.h>
-
+#define NO_STDIO_REDIRECT
 #include <SDL_CP.h>
 
 #define CONTROLS_IMPLEMENTATION

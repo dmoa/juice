@@ -11,11 +11,18 @@ struct CurAnimation {
 };
 
 inline void _SetAnimation(CurAnimation* anim, Asset_Ase* asset, std::string name) {
+
+    // If animation doesn't exist, don't bother.
+    if (asset->tags.find(name) == asset->tags.end()) {
+        SDL_Log("Failed to set animation %s for asset %s\n", name.c_str(), asset->file_path.c_str());
+        return;
+    }
+
     anim->name = name;
     anim->frame_i = asset->tags[name].from;
     anim->tick = asset->frame_durations[anim->frame_i];
     anim->quad = {
-                anim->frame_i * asset->frame_height,
+                anim->frame_i * asset->frame_width,
                 0,
                 asset->frame_width,
                 asset->frame_height

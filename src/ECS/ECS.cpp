@@ -9,11 +9,11 @@ void ECS::GiveMapPlayerEnemies(Map* _map, Player* _player, Enemies* _enemies) {
     enemies = _enemies;
 }
 
-int ECS::AddEntity(float x, float y, ENTITY_NAME name, ENTITY_TYPE type) {
+int ECS::AddEntity(ENTITY_NAME name, ENTITY_TYPE type, float x, float y, Asset_Ase* asset) {
 
     int id = entities.size();
 
-    entities[id] = {x, y, name, type};
+    entities[id] = {name, type, x, y, NULL};
     draw_order_indexes.push_back(id);
 
     return id;
@@ -47,6 +47,8 @@ void ECS::Draw() {
             int i2 = draw_order_indexes[j+1];
             int name1 = entities[i1].name;
             int name2 = entities[i2].name;
+
+            if (entities[i1].asset == NULL || entities[i2].asset == NULL) continue;
 
             if (entities[i1].y + COLLISION_DATA[name1].y + COLLISION_DATA[name1].h > entities[i2].y + COLLISION_DATA[name2].y + COLLISION_DATA[name2].h) {
                 draw_order_indexes[j]   = i2;

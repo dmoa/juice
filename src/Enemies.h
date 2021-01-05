@@ -40,7 +40,7 @@ struct Enemies {
 
     // Components on top of ECS for enemy only
 
-    std::map<int, Enemy>  enemies;
+    std::map<int, Enemy> enemies;
 
     SDL_Texture* spider_texture;
 };

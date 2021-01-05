@@ -155,5 +155,5 @@ int Map::AddEntityIfPossible(int x, int y, ENTITY_NAME name) {
             return -1;
         }
     }
-    return ecs->AddEntity(x, y, name, MAP_TYPE);
+    return ecs->AddEntity(name, MAP_TYPE, x, y);
 }

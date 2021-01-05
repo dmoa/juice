@@ -17,7 +17,7 @@ void Enemies::PassPointers(float* _dt, Map* _map, ECS* _ecs, Player* _player) {
 void Enemies::CreateEnemies() {
     for (int i = 0; i < 30; i ++) {
 
-        int   id = ecs->AddEntity(random(50, map->map_width - 100), random(50, map->map_height - 100), SPIDER, ENEMY_TYPE);
+        int   id = ecs->AddEntity(SPIDER, ENEMY_TYPE, random(50, map->map_width - 100), random(50, map->map_height - 100));
         float tick = float(random(0, 200)) / 1000;
 
         enemies[id] = {2, false, {IDLE, tick, 0}};
@@ -38,13 +38,10 @@ void Enemies::DrawEnemy(int id) {
 void Enemies::Update() {
     // it.first  -> entity id
     // it.second -> Enemy struct with additional components
-
     for (auto & it: enemies) {
         UpdateEnemyAnimation(it.first, & it.second);
         UpdateEnemyMovement( it.first, & it.second);
     }
-
-
 }
 
 void Enemies::UpdateEnemyAnimation(int id, Enemy* enemy) {

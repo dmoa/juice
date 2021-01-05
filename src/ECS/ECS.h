@@ -6,6 +6,7 @@
 
 #include "../Globals/All.h"
 #include "Entity.h"
+#include "../Asset/AssetLoader.h"
 
 struct Map;
 struct Player;
@@ -14,7 +15,7 @@ struct Enemies;
 struct ECS {
 
     void GiveMapPlayerEnemies(Map* _map, Player* _player, Enemies* _enemies);
-    int AddEntity(float x, float y, ENTITY_NAME name, ENTITY_TYPE type);
+    int AddEntity(ENTITY_NAME name, ENTITY_TYPE type, float x, float y, Asset_Ase* asset = NULL);
     void PopEntity(int id);
 
     inline float GetCenterX(int id) { return entities[id].x + COLLISION_DATA[entities[id].name].x + COLLISION_DATA[entities[id].name].w / 2; }

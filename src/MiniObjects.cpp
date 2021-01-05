@@ -25,7 +25,7 @@ void MiniObjects::Update() {
 }
 
 int MiniObjects::GenerateCobweb(float x, float y) {
-    int id = ecs->AddEntity(x, y, COBWEB, MINIOBJECT_TYPE);
+    int id = ecs->AddEntity(COBWEB, MINIOBJECT_TYPE, x, y);
 
     objects[id] = {-15, true, {ANIM_NONE}};
 

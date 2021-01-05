@@ -19,6 +19,8 @@ struct Tag_Range {
 };
 
 struct Asset_Ase {
+    std::string file_path; // defacto name
+
     SDL_Texture* texture;
     int frame_width;
     int frame_height;
@@ -43,6 +45,7 @@ inline Asset_Ase* LoadAsset_Ase(std::string file_path) {
     SDL_FreeSurface(surface);
 
     Asset_Ase* asset = new Asset_Ase {
+        file_path,
         texture,
         output->frame_width,
         output->frame_height,
@@ -53,14 +56,12 @@ inline Asset_Ase* LoadAsset_Ase(std::string file_path) {
         new SDL_Rect
     };
 
-    SDL_Log("num tags = %i", output->num_tags);
     for (int i = 0; i < output->num_tags; i++) {
-        SDL_Log("%s", output->tags[i].name.c_str());
         asset->tags[output->tags[i].name] = {output->tags[i].from, output->tags[i].to};
     }
 
     for (int i = 0; i < output->num_slices; i++) {
-        if (output->slices[i].name == "collision") {
+        if (output->slices[i].name == "Collision") {
             *(asset->collision_box) = output->slices[i].quad;
         } else {
             SDL_Log("Asset_Ase slice %s not supported", output->slices[i].name.c_str());
