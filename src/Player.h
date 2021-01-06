@@ -67,7 +67,7 @@ struct Player {
 
     std::vector<SDL_Rect>* map_cb;
 
-    Asset_Ase* asset;
+    Asset_Ase_Animated* asset;
     CurAnimation cur_anim;
 
     SDL_Rect     rendering_quad;

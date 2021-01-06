@@ -22,8 +22,6 @@ Copyright © 2020 Stan O
 *    any source distribution.
 
 
-
-
 Parses:
     - All header data
     - All frame data
@@ -49,6 +47,9 @@ Let me know if you want something added,
     ~ Stan
 
 */
+
+// @NOTE:
+// I've edited this library so that the wrapper AssetLoader.h is smaller.
 
 #pragma once
 
@@ -141,6 +142,11 @@ struct Palette_Chunk {
     SDL_Color entries [256];
 };
 
+struct Tag_Range {
+    u16 from;
+    u16 to;
+};
+
 struct Slice {
     std::string name;
     SDL_Rect quad;
@@ -153,8 +159,7 @@ struct Ase_Output {
     int frame_height;
     Palette_Chunk palette;
 
-    Ase_Tag* tags;
-    int num_tags;
+    std::unordered_map<std::string, Tag_Range> tags;
 
     u16* frame_durations;
     int num_frames;
@@ -314,22 +319,23 @@ static Ase_Output* Ase_Load(std::string path) {
 
                     case TAGS: {
 
-                        output->num_tags = GetU16(buffer_p + 6);;
-                        output->tags = new Ase_Tag[output->num_tags];
+                        u16 num_tags = GetU16(buffer_p + 6);;
 
                         // iterate over each tag and append data to output->tags
                         int tag_buffer_offset = 0;
-                        for (int k = 0; k < output->num_tags; k ++) {
+                        for (int k = 0; k < num_tags; k ++) {
 
-                            output->tags[k].from = GetU16(buffer_p + tag_buffer_offset + 16);
-                            output->tags[k].to = GetU16(buffer_p + tag_buffer_offset + 18);
-
-                            // get string
-                            int slen = GetU16(buffer_p + tag_buffer_offset + 33);
-                            output->tags[k].name = "";
+                            std::string tag_name = "";
+                            // get string from buffer
+                            u16 slen = GetU16(buffer_p + tag_buffer_offset + 33);
                             for (int a = 0; a < slen; a ++) {
-                                output->tags[k].name += *(buffer_p + tag_buffer_offset + a + 35);
+                                tag_name += *(buffer_p + tag_buffer_offset + a + 35);
                             }
+
+                            output->tags[tag_name] = {
+                                GetU16(buffer_p + tag_buffer_offset + 16), // .from
+                                GetU16(buffer_p + tag_buffer_offset + 18)  // .to
+                            };
 
                             tag_buffer_offset += 19 + slen;
                         }
@@ -392,7 +398,6 @@ static Ase_Output* Ase_Load(std::string path) {
 inline void Ase_Destroy_Output(Ase_Output* output) {
     delete [] output->pixels;
     delete [] output->frame_durations;
-    delete [] output->tags;
     delete [] output->slices;
     delete output;
 }
