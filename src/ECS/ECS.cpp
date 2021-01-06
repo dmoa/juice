@@ -48,9 +48,13 @@ void ECS::Draw() {
             int name1 = entities[i1].name;
             int name2 = entities[i2].name;
 
-            if (entities[i1].asset == NULL || entities[i2].asset == NULL) continue;
+            // For draw order we use the collision box because the objects' collision box
+            // always includes the bottom of the object (nature of topdown game). This
+            // might change later.
+            if (entities[i1].asset== NULL || entities[i2].asset== NULL) break;
+            if (entities[i1].asset->collision_box == NULL || entities[i2].asset->collision_box == NULL) break;
 
-            if (entities[i1].y + COLLISION_DATA[name1].y + COLLISION_DATA[name1].h > entities[i2].y + COLLISION_DATA[name2].y + COLLISION_DATA[name2].h) {
+            if (entities[i1].y + entities[i1].asset->collision_box->y + entities[i1].asset->collision_box->h > entities[i2].y + entities[i2].asset->collision_box->y + entities[i2].asset->collision_box->h) {
                 draw_order_indexes[j]   = i2;
                 draw_order_indexes[j+1] = i1;
                 has_swapped = true;

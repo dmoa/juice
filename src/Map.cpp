@@ -4,6 +4,8 @@
 
 void Map::LoadTexture() {
     texture = LoadImage(g_window.rdr, "assets/tileset.png");
+    tree1 = LoadAsset_Ase("assets/map/tree1.ase");
+    tree2 = LoadAsset_Ase("assets/map/tree2.ase");
 }
 
 void Map::ReloadTilesetTexture() {
@@ -76,8 +78,12 @@ void Map::CreateMapTexture() {
         SDL_RenderCopyEx(g_window.rdr, texture, & iter_quad, & iter_pos, NULL, NULL, SDL_FLIP_VERTICAL);
     }
 
-    // TREES, LOGS AND STONES
+    SDL_SetRenderTarget(g_window.rdr, NULL);
 
+    // TREES, LOGS AND STONES
+    // We don't add these objects to static_saved_drawn_data because
+    // when the player gets to one of the objects the opacity changes,
+    // so they have to be independently drawn.
     int x;
     int y;
     for (int i = 0; i < 100; i++) {
@@ -87,7 +93,6 @@ void Map::CreateMapTexture() {
         if (entity_id != -1) object_opacities[entity_id] = 255.f;
     }
 
-    SDL_SetRenderTarget(g_window.rdr, NULL);
 }
 
 void Map::CreateCollisionBoxes() {
@@ -155,5 +160,5 @@ int Map::AddEntityIfPossible(int x, int y, ENTITY_NAME name) {
             return -1;
         }
     }
-    return ecs->AddEntity(name, MAP_TYPE, x, y);
+    return ecs->AddEntity(name, MAP_TYPE, x, y, tree1);
 }

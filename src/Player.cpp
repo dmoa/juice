@@ -4,7 +4,7 @@
 #include "ECS/ECS.h"
 
 void Player::LoadAsset() {
-    asset = LoadAsset_Ase("assets/player/knight.ase");
+    asset = LoadAsset_Ase_Animated("assets/player/knight.ase");
     is_flipped = SDL_FLIP_HORIZONTAL;
     _SetAnimation(& cur_anim, asset, "Idle");
 

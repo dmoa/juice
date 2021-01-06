@@ -52,4 +52,7 @@ struct Map {
 
     SDL_Texture* static_saved_drawn_data = SDL_CreateTexture(g_window.rdr, NULL, SDL_TEXTUREACCESS_TARGET, tiles_wide * tile_length, tiles_high * tile_length);
     SDL_Texture* texture;
+
+    Asset_Ase* tree1;
+    Asset_Ase* tree2;
 };
