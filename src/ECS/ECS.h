@@ -14,7 +14,7 @@ struct Enemies;
 
 struct ECS {
 
-    void GiveMapPlayerEnemies(Map* _map, Player* _player, Enemies* _enemies);
+    void GivePointers(Map* _map, Player* _player, Enemies* _enemies);
     int AddEntity(ENTITY_NAME name, ENTITY_TYPE type, float x, float y, Asset_Ase* asset = NULL);
     void PopEntity(int id);
 

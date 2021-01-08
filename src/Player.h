@@ -41,8 +41,8 @@ struct Player {
     float x = 10;
     float y = 10;
 
-    float GetDrawCenterX() { return x + rendering_quad.w / 2; };
-    float GetDrawCenterY() { return y + rendering_quad.h / 2; };
+    inline float GetDrawCenterX() { return x + asset->frame_width / 2; };
+    inline float GetDrawCenterY() { return y + asset->frame_height / 2; };
 
     float* dt;
     Map* map;

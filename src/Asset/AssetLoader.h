@@ -16,6 +16,8 @@ inline SDL_Texture* LoadImage(SDL_Renderer* renderer, std::string path) {
 struct Asset_Ase {
     std::string file_path; // defacto name
     SDL_Texture* texture;
+    int frame_width;
+    int frame_height;
     // For now, there aren't any cases where a sprite doesn't have a collision box.
     // If a sprite in the future does not need a collision box, it would likely
     // be an edge case and we waste an obscure amount of memory when holding an empty pointer.
@@ -23,8 +25,6 @@ struct Asset_Ase {
 };
 
 struct Asset_Ase_Animated : Asset_Ase {
-    int frame_width;
-    int frame_height;
     int num_frames;
 
     u16* frame_durations;
@@ -48,9 +48,9 @@ inline Asset_Ase* LoadAsset_Ase(std::string file_path) {
         asset = new Asset_Ase_Animated ({
             file_path,
             texture,
-            new SDL_Rect,
             output->frame_width,
             output->frame_height,
+            new SDL_Rect,
             output->num_frames,
             output->frame_durations,
             output->tags
@@ -60,6 +60,8 @@ inline Asset_Ase* LoadAsset_Ase(std::string file_path) {
         asset = new Asset_Ase ({
             file_path,
             texture,
+            output->frame_width,
+            output->frame_height,
             new SDL_Rect
         });
     }
