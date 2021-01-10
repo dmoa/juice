@@ -12,6 +12,11 @@
 #include <SDL2_ttf/SDL_ttf.h>
 #endif
 
+#include <stdio.h>
+// For libraries that use printf
+// (printf is disabled in SDL_Log for stupid reasons)
+#define printf SDL_Log
+
 typedef int64_t  s64;
 typedef int32_t  s32;
 typedef int16_t  s16;

@@ -7,7 +7,7 @@ struct GlobalWindowData {
     int h;
     int scale;
     SDL_Renderer* rdr;
-    int pixel_format;
+    SDL_Rect gameplay_viewport;
 };
 
 extern GlobalWindowData g_window;

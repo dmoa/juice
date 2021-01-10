@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
 
     clock.tick(); // avoid large dt initially
 
-    gameplay_camera.GivePlayerMapDelta(& player, & map, & clock.dt);
+    gameplay_camera.PassPointers(& player, & map, & clock.dt);
 
     ecs.GivePointers(& map, & player, & enemies);
 
@@ -60,10 +60,6 @@ int main(int argc, char* argv[]) {
     map.PassPointers(& player, & clock.dt, & ecs);
     map.CreateMapTexture();
     map.CreateCollisionBoxes();
-
-    enemies.CreateTextures();
-    enemies.PassPointers(& clock.dt, & map, & ecs, & player);
-    //enemies.CreateEnemies();
 
     SDL_Event event;
     bool quit = false;
@@ -125,7 +121,7 @@ int main(int argc, char* argv[]) {
 
         print.Draw(std::to_string( clock.average_fps ), 2, 0);
 
-        window.Present(gameplay_camera.GetViewport());
+        window.Present();
     }
 
     player.DestroyAsset();

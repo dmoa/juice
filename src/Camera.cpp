@@ -1,13 +1,9 @@
 #include "Camera.h"
 
-void Camera::GivePlayerMapDelta(Player* _player, Map* _map, float* _dt) {
+void Camera::PassPointers(Player* _player, Map* _map, float* _dt) {
     player = _player;
     map = _map;
     dt = _dt;
-}
-
-SDL_Rect* Camera::GetViewport() {
-    return & viewport;
 }
 
 void Camera::Update() {
@@ -29,7 +25,7 @@ void Camera::Update() {
         real_y = map->GetMapWidth() - g_window.h / g_window.scale;
     }
 
-    viewport = {real_x, real_y, g_window.w / g_window.scale, g_window.h / g_window.scale};
+    g_window.gameplay_viewport = {real_x, real_y, g_window.w / g_window.scale, g_window.h / g_window.scale};
 }
 
 void Camera::DevUpdate() {
@@ -45,5 +41,5 @@ void Camera::DevUpdate() {
     if (CTS::Up()) {
         real_y -= pan_v * (*dt);
     }
-    viewport = {real_x, real_y, g_window.w / g_window.scale, g_window.h / g_window.scale};
+    g_window.gameplay_viewport = {real_x, real_y, g_window.w / g_window.scale, g_window.h / g_window.scale};
 }

@@ -10,7 +10,7 @@ struct CurAnimation {
     SDL_Rect quad;
 };
 
-inline void _SetAnimation(CurAnimation* anim, Asset_Ase_Animated* asset, std::string name) {
+inline void SetAnimation(CurAnimation* anim, Asset_Ase_Animated* asset, std::string name) {
 
     // If animation doesn't exist, don't bother.
     if (asset->tags.find(name) == asset->tags.end()) {
@@ -29,8 +29,8 @@ inline void _SetAnimation(CurAnimation* anim, Asset_Ase_Animated* asset, std::st
     };
 }
 
-inline void _SetAnimationIf(CurAnimation* anim, Asset_Ase_Animated* asset, std::string name) {
-    if (name != anim->name) _SetAnimation(anim, asset, name);
+inline void SetAnimationIf(CurAnimation* anim, Asset_Ase_Animated* asset, std::string name) {
+    if (name != anim->name) SetAnimation(anim, asset, name);
 }
 
 // @Question for M about inline vs const

@@ -5,8 +5,9 @@
 
 void Player::LoadAsset() {
     asset = LoadAsset_Ase_Animated("assets/player/knight.ase");
+    weapon_asset = LoadAsset_Ase("assets/player/weapons/knife.ase");
     is_flipped = SDL_FLIP_HORIZONTAL;
-    _SetAnimation(& cur_anim, asset, "Idle");
+    SetAnimation(& cur_anim, asset, "Idle");
 
     rendering_quad.w = cur_anim.quad.w;
     rendering_quad.h = cur_anim.quad.h;
@@ -14,6 +15,7 @@ void Player::LoadAsset() {
 
 void Player::DestroyAsset() {
     DestroyAsset_Ase_Animated(asset);
+    DestroyAsset_Ase(weapon_asset);
 }
 
 void Player::PassPointers(Map* _map, Enemies* _enemies, ECS* _ecs, float* _dt) {
@@ -30,6 +32,14 @@ void Player::InitPos() {
 
 void Player::Draw() {
     SDL_RenderCopyEx(g_window.rdr, asset->texture, & cur_anim.quad, & rendering_quad, NULL, NULL, is_flipped);
+
+    SDL_Rect drect = {0, 0, weapon_asset->frame_width, weapon_asset->frame_height};
+    GetMouseGameState(& drect.x, & drect.y);
+    drect.x -= drect.w / 2; drect.y -= drect.h;
+
+    SDL_Point pivot = {rendering_quad.x, rendering_quad.y};
+
+    SDL_RenderCopyEx(g_window.rdr, weapon_asset->texture, NULL, & drect, drect.x % 360, & pivot, SDL_FLIP_NONE);
 }
 
 void Player::Update() {
@@ -141,10 +151,10 @@ void Player::AnimationUpdate() {
 
     if (! is_attacking) {
         if (current_xv || current_yv) {
-            _SetAnimationIf(& cur_anim, asset, "Run");
+            SetAnimationIf(& cur_anim, asset, "Run");
         }
         else {
-            _SetAnimationIf(& cur_anim, asset, "Idle");
+            SetAnimationIf(& cur_anim, asset, "Idle");
         }
     }
 }
@@ -152,27 +162,27 @@ void Player::AnimationUpdate() {
 void Player::Attack() {
     is_attacking = true;
 
-    for (auto it = enemies->enemies.begin(); it != enemies->enemies.end();) {
+    // for (auto it = enemies->enemies.begin(); it != enemies->enemies.end();) {
 
-        // we save the current iterator, as PopEntity deletes items in enemies->enemies.
-        // If we were to do i++ at the end of the loop, then i++ would freak out and crash
-        // because it doesn't know how to find the next item as the item it's currently pointing
-        // to just got deleted. We fix this by doing it++ previously, so that it can find the next
-        // item in advance.
+    //     // we save the current iterator, as PopEntity deletes items in enemies->enemies.
+    //     // If we were to do i++ at the end of the loop, then i++ would freak out and crash
+    //     // because it doesn't know how to find the next item as the item it's currently pointing
+    //     // to just got deleted. We fix this by doing it++ previously, so that it can find the next
+    //     // item in advance.
 
-        auto current = it++;
-        Entity e = ecs->entities[current->first];
+    //     auto current = it++;
+    //     Entity e = ecs->entities[current->first];
 
-        // if (Entities_AABB(e.name, e.x, e.y, PLAYER, x, y)) {
+    //     // if (Entities_AABB(e.name, e.x, e.y, PLAYER, x, y)) {
 
-        //     current->second.hp--;
-        //     if (current->second.hp <= 0) {
-        //         ecs->PopEntity(current->first);
-        //     }
+    //     //     current->second.hp--;
+    //     //     if (current->second.hp <= 0) {
+    //     //         ecs->PopEntity(current->first);
+    //     //     }
 
-        // }
-    }
+    //     // }
+    // }
 
     cooldown_tick = cooldown;
-    //_SetAnimation(& cur_anim, asset, "kick");
+    //SetAnimation(& cur_anim, asset, "kick");
 }

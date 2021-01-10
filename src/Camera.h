@@ -9,8 +9,7 @@
 #include "utils/extramath.h"
 
 struct Camera {
-    void GivePlayerMapDelta(Player* _player, Map* _map, float* _dt);
-    SDL_Rect* GetViewport();
+    void PassPointers(Player* _player, Map* _map, float* _dt);
     void Update();
     void DevUpdate();
 
@@ -20,7 +19,5 @@ struct Camera {
     float real_x = 0;
     float real_y = 0;
     int max_distance_from_player = 30;
-    SDL_Rect viewport = {real_x, real_y, g_window.w / g_window.scale, g_window.h / g_window.scale};
-
     float pan_v = 400;
 };

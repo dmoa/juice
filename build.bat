@@ -1,6 +1,6 @@
 @echo off
 
-set cppfiles=src/*.cpp src/ECS/*.cpp src/ECS/Animation/*.cpp src/utils/*.cpp src/Globals/*.cpp
+set cppfiles=src/*.cpp src/ECS/*.cpp src/ECS/Animation/*.cpp src/utils/*.cpp
 
 if [%1]==[] (
     g++.exe -std=c++17 src/*.cpp src/ECS/*.cpp src/ECS/Animation/*.cpp src/utils/*.cpp src/Globals/* -I"C:\dev\SDL\64\include" -L"C:\dev\SDL\64\lib" -I"C:\juice\src" -w -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image -lws2_32 -o bin/dev/main.exe -Wl,-subsystem,windows && CALL run.bat

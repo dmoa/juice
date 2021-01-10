@@ -10,7 +10,7 @@ struct Window {
     void Clear();
     void SetDrawGameplay();
     void SetDrawOther();
-    void Present(SDL_Rect* gameplay_viewport);
+    void Present();
     void Shutdown();
 
     SDL_Texture* gameplay_texture;

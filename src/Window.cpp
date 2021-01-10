@@ -33,9 +33,9 @@ void Window::SetDrawOther() {
     SDL_SetRenderTarget(g_window.rdr, other_texture);
 }
 
-void Window::Present(SDL_Rect* gameplay_viewport) {
+void Window::Present() {
     SDL_SetRenderTarget(g_window.rdr, NULL);
-    SDL_RenderCopy(g_window.rdr, gameplay_texture, gameplay_viewport, NULL);
+    SDL_RenderCopy(g_window.rdr, gameplay_texture, & g_window.gameplay_viewport, NULL);
     other_texture_rect = {0, 0, g_window.w / g_window.scale, g_window.h / g_window.scale};
     SDL_RenderCopy(g_window.rdr, other_texture, & other_texture_rect, NULL);
     SDL_RenderPresent(g_window.rdr);

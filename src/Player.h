@@ -14,14 +14,11 @@
 
 #include "ECS/Animation/UpdateAnimation.h"
 
-
 struct Map;
 struct Enemies;
 struct ECS;
 
-inline bool Entities_AABB(ENTITY_NAME e1, float x1, float y1, ENTITY_NAME e2, float x2, float y2) {
-    return AABB(x1 + COLLISION_DATA[e1].x, y1 + COLLISION_DATA[e1].y, COLLISION_DATA[e1].w, COLLISION_DATA[e1].h, x2 + COLLISION_DATA[e2].x, y2 + COLLISION_DATA[e2].y, COLLISION_DATA[e2].w, COLLISION_DATA[e2].h);
-}
+#define PLAYER_NUM_WEAPONS
 
 struct Player {
     void LoadAsset();
@@ -38,8 +35,8 @@ struct Player {
 
     void Attack();
 
-    float x = 10;
-    float y = 10;
+    float x = 30;
+    float y = 30;
 
     inline float GetDrawCenterX() { return x + asset->frame_width / 2; };
     inline float GetDrawCenterY() { return y + asset->frame_height / 2; };
@@ -68,6 +65,7 @@ struct Player {
     std::vector<SDL_Rect>* map_cb;
 
     Asset_Ase_Animated* asset;
+    Asset_Ase* weapon_asset;
     CurAnimation cur_anim;
 
     SDL_Rect     rendering_quad;
