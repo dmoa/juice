@@ -29,6 +29,6 @@ inline bool AABB(float x, float y, float w, float h, float x2, float y2, float w
 
 inline void GetMouseGameState(int* x, int* y) {
     SDL_GetMouseState(x, y);
-    *x = *x / g_window.scale + g_window.gameplay_viewport.x;
-    *y = *y / g_window.scale + g_window.gameplay_viewport.y;
+    if (x) *x = *x / g_window.scale + g_window.gameplay_viewport.x;
+    if (y) *y = *y / g_window.scale + g_window.gameplay_viewport.y;
 }

@@ -31,15 +31,31 @@ void Player::InitPos() {
 }
 
 void Player::Draw() {
+
+    int mouse_x; int mouse_y; GetMouseGameState(& mouse_x, & mouse_y);
+    // +90 at the end because atan2's range is (-rad,rad), when we want (0,360), not (-180, 180).
+    float angle = atan2(mouse_y - GetDrawCenterY(), mouse_x - GetDrawCenterX()) * 180 / PI + 90;
+
+    // If the angle of the weapon makes the weapon point towards the top, then draw the weapon behind the player.
+    if (angle < 90 || angle > 270) {
+        DrawWeapon(angle);
+        DrawCharacter();
+    }
+    else {
+        DrawCharacter();
+        DrawWeapon(angle);
+    }
+}
+
+void Player::DrawCharacter() {
     SDL_RenderCopyEx(g_window.rdr, asset->texture, & cur_anim.quad, & rendering_quad, NULL, NULL, is_flipped);
+}
 
-    SDL_Rect drect = {0, 0, weapon_asset->frame_width, weapon_asset->frame_height};
-    GetMouseGameState(& drect.x, & drect.y);
-    drect.x -= drect.w / 2; drect.y -= drect.h;
-
-    SDL_Point pivot = {rendering_quad.x, rendering_quad.y};
-
-    SDL_RenderCopyEx(g_window.rdr, weapon_asset->texture, NULL, & drect, drect.x % 360, & pivot, SDL_FLIP_NONE);
+void Player::DrawWeapon(float angle) {
+    // The weapon is drawn slightly below the center of the player with a pivot of the bottom of the weapon.
+    SDL_Rect drect = {GetDrawCenterX() - weapon_asset->frame_width / 2, GetDrawCenterY() - weapon_asset->frame_height / 8 * 3, weapon_asset->frame_width, weapon_asset->frame_height};
+    SDL_Point pivot = {weapon_asset->frame_width / 2, weapon_asset->frame_height};
+    SDL_RenderCopyEx(g_window.rdr, weapon_asset->texture, NULL, & drect, angle, & pivot, SDL_FLIP_NONE);
 }
 
 void Player::Update() {

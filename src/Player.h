@@ -18,7 +18,12 @@ struct Map;
 struct Enemies;
 struct ECS;
 
-#define PLAYER_NUM_WEAPONS
+#define PLAYER_NUM_WEAPONS 1
+
+// struct Weapon {
+//     SDL_Rect quad;
+
+// }
 
 struct Player {
     void LoadAsset();
@@ -28,6 +33,8 @@ struct Player {
     void InitPos();
 
     void Draw();
+    void DrawCharacter();
+    void DrawWeapon(float angle);
 
     void Update();
     void CollisionUpdate();
@@ -68,6 +75,6 @@ struct Player {
     Asset_Ase* weapon_asset;
     CurAnimation cur_anim;
 
-    SDL_Rect     rendering_quad;
+    SDL_Rect rendering_quad;
     SDL_RendererFlip is_flipped = SDL_FLIP_NONE;
 };
