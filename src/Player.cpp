@@ -13,7 +13,7 @@ void Player::LoadAsset() {
 }
 
 void Player::DestroyAsset() {
-    DestroyAsset_Ase(asset);
+    DestroyAsset_Ase_Animated(asset);
 }
 
 void Player::PassPointers(Map* _map, Enemies* _enemies, ECS* _ecs, float* _dt) {
@@ -25,11 +25,10 @@ void Player::PassPointers(Map* _map, Enemies* _enemies, ECS* _ecs, float* _dt) {
 }
 
 void Player::InitPos() {
-    id = ecs->AddEntity(PLAYER, PLAYER_TYPE, x, y);
+    id = ecs->AddEntity(PLAYER_TYPE, x, y, (Asset_Ase**) & asset);
 }
 
 void Player::Draw() {
-
     SDL_RenderCopyEx(g_window.rdr, asset->texture, & cur_anim.quad, & rendering_quad, NULL, NULL, is_flipped);
 }
 
@@ -164,14 +163,14 @@ void Player::Attack() {
         auto current = it++;
         Entity e = ecs->entities[current->first];
 
-        if (Entities_AABB(e.name, e.x, e.y, PLAYER, x, y)) {
+        // if (Entities_AABB(e.name, e.x, e.y, PLAYER, x, y)) {
 
-            current->second.hp--;
-            if (current->second.hp <= 0) {
-                ecs->PopEntity(current->first);
-            }
+        //     current->second.hp--;
+        //     if (current->second.hp <= 0) {
+        //         ecs->PopEntity(current->first);
+        //     }
 
-        }
+        // }
     }
 
     cooldown_tick = cooldown;

@@ -2,15 +2,18 @@
 #include "Player.h"
 #include "ECS/ECS.h"
 
-void Map::LoadTexture() {
+void Map::LoadAssets() {
     texture = LoadImage(g_window.rdr, "assets/tileset.png");
-    tree1 = LoadAsset_Ase("assets/map/tree1.ase");
-    tree2 = LoadAsset_Ase("assets/map/tree2.ase");
+
+    still_objects[0] = LoadAsset_Ase("assets/map/tree1.ase");
+    still_objects[1] = LoadAsset_Ase("assets/map/tree2.ase");
+    still_objects[2] = LoadAsset_Ase("assets/map/stone.ase");
+    still_objects[3] = LoadAsset_Ase("assets/map/trunk.ase");
 }
 
-void Map::ReloadTilesetTexture() {
+void Map::DestroyAssets() {
     SDL_DestroyTexture(texture);
-    LoadTexture();
+    for (int i = 0; i < NUM_STILL_OBJECTS; i++) { DestroyAsset_Ase(still_objects[i]); }
 }
 
 void Map::PassPointers(Player* _player, float* _dt, ECS* _ecs) {
@@ -89,7 +92,7 @@ void Map::CreateMapTexture() {
     for (int i = 0; i < 100; i++) {
         x = random(tile_length, GetMapWidth() - tile_length * 2);
         y = random(tile_length, GetMapHeight() - tile_length * 3);
-        int entity_id = AddEntityIfPossible(x, y, (ENTITY_NAME) (rand() % NUM_MAP_ENTITY_TYPE + MAP_ENTITY_OFFSET)); // oddly specific, it's just the numerical value of all the map object enums
+        int entity_id = AddEntityIfPossible(x, y, & still_objects[random(0, NUM_STILL_OBJECTS)]); // oddly specific, it's just the numerical value of all the map object enums
         if (entity_id != -1) object_opacities[entity_id] = 255.f;
     }
 
@@ -117,34 +120,27 @@ void Map::DrawBase() {
 }
 
 void Map::DrawObject(int id) {
-    ENTITY_NAME name = ecs->entities[id].name;
+    Entity e = ecs->entities[id];
+    Asset_Ase* a = *(e.asset);
 
-    SDL_Rect pos;
-    SDL_Rect quad;
+    SDL_Rect pos = {e.x, e.y, a->frame_width, a->frame_height};
 
-    pos.x = ecs->entities[id].x;
-    pos.y = ecs->entities[id].y;
-
-    quad.x = QUAD_DIMENSIONS[name].x;
-    quad.y = QUAD_DIMENSIONS[name].y;
-
-    quad.w = pos.w = QUAD_DIMENSIONS[name].w;
-    quad.h = pos.h = QUAD_DIMENSIONS[name].h;
-
-    SDL_SetTextureAlphaMod(texture, object_opacities[id]);
-    SDL_RenderCopy(g_window.rdr, texture, & quad, & pos);
+    SDL_SetTextureAlphaMod(a->texture, object_opacities[id]);
+    SDL_RenderCopy(g_window.rdr, a->texture, NULL, & pos);
 }
 
 
 void Map::Update() {
-    // info.second = opacity
     for (auto & info : object_opacities) {
-        int id = info.first;
+        Entity e = ecs->entities[info.first];
 
-        if (pyth_s(ecs->entities[id].x + QUAD_DIMENSIONS[ecs->entities[id].name].w / 2, ecs->entities[id].y  + QUAD_DIMENSIONS[ecs->entities[id].name].h / 2, player->GetDrawCenterX(), player->GetDrawCenterY()) < opacity_distance*opacity_distance) {
-            info.second = max(object_opacities[id] - (*dt) * 500, 130.f);
-        } else {
-            info.second = min(object_opacities[id] + (*dt) * 200, 255.f);
+        if (pyth_s(e.x + (*e.asset)->frame_width / 2, e.y + (*e.asset)->frame_height / 2, player->GetDrawCenterX(), player->GetDrawCenterY()) < opacity_distance*opacity_distance) {
+            // info.first = entity id
+            // info.second = entity opacity
+            info.second = max(object_opacities[info.first] - (*dt) * 500, 130.f);
+        }
+        else {
+            info.second = min(object_opacities[info.first] + (*dt) * 200, 255.f);
         }
     }
 }
@@ -154,11 +150,11 @@ void Map::DestroyTextures() {
     SDL_DestroyTexture(texture);
 }
 
-int Map::AddEntityIfPossible(int x, int y, ENTITY_NAME name) {
+int Map::AddEntityIfPossible(int x, int y, Asset_Ase** asset) {
     for (unsigned int i = 0; i < ecs->entities.size(); i++) {
-        if (AABB(x, y, QUAD_DIMENSIONS[name].w, QUAD_DIMENSIONS[name].h, ecs->entities[i].x, ecs->entities[i].y, QUAD_DIMENSIONS[ecs->entities[i].name].w, QUAD_DIMENSIONS[ecs->entities[i].name].h)) {
+        if (AABB(x, y, (*asset)->frame_width, (*asset)->frame_height, ecs->entities[i].x, ecs->entities[i].y, (*ecs->entities[i].asset)->frame_width, (*ecs->entities[i].asset)->frame_height)) {
             return -1;
         }
     }
-    return ecs->AddEntity(name, MAP_TYPE, x, y, tree1);
+    return ecs->AddEntity(MAP_TYPE, x, y, asset);
 }

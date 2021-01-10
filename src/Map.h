@@ -17,12 +17,12 @@
 struct Player;
 struct ECS;
 
-#define NUM_STILL_OBJECTS 2
+#define NUM_STILL_OBJECTS 4
 
 struct Map {
 
-    void LoadTexture();
-    void ReloadTilesetTexture();
+    void LoadAssets();
+    void DestroyAssets();
     void PassPointers(Player* _player, float* _dt, ECS* _ecs);
     void CreateMapTexture();
     void CreateCollisionBoxes();
@@ -50,7 +50,7 @@ struct Map {
 
     std::vector<SDL_Rect> collision_boxes;
 
-    int AddEntityIfPossible(int x, int y, Asset_Ase* name);
+    int AddEntityIfPossible(int x, int y, Asset_Ase** name);
 
     SDL_Texture* static_saved_drawn_data = SDL_CreateTexture(g_window.rdr, NULL, SDL_TEXTUREACCESS_TARGET, tiles_wide * tile_length, tiles_high * tile_length);
     SDL_Texture* texture;

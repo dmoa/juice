@@ -15,11 +15,11 @@ struct Enemies;
 struct ECS {
 
     void GivePointers(Map* _map, Player* _player, Enemies* _enemies);
-    int AddEntity(ENTITY_NAME name, ENTITY_TYPE type, float x, float y, Asset_Ase* asset = NULL);
+    int AddEntity(ENTITY_TYPE type, float x, float y, Asset_Ase** asset = NULL);
     void PopEntity(int id);
 
-    inline float GetCenterX(int id) { return entities[id].x + COLLISION_DATA[entities[id].name].x + COLLISION_DATA[entities[id].name].w / 2; }
-    inline float GetCenterY(int id) { return entities[id].y + COLLISION_DATA[entities[id].name].y + COLLISION_DATA[entities[id].name].h / 2; }
+    inline float GetCenterX(int id) { return entities[id].x + (*entities[id].asset)->frame_width / 2; }
+    inline float GetCenterY(int id) { return entities[id].y + (*entities[id].asset)->frame_height / 2; }
 
     void Draw();
 

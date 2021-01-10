@@ -96,8 +96,8 @@ inline void DestroyAsset_Ase(Asset_Ase* a) {
 
 inline void DestroyAsset_Ase_Animated(Asset_Ase_Animated* a) {
     delete a->frame_durations;
-    // Not running DestroyAsset_Ase here because I'm not sure whether
-    // that would make the compiler cast the pointer when it doesn't need to.
+    // Copying out DestroyAsset_Ase because I'm not sure whether that
+    // would make the compiler cast the pointer when it doesn't need to.
     SDL_DestroyTexture(a->texture);
     delete a->collision_box;
     delete a;

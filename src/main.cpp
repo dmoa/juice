@@ -1,6 +1,7 @@
 #pragma once
 
 #include <time.h>
+#include <stdio.h>
 #define NO_STDIO_REDIRECT
 #include <SDL_CP.h>
 
@@ -49,20 +50,20 @@ int main(int argc, char* argv[]) {
 
     gameplay_camera.GivePlayerMapDelta(& player, & map, & clock.dt);
 
-    ecs.GiveMapPlayerEnemies(& map, & player, & enemies);
+    ecs.GivePointers(& map, & player, & enemies);
 
     player.LoadAsset();
     player.PassPointers(& map, & enemies, & ecs, & clock.dt);
     player.InitPos();
 
-    map.LoadTexture();
+    map.LoadAssets();
     map.PassPointers(& player, & clock.dt, & ecs);
     map.CreateMapTexture();
     map.CreateCollisionBoxes();
 
     enemies.CreateTextures();
     enemies.PassPointers(& clock.dt, & map, & ecs, & player);
-    enemies.CreateEnemies();
+    //enemies.CreateEnemies();
 
     SDL_Event event;
     bool quit = false;
@@ -81,7 +82,8 @@ int main(int argc, char* argv[]) {
                             quit = true;
                             break;
                         case SDLK_r:
-                            map.ReloadTilesetTexture();
+                            map.DestroyAssets();
+                            map.LoadAssets();
                             player.DestroyAsset();
                             player.LoadAsset();
                             break;
