@@ -20,10 +20,16 @@ struct ECS;
 
 #define PLAYER_NUM_WEAPONS 1
 
-// struct Weapon {
-//     SDL_Rect quad;
+struct Weapon {
+    Asset_Ase* asset;
+    SDL_Rect drect;
+    SDL_Point pivot;
 
-// }
+    float angle;
+    float attack_tick = -1; // time left in the attack
+    float attack_length = 0.3;
+    const int swing_angle = 90;
+};
 
 struct Player {
     void LoadAsset();
@@ -34,11 +40,12 @@ struct Player {
 
     void Draw();
     void DrawCharacter();
-    void DrawWeapon(float angle);
+    void DrawWeapon();
 
     void Update();
     void CollisionUpdate();
     void AnimationUpdate();
+    void UpdateWeapon();
 
     void Attack();
 
@@ -72,9 +79,10 @@ struct Player {
     std::vector<SDL_Rect>* map_cb;
 
     Asset_Ase_Animated* asset;
-    Asset_Ase* weapon_asset;
     CurAnimation cur_anim;
 
     SDL_Rect rendering_quad;
     SDL_RendererFlip is_flipped = SDL_FLIP_NONE;
+
+    Weapon weapon;
 };

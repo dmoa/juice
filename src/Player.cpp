@@ -5,7 +5,7 @@
 
 void Player::LoadAsset() {
     asset = LoadAsset_Ase_Animated("assets/player/knight.ase");
-    weapon_asset = LoadAsset_Ase("assets/player/weapons/knife.ase");
+    weapon.asset = LoadAsset_Ase("assets/player/weapons/knife.ase");
     is_flipped = SDL_FLIP_HORIZONTAL;
     SetAnimation(& cur_anim, asset, "Idle");
 
@@ -15,7 +15,7 @@ void Player::LoadAsset() {
 
 void Player::DestroyAsset() {
     DestroyAsset_Ase_Animated(asset);
-    DestroyAsset_Ase(weapon_asset);
+    DestroyAsset_Ase(weapon.asset);
 }
 
 void Player::PassPointers(Map* _map, Enemies* _enemies, ECS* _ecs, float* _dt) {
@@ -33,17 +33,24 @@ void Player::InitPos() {
 void Player::Draw() {
 
     int mouse_x; int mouse_y; GetMouseGameState(& mouse_x, & mouse_y);
-    // +90 at the end because atan2's range is (-rad,rad), when we want (0,360), not (-180, 180).
-    float angle = atan2(mouse_y - GetDrawCenterY(), mouse_x - GetDrawCenterX()) * 180 / PI + 90;
+
+    // If not attacking, weapon should follow mouse. Otherwise do weapon swing.
+    if (! is_attacking) {
+        // +90 at the end because atan2's range is (-rad,rad), when we want (0,360), not (-180, 180).
+        weapon.angle = atan2(mouse_y - GetDrawCenterY(), mouse_x - GetDrawCenterX()) * 180 / PI + 90;
+    }
+    else {
+        weapon.angle += (weapon.attack_length - weapon.attack_tick) / weapon.attack_length * weapon.swing_angle;
+    }
 
     // If the angle of the weapon makes the weapon point towards the top, then draw the weapon behind the player.
-    if (angle < 90 || angle > 270) {
-        DrawWeapon(angle);
+    if (weapon.angle < 90 || weapon.angle > 270) {
+        DrawWeapon();
         DrawCharacter();
     }
     else {
         DrawCharacter();
-        DrawWeapon(angle);
+        DrawWeapon();
     }
 }
 
@@ -51,11 +58,11 @@ void Player::DrawCharacter() {
     SDL_RenderCopyEx(g_window.rdr, asset->texture, & cur_anim.quad, & rendering_quad, NULL, NULL, is_flipped);
 }
 
-void Player::DrawWeapon(float angle) {
+void Player::DrawWeapon() {
     // The weapon is drawn slightly below the center of the player with a pivot of the bottom of the weapon.
-    SDL_Rect drect = {GetDrawCenterX() - weapon_asset->frame_width / 2, GetDrawCenterY() - weapon_asset->frame_height / 8 * 3, weapon_asset->frame_width, weapon_asset->frame_height};
-    SDL_Point pivot = {weapon_asset->frame_width / 2, weapon_asset->frame_height};
-    SDL_RenderCopyEx(g_window.rdr, weapon_asset->texture, NULL, & drect, angle, & pivot, SDL_FLIP_NONE);
+    weapon.drect = {GetDrawCenterX() - weapon.asset->frame_width / 2, GetDrawCenterY() - weapon.asset->frame_height / 8 * 3, weapon.asset->frame_width, weapon.asset->frame_height};
+    weapon.pivot = {weapon.asset->frame_width / 2, weapon.asset->frame_height};
+    SDL_RenderCopyEx(g_window.rdr, weapon.asset->texture, NULL, & weapon.drect, weapon.angle, & weapon.pivot, SDL_FLIP_NONE);
 }
 
 void Player::Update() {
@@ -116,6 +123,8 @@ void Player::Update() {
     // updating pos in the draw objects, so that it can calculate the draw order.
     ecs->entities[id].x = x;
     ecs->entities[id].y = y;
+
+    UpdateWeapon();
 }
 
 void Player::CollisionUpdate() {
@@ -163,7 +172,6 @@ void Player::CollisionUpdate() {
 
 void Player::AnimationUpdate() {
     bool finished_anim = UpdateAnimation(& cur_anim, asset, dt);
-    is_attacking = is_attacking && ! finished_anim;
 
     if (! is_attacking) {
         if (current_xv || current_yv) {
@@ -175,30 +183,16 @@ void Player::AnimationUpdate() {
     }
 }
 
+void Player::UpdateWeapon() {
+    if (weapon.attack_tick < 0) {
+        is_attacking = false;
+    }
+    else {
+        weapon.attack_tick -= *dt;
+    }
+}
+
 void Player::Attack() {
     is_attacking = true;
-
-    // for (auto it = enemies->enemies.begin(); it != enemies->enemies.end();) {
-
-    //     // we save the current iterator, as PopEntity deletes items in enemies->enemies.
-    //     // If we were to do i++ at the end of the loop, then i++ would freak out and crash
-    //     // because it doesn't know how to find the next item as the item it's currently pointing
-    //     // to just got deleted. We fix this by doing it++ previously, so that it can find the next
-    //     // item in advance.
-
-    //     auto current = it++;
-    //     Entity e = ecs->entities[current->first];
-
-    //     // if (Entities_AABB(e.name, e.x, e.y, PLAYER, x, y)) {
-
-    //     //     current->second.hp--;
-    //     //     if (current->second.hp <= 0) {
-    //     //         ecs->PopEntity(current->first);
-    //     //     }
-
-    //     // }
-    // }
-
-    cooldown_tick = cooldown;
-    //SetAnimation(& cur_anim, asset, "kick");
+    weapon.attack_tick = weapon.attack_length;
 }
