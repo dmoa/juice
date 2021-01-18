@@ -27,8 +27,8 @@ struct Weapon {
 
     float angle;
     float attack_tick = -1; // time left in the attack
-    float attack_length = 0.3;
-    const int swing_angle = 90;
+    float attack_length = 0.2;
+    const int swing_angle = 360;
 };
 
 struct Player {

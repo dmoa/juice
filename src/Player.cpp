@@ -19,11 +19,11 @@ void Player::DestroyAsset() {
 }
 
 void Player::PassPointers(Map* _map, Enemies* _enemies, ECS* _ecs, float* _dt) {
-    map     = _map;
-    map_cb  = _map->GetCollisionBoxes();
+    map = _map;
+    map_cb = _map->GetCollisionBoxes();
     enemies = _enemies;
-    ecs     = _ecs;
-    dt      = _dt;
+    ecs = _ecs;
+    dt = _dt;
 }
 
 void Player::InitPos() {
@@ -37,10 +37,11 @@ void Player::Draw() {
     // If not attacking, weapon should follow mouse. Otherwise do weapon swing.
     if (! is_attacking) {
         // +90 at the end because atan2's range is (-rad,rad), when we want (0,360), not (-180, 180).
-        weapon.angle = atan2(mouse_y - GetDrawCenterY(), mouse_x - GetDrawCenterX()) * 180 / PI + 90;
+        // +180 to make the weapon face away from the cursor.
+        weapon.angle = atan2(mouse_y - GetDrawCenterY(), mouse_x - GetDrawCenterX()) * 180 / PI + 90 + 180;
     }
     else {
-        weapon.angle += (weapon.attack_length - weapon.attack_tick) / weapon.attack_length * weapon.swing_angle;
+        weapon.angle += weapon.swing_angle / weapon.attack_length * (*dt);
     }
 
     // If the angle of the weapon makes the weapon point towards the top, then draw the weapon behind the player.
@@ -59,9 +60,11 @@ void Player::DrawCharacter() {
 }
 
 void Player::DrawWeapon() {
-    // The weapon is drawn slightly below the center of the player with a pivot of the bottom of the weapon.
-    weapon.drect = {GetDrawCenterX() - weapon.asset->frame_width / 2, GetDrawCenterY() - weapon.asset->frame_height / 8 * 3, weapon.asset->frame_width, weapon.asset->frame_height};
-    weapon.pivot = {weapon.asset->frame_width / 2, weapon.asset->frame_height};
+
+    weapon.pivot = {weapon.asset->frame_width / 2, weapon.asset->frame_height * 1.5};
+    // drect's y is + .5 frame_height to align center of weapon with player center. Pivot.y is to offset the rotation since SDL pivots relative to drect.
+    // We offset to make sure it pivots around the player center.
+    weapon.drect = {GetDrawCenterX() - weapon.asset->frame_width / 2, GetDrawCenterY() + weapon.asset->frame_height / 2 - weapon.pivot.y, weapon.asset->frame_width, weapon.asset->frame_height};
     SDL_RenderCopyEx(g_window.rdr, weapon.asset->texture, NULL, & weapon.drect, weapon.angle, & weapon.pivot, SDL_FLIP_NONE);
 }
 
@@ -105,10 +108,10 @@ void Player::Update() {
 
     if (cooldown_tick > 0) cooldown_tick -= *dt;
     // player is slower when attacking
-    if (is_attacking) {
-        current_xv *= 0.4;
-        current_yv *= 0.4;
-    }
+    // if (is_attacking) {
+    //     current_xv *= 0.4;
+    //     current_yv *= 0.4;
+    // }
 
     old_x = x;
     old_y = y;
@@ -195,4 +198,5 @@ void Player::UpdateWeapon() {
 void Player::Attack() {
     is_attacking = true;
     weapon.attack_tick = weapon.attack_length;
+    weapon.angle -= weapon.swing_angle / 2;
 }

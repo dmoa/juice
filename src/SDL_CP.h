@@ -26,4 +26,6 @@ typedef uint8_t  u8;
 // (printf is disabled in SDL_Log for stupid reasons)
 #define printf SDL_Log
 
+inline u32 GetMouseDown(int i) { return SDL_GetMouseState(NULL, NULL) == SDL_BUTTON(i); };
+
 #define PI 3.14159265
