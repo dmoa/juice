@@ -3,10 +3,11 @@
 #include <SDL_CP.h>
 
 #include "Globals/All.h"
+#include "utils/Controls.h"
+#include "utils/extramath.h"
 
 #include "Player.h"
 #include "Map.h"
-#include "utils/extramath.h"
 
 struct Camera {
     void PassPointers(Player* _player, Map* _map, float* _dt);

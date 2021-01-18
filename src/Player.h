@@ -7,12 +7,11 @@
 #include <SDL_CP.h>
 
 #include "Globals/All.h"
+#include "utils/Controls.h"
 
 #include "Asset/AssetLoader.h"
 #include "Asset/Animation.h"
 #include "utils/extramath.h"
-
-#include "ECS/Animation/UpdateAnimation.h"
 
 struct Map;
 struct Enemies;

@@ -1,6 +1,5 @@
 #include "Text.h"
 
-
 SDL_Color Text::white_color = {255, 255, 255};
 TTF_Font* Text::main_font = NULL;
 

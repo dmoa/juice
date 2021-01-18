@@ -28,4 +28,7 @@ typedef uint8_t  u8;
 
 inline u32 GetMouseDown(int i) { return SDL_GetMouseState(NULL, NULL) == SDL_BUTTON(i); };
 
+// Render copy the entire texture
+inline void RenderCopyWhole(SDL_Renderer* r, SDL_Texture* t, SDL_Rect* rt) { SDL_RenderCopy(r, t, NULL, rt); };
+
 #define PI 3.14159265

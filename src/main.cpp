@@ -2,15 +2,16 @@
 
 #include <time.h>
 #include <stdio.h>
-#define NO_STDIO_REDIRECT
+
 #include <SDL_CP.h>
 
-#define CONTROLS_IMPLEMENTATION
-#include "Globals/Controls.h"
-
 #include "utils/Text.h"
+
+#define CONTROLS_IMPLEMENTATION
+#include "utils/Controls.h"
+
 #include "utils/Clock.h"
-#include "utils/PrintOnScreen.h"
+#include "utils/PrintScreen.h"
 #include "Asset/AssetLoader.h"
 
 #include "Globals/Window.h"
@@ -37,7 +38,6 @@ int main(int argc, char* argv[]) {
 
     bool DEV_PAUSED = false;
 
-    PrintOnScreen print;
     Window window;
     Clock clock;
     Camera gameplay_camera;
@@ -119,7 +119,7 @@ int main(int argc, char* argv[]) {
 
         window.SetDrawOther();
 
-        print.Draw(std::to_string( clock.average_fps ), 2, 0);
+        PrintScreen(std::to_string( clock.average_fps ), 2, 0);
 
         window.Present();
     }

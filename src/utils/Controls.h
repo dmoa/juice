@@ -2,7 +2,7 @@
 
 #include <SDL_CP.h>
 
-#include "../utils/GetGameController.h"
+#include "GetGameController.h"
 
 namespace CTS {
     extern const Uint8* keys_down;
@@ -48,7 +48,7 @@ namespace CTS {
         return keys_down[SDL_SCANCODE_DOWN] || keys_down[SDL_SCANCODE_S] || ControllerAxis(SDL_CONTROLLER_AXIS_LEFTY) > axis_min;
     }
     bool Action1() {
-        return keys_down[SDL_SCANCODE_SPACE] || ControllerButton(SDL_CONTROLLER_BUTTON_B);
+        return GetMouseDown(SDL_BUTTON_LEFT) || ControllerButton(SDL_CONTROLLER_BUTTON_X);
     }
     bool ActionDev() {
         bool action_dev_now = (keys_down[SDL_SCANCODE_LCTRL]) || (ControllerButton(SDL_CONTROLLER_BUTTON_BACK) && CTS::Left());
