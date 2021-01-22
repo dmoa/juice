@@ -3,7 +3,7 @@
 #include <time.h>
 #include <stdio.h>
 
-#include <SDL_CP.h>
+#include <Engine/Engine.h>
 
 #include "utils/Text.h"
 
@@ -14,8 +14,6 @@
 #include "utils/PrintScreen.h"
 #include "Asset/AssetLoader.h"
 
-#include "Globals/Window.h"
-
 #include "Window.h"
 #include "Camera.h"
 
@@ -24,7 +22,7 @@
 #include "Player.h"
 #include "Map.h"
 #include "Enemies.h"
-
+#include "Crosshair.h"
 
 GlobalWindowData g_window = {1800, 1000, 4, NULL, NULL};
 
@@ -45,6 +43,7 @@ int main(int argc, char* argv[]) {
     Player player;
     Map map;
     Enemies enemies;
+    Crosshair crosshair;
 
     clock.tick(); // avoid large dt initially
 
@@ -60,6 +59,8 @@ int main(int argc, char* argv[]) {
     map.PassPointers(& player, & clock.dt, & ecs);
     map.CreateMapTexture();
     map.CreateCollisionBoxes();
+
+    crosshair.LoadAsset();
 
     SDL_Event event;
     bool quit = false;
@@ -82,6 +83,8 @@ int main(int argc, char* argv[]) {
                             map.LoadAssets();
                             player.DestroyAsset();
                             player.LoadAsset();
+                            crosshair.DestroyAsset();
+                            crosshair.LoadAsset();
                             break;
                         default: break;
                     }
@@ -106,7 +109,9 @@ int main(int argc, char* argv[]) {
             map.Update();
             enemies.Update();
             gameplay_camera.Update();
+            crosshair.Update();
         }
+        SDL_ShowCursor(DEV_PAUSED); // if in dev mode -> show cursor
 
         // DRAW
 
@@ -116,6 +121,7 @@ int main(int argc, char* argv[]) {
 
         map.DrawBase();
         ecs.Draw();
+        crosshair.Draw();
 
         window.SetDrawOther();
 

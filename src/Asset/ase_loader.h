@@ -2,25 +2,25 @@
 Aseprite Loader
 Copyright © 2020 Stan O
 
-* Permission is granted to anyone to use this software
-* for any purpose, including commercial applications,
-* and to alter it and redistribute it freely, subject to
-* the following restrictions:
-*
-* 1. The origin of this software must not be
-*    misrepresented; you must not claim that you
-*    wrote the original software. If you use this
-*    software in a product, an acknowledgment in
-*    the product documentation would be appreciated
-*    but is not required.
-*
-* 2. Altered source versions must be plainly marked
-*    as such, and must not be misrepresented as
-*    being the original software.
-*
-* 3. This notice may not be removed or altered from
-*    any source distribution.
+MIT License
 
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 
 Parses:
     - All header data
@@ -28,7 +28,7 @@ Parses:
     - All pixel data
 
 Chunks Supported:
-    - CEL 0x2005
+    - CEL
         - No opacity support
     - PALETTE 0x2019
         - No name support
@@ -58,7 +58,7 @@ Let me know if you want something added,
 #include <string>
 #include <math.h>
 #include <vector>
-#include <SDL_CP.h>
+#include <Engine/Engine.h>
 #include "decompressor.h"
 
 inline u16 GetU16(char* memory) {
@@ -208,7 +208,7 @@ static Ase_Output* Ase_Load(std::string path) {
         };
 
         if (header.color_depth != 8) {
-            SDL_Log("File %s not in indexed color mode. Only indexed color mode supported. Exit.", path.c_str());
+            SDL_Log("%s: Not in indexed color mode. Only indexed color mode supported.\n", path.c_str());
             return NULL;
         }
 
@@ -248,7 +248,7 @@ static Ase_Output* Ase_Load(std::string path) {
             output->frame_durations[i] = frames[i].frame_duration;
 
             if (frames[i].magic_number != FRAME_MN) {
-                std::cout << "Frame " << i << " magic number not correct, corrupt file?" << std::endl;
+                SDL_Log("%s: Frame %i magic number not correct, corrupt file?\n", path.c_str(), i);
                 Ase_Destroy_Output(output);
                 return NULL;
             }
@@ -274,7 +274,7 @@ static Ase_Output* Ase_Load(std::string path) {
 
                             // We do not support color data with strings in it. Flag 1 means there's a name.
                             if (GetU16(buffer_p + 26) == 1) {
-                                std::cout << "Name flag detected, cannot load! Color Index: " << k << std::endl;
+                                SDL_Log("%s: Name flag detected, cannot load! Color Index: %i.\n", path.c_str(), k);
                                 Ase_Destroy_Output(output);
                                 return NULL;
                             }
@@ -290,7 +290,7 @@ static Ase_Output* Ase_Load(std::string path) {
                         u16 cel_type = GetU16(buffer_p + 13);
 
                         if (cel_type != INDEX_FORMAT) {
-                            std::cout << "Pixel format not supported! Exit.\n";
+                            SDL_Log("%s: Pixel format not supported!\n", path.c_str());
                             Ase_Destroy_Output(output);
                             return NULL;
                         }
@@ -301,7 +301,7 @@ static Ase_Output* Ase_Load(std::string path) {
 
                         unsigned int data_size = Decompressor_Feed(buffer_p + 26, 26 - chunk_size, pixels, width * height, true);
                         if (data_size == -1) {
-                            std::cout << "Failed to decompress pixels! Exit.\n";
+                            SDL_Log("%s: Failed to decompress pixels!\n", path.c_str());
                             Ase_Destroy_Output(output);
                             return NULL;
                         }
@@ -345,7 +345,7 @@ static Ase_Output* Ase_Load(std::string path) {
                         u32 num_keys = GetU32(buffer_p + 6);
                         u32 flag = GetU32(buffer_p + 10);
                         if (flag != 0) {
-                            std::cout << "Flag " << flag << " not supported! Asset: " << path;
+                            SDL_Log("%s: Flag %i not supported!\n", path.c_str(), flag);
                             Ase_Destroy_Output(output);
                             return NULL;
                         }
@@ -388,9 +388,8 @@ static Ase_Output* Ase_Load(std::string path) {
 
         return output;
 
-
     } else {
-        std::cout << "file could not be loaded" << std::endl;
+        SDL_Log("%s: File could not be loaded.\n", path.c_str());
         return NULL;
     }
 }

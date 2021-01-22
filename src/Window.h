@@ -1,8 +1,6 @@
 #pragma once
 
-#include <SDL_CP.h>
-
-#include "Globals/Window.h"
+#include <Engine/Engine.h>
 
 struct Window {
 

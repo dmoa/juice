@@ -3,7 +3,7 @@
 #include "ECS/ECS.h"
 
 void Map::LoadAssets() {
-    texture = LoadImage(g_window.rdr, "assets/tileset.png");
+    texture = LoadAsset_IMG("assets/tileset.png");
 
     still_objects[0] = LoadAsset_Ase("assets/map/tree1.ase");
     still_objects[1] = LoadAsset_Ase("assets/map/tree2.ase");

@@ -4,11 +4,10 @@
 #include <map>
 #include <string>
 
-#include <SDL_CP.h>
+#include <Engine/Engine.h>
 
 #include "utils/extramath.h"
 #include "Asset/AssetLoader.h"
-#include "Globals/All.h"
 
 struct Map;
 struct ECS;

@@ -2,9 +2,7 @@
 
 #include <string>
 
-#include <SDL_CP.h>
-
-#include "../Globals/All.h"
+#include <Engine/Engine.h>
 
 struct Text {
     static void LoadFont();

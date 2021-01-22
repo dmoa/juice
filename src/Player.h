@@ -4,9 +4,8 @@
 #include <map>
 #define ROOT2 1.41421356237
 
-#include <SDL_CP.h>
+#include <Engine/Engine.h>
 
-#include "Globals/All.h"
 #include "utils/Controls.h"
 
 #include "Asset/AssetLoader.h"

@@ -1,8 +1,7 @@
 #pragma once
 
-#include <SDL_CP.h>
+#include <Engine/Engine.h>
 
-#include "Globals/All.h"
 #include "utils/Controls.h"
 #include "utils/extramath.h"
 

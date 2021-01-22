@@ -3,12 +3,11 @@
 #include <string>
 #include <unordered_map>
 
-#include <SDL_CP.h>
-#include "../Globals/Window.h"
+#include <Engine/Engine.h>
 #include "ase_loader.h"
 
-inline SDL_Texture* LoadImage(SDL_Renderer* renderer, std::string path) {
-    SDL_Texture* texture = IMG_LoadTexture(renderer, path.c_str());
+inline SDL_Texture* LoadAsset_IMG(std::string path) {
+    SDL_Texture* texture = IMG_LoadTexture(g_window.rdr, path.c_str());
     if (!texture) SDL_Log("%s%s", path.c_str(), " not found");
     return texture;
 }

@@ -2,9 +2,8 @@
 
 #include <algorithm>
 
-#include <SDL_CP.h>
+#include <Engine/Engine.h>
 
-#include "../Globals/All.h"
 #include "Entity.h"
 #include "../Asset/AssetLoader.h"
 
