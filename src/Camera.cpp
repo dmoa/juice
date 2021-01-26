@@ -29,17 +29,17 @@ void Camera::Update() {
 }
 
 void Camera::DevUpdate() {
-    if (CTS::Right()) {
-        real_x += pan_v * (*dt);
+    if (g_controls.Right()) {
+        real_x += pan_v * (g_dt);
     }
-    if (CTS::Left()) {
-        real_x -= pan_v * (*dt);
+    if (g_controls.Left()) {
+        real_x -= pan_v * (g_dt);
     }
-    if (CTS::Down()) {
-        real_y += pan_v * (*dt);
+    if (g_controls.Down()) {
+        real_y += pan_v * (g_dt);
     }
-    if (CTS::Up()) {
-        real_y -= pan_v * (*dt);
+    if (g_controls.Up()) {
+        real_y -= pan_v * (g_dt);
     }
     g_window.gameplay_viewport = {real_x, real_y, g_window.w / g_window.scale, g_window.h / g_window.scale};
 }

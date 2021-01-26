@@ -1,7 +1,13 @@
+// Engine is built on top of SDL.
+// SDL functions have prefix SDL_.....
+// Engine functions don't have a prefix, mainly because at the moment there aren't many of them.
+
 #pragma once
 
 #include <stdio.h>
 #include <stdint.h>
+#include <time.h>
+#include <string>
 
 typedef int64_t  s64;
 typedef int32_t  s32;
@@ -23,45 +29,27 @@ typedef uint8_t  u8;
 #include <SDL2_ttf/SDL_ttf.h>
 #endif
 
-struct GlobalWindowData {
-    int w;
-    int h;
-    int scale;
-    SDL_Renderer* rdr;
-    SDL_Rect gameplay_viewport;
-};
-extern GlobalWindowData g_window;
+#include "Window.h"
+#include "Graphics.h"
+#include "Text.h"
+#include "Controls.h"
+#include "Asset.h"
+#include "Clock.h"
+#include "Animation.h"
+#include "ExtraMath.h"
 
-// The following are functions that revolve around SDL, usually small changes that make life easier.
-
-inline void GetMouseGameState(int* x, int* y) {
-    SDL_GetMouseState(x, y);
-    if (x) *x = *x / g_window.scale + g_window.gameplay_viewport.x;
-    if (y) *y = *y / g_window.scale + g_window.gameplay_viewport.y;
+inline void EngineInit() {
+    SDL_Init(SDL_INIT_EVERYTHING);
+    IMG_Init(IMG_INIT_PNG);
+    TTF_Init();
+    srand(time(0));
+    Text::LoadFont();
+    g_controls.Init();
 }
 
-inline u32 GetMouseDown(int i) { return SDL_GetMouseState(NULL, NULL) == SDL_BUTTON(i); };
-
-inline void GetTextureSize(SDL_Texture* t, int* w, int* h) { SDL_QueryTexture(t, NULL, NULL, w, h); };
-
-
-enum DrawnFrom {
-    TOP_LEFT,
-    CENTER
-};
-
-// RenderCopyWhole renders the entire texture, no cropping.
-// By default, it draws from the top left, but can specify to draw from center.
-// The SDL_Rect* arg only has to contain x and y, width and height we figure out in the function.
-inline void RenderCopyWhole(SDL_Renderer* r, SDL_Texture* t, SDL_Rect* _rt, DrawnFrom pos = TOP_LEFT) {
-
-    SDL_Rect rt = *_rt;
-    GetTextureSize(t, & rt.w, & rt.h);
-
-    if (pos == CENTER) {
-        rt.x -= rt.w / 2;
-        rt.y -= rt.h / 2;
-    }
-
-    SDL_RenderCopy(r, t, NULL, & rt);
-};
+inline void EngineQuit() {
+    Text::DestroyFont();
+    TTF_Quit();
+    IMG_Quit();
+    SDL_Quit();
+}

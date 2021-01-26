@@ -3,18 +3,9 @@
 #include <time.h>
 #include <stdio.h>
 
+#define ENGINE_IMPLEMENTATION
 #include <Engine/Engine.h>
 
-#include "utils/Text.h"
-
-#define CONTROLS_IMPLEMENTATION
-#include "utils/Controls.h"
-
-#include "utils/Clock.h"
-#include "utils/PrintScreen.h"
-#include "Asset/AssetLoader.h"
-
-#include "Window.h"
 #include "Camera.h"
 
 #include "ECS/ECS.h"
@@ -24,20 +15,12 @@
 #include "Enemies.h"
 #include "Crosshair.h"
 
-GlobalWindowData g_window = {1800, 1000, 4, NULL, NULL};
-
 int main(int argc, char* argv[]) {
-    SDL_Init(SDL_INIT_EVERYTHING);
-    IMG_Init(IMG_INIT_PNG);
-    TTF_Init();
-    srand(time(0));
-    Text::LoadFont();
-    CTS::Init();
+    EngineInit();
+    window.Init();
 
     bool DEV_PAUSED = false;
 
-    Window window;
-    Clock clock;
     Camera gameplay_camera;
     ECS ecs;
     Player player;
@@ -45,18 +28,17 @@ int main(int argc, char* argv[]) {
     Enemies enemies;
     Crosshair crosshair;
 
-    clock.tick(); // avoid large dt initially
 
-    gameplay_camera.PassPointers(& player, & map, & clock.dt);
+    gameplay_camera.PassPointers(& player, & map, & g_dt);
 
     ecs.GivePointers(& map, & player, & enemies);
 
     player.LoadAsset();
-    player.PassPointers(& map, & enemies, & ecs, & clock.dt);
+    player.PassPointers(& map, & enemies, & ecs, & g_dt);
     player.InitPos();
 
     map.LoadAssets();
-    map.PassPointers(& player, & clock.dt, & ecs);
+    map.PassPointers(& player, & g_dt, & ecs);
     map.CreateMapTexture();
     map.CreateCollisionBoxes();
 
@@ -98,9 +80,9 @@ int main(int argc, char* argv[]) {
             }
         }
 
-        if (CTS::ActionDev()) DEV_PAUSED = ! DEV_PAUSED;
+        if (g_controls.ActionDev()) DEV_PAUSED = ! DEV_PAUSED;
 
-        clock.tick();
+        engine_clock.tick();
 
         if (DEV_PAUSED) {
             gameplay_camera.DevUpdate();
@@ -125,18 +107,14 @@ int main(int argc, char* argv[]) {
 
         window.SetDrawOther();
 
-        PrintScreen(std::to_string( clock.average_fps ), 2, 0);
+        PrintScreen(std::to_string( engine_clock.average_fps ), 2, 0);
 
         window.Present();
     }
 
     player.DestroyAsset();
     map.DestroyTextures();
-
-    Text::DestroyFont();
-    TTF_Quit();
-    IMG_Quit();
     window.Shutdown();
-    SDL_Quit();
+    EngineQuit();
     return 0;
 }

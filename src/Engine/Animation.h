@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Engine/Engine.h>
-#include "AssetLoader.h"
+#include "Asset.h"
 
 struct CurAnimation {
     std::string name;
@@ -33,9 +33,8 @@ inline void SetAnimationIf(CurAnimation* anim, Asset_Ase_Animated* asset, std::s
     if (name != anim->name) SetAnimation(anim, asset, name);
 }
 
-// @Question for M about inline vs const
 inline bool UpdateAnimation(CurAnimation* anim, Asset_Ase_Animated* asset, float* dt) {
-    anim->tick -= *dt * 1000; // convert dt into milliseconds
+    anim->tick -= g_dt * 1000; // convert dt into milliseconds
     if (anim->tick < 0) {
 
         Tag_Range t = asset->tags[anim->name];

@@ -6,11 +6,7 @@
 
 #include <Engine/Engine.h>
 
-#include "utils/Controls.h"
 
-#include "Asset/AssetLoader.h"
-#include "Asset/Animation.h"
-#include "utils/extramath.h"
 
 struct Map;
 struct Enemies;

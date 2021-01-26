@@ -1,4 +1,18 @@
-#include "Text.h"
+#pragma once
+
+#include <string>
+
+#include "Window.h"
+
+struct Text {
+    static void LoadFont();
+    static void DestroyFont();
+    static SDL_Texture* CreateTexture(std::string text);
+    static TTF_Font* main_font;
+    static SDL_Color white_color;
+};
+
+#ifdef ENGINE_IMPLEMENTATION
 
 SDL_Color Text::white_color = {255, 255, 255};
 TTF_Font* Text::main_font = NULL;
@@ -21,3 +35,5 @@ SDL_Texture* Text::CreateTexture(std::string text) {
 
     return texture;
 }
+
+#endif

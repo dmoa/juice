@@ -6,8 +6,7 @@
 
 #include <Engine/Engine.h>
 
-#include "utils/extramath.h"
-#include "Asset/AssetLoader.h"
+
 
 struct Map;
 struct ECS;

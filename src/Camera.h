@@ -2,9 +2,6 @@
 
 #include <Engine/Engine.h>
 
-#include "utils/Controls.h"
-#include "utils/extramath.h"
-
 #include "Player.h"
 #include "Map.h"
 

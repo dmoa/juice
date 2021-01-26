@@ -9,8 +9,7 @@
 
 #include <Engine/Engine.h>
 
-#include "utils/extramath.h"
-#include "Asset/AssetLoader.h"
+
 
 struct Player;
 struct ECS;

@@ -96,8 +96,8 @@ void Enemies::Update() {}
 //             yv *= cap_v;
 
 
-//             ecs->entities[id].x += xv * (*dt);
-//             ecs->entities[id].y += yv * (*dt);
+//             ecs->entities[id].x += xv * (g_dt);
+//             ecs->entities[id].y += yv * (g_dt);
 
 //         }
 //     }

@@ -1,7 +1,5 @@
 #pragma once
 
-#include <SDL2/SDL_gamecontroller.h>
-
 inline SDL_GameController* GetGameController() {
 
     SDL_GameController* controller = NULL;

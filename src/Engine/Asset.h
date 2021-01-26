@@ -3,8 +3,8 @@
 #include <string>
 #include <unordered_map>
 
-#include <Engine/Engine.h>
-#include "ase_loader.h"
+#include "Engine.h"
+#include "utils/ase_loader.h"
 
 inline SDL_Texture* LoadAsset_IMG(std::string path) {
     SDL_Texture* texture = IMG_LoadTexture(g_window.rdr, path.c_str());
@@ -30,7 +30,31 @@ struct Asset_Ase_Animated : Asset_Ase {
     std::unordered_map<std::string, Tag_Range> tags;
 };
 
-inline Asset_Ase* LoadAsset_Ase(std::string file_path) {
+
+Asset_Ase* LoadAsset_Ase(std::string file_path);
+
+inline Asset_Ase_Animated* LoadAsset_Ase_Animated(std::string file_path) {
+    return (Asset_Ase_Animated*) LoadAsset_Ase(file_path);
+}
+
+inline void DestroyAsset_Ase(Asset_Ase* a) {
+    SDL_DestroyTexture(a->texture);
+    delete a->collision_box;
+    delete a;
+}
+
+inline void DestroyAsset_Ase_Animated(Asset_Ase_Animated* a) {
+    delete a->frame_durations;
+    // Copying out DestroyAsset_Ase because I'm not sure whether that
+    // would make the compiler cast the pointer when it doesn't need to.
+    SDL_DestroyTexture(a->texture);
+    delete a->collision_box;
+    delete a;
+}
+
+#ifdef ENGINE_IMPLEMENTATION
+
+Asset_Ase* LoadAsset_Ase(std::string file_path) {
     Ase_Output* output = Ase_Load(file_path);
 
     SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormatFrom(output->pixels, output->frame_width * output->num_frames, output->frame_height, 8, output->frame_width * output->num_frames, SDL_PIXELFORMAT_INDEX8);
@@ -83,21 +107,4 @@ inline Asset_Ase* LoadAsset_Ase(std::string file_path) {
     return asset;
 }
 
-inline Asset_Ase_Animated* LoadAsset_Ase_Animated(std::string file_path) {
-    return (Asset_Ase_Animated*) LoadAsset_Ase(file_path);
-}
-
-inline void DestroyAsset_Ase(Asset_Ase* a) {
-    SDL_DestroyTexture(a->texture);
-    delete a->collision_box;
-    delete a;
-}
-
-inline void DestroyAsset_Ase_Animated(Asset_Ase_Animated* a) {
-    delete a->frame_durations;
-    // Copying out DestroyAsset_Ase because I'm not sure whether that
-    // would make the compiler cast the pointer when it doesn't need to.
-    SDL_DestroyTexture(a->texture);
-    delete a->collision_box;
-    delete a;
-}
+#endif

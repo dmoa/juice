@@ -1,9 +1,9 @@
 @echo off
 
-set cppfiles=src/*.cpp src/ECS/*.cpp src/ECS/Animation/*.cpp src/utils/*.cpp
+set cppfiles=src/*.cpp src/ECS/*.cpp
 
 if [%1]==[] (
-    g++.exe -std=c++17 src/*.cpp src/ECS/*.cpp src/utils/*.cpp -I"C:\dev\SDL\64\include" -L"C:\dev\SDL\64\lib" -I"C:\juice\src" -w -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image -lws2_32 -o bin/dev/main.exe -Wl,-subsystem,windows && CALL run.bat
+    g++.exe -std=c++17 %cppfiles% -I"C:\dev\SDL\64\include" -L"C:\dev\SDL\64\lib" -I"C:\juice\src" -w -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image -lws2_32 -o bin/dev/main.exe -Wl,-subsystem,windows && CALL run.bat
 ) else (
     clang++ -std=c++17 --target=x86_64-w64-mingw32-g++ -fuse-ld=lld.exe -g -gcodeview -Wl,/debug,/pdb:bin/debug/debug.pdb -I"C:\dev\SDL\64\include" -L"C:\dev\SDL\64\lib" -I"C:\juice\src" -w -Wno-narrowing -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image -lws2_32 -Wl,-subsystem,windows -o bin/debug/main.exe %cppfiles%
 )

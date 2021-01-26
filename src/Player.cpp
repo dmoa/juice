@@ -41,7 +41,7 @@ void Player::Draw() {
         weapon.angle = atan2(mouse_y - GetDrawCenterY(), mouse_x - GetDrawCenterX()) * 180 / PI + 90 + 180;
     }
     else {
-        weapon.angle += weapon.swing_angle / weapon.attack_length * (*dt);
+        weapon.angle += weapon.swing_angle / weapon.attack_length * (g_dt);
     }
 
     // If the angle of the weapon makes the weapon point towards the top, then draw the weapon behind the player.
@@ -72,31 +72,31 @@ void Player::Update() {
 
     current_xv = 0;
     current_yv = 0;
-    if (!(CTS::Left() && CTS::Right())) {
-        if (CTS::Right()) {
+    if (!(g_controls.Left() && g_controls.Right())) {
+        if (g_controls.Right()) {
             current_xv = v;
             is_flipped = SDL_FLIP_NONE;
 
         }
-        if (CTS::Left()) {
+        if (g_controls.Left()) {
             current_xv = -v;
             is_flipped = SDL_FLIP_HORIZONTAL;
 
         }
     }
-    if (!(CTS::Up() && CTS::Down())) {
-        if (CTS::Up()) {
+    if (!(g_controls.Up() && g_controls.Down())) {
+        if (g_controls.Up()) {
             current_yv = -v;
         }
-        if (CTS::Down()) {
+        if (g_controls.Down()) {
             current_yv = v;
         }
     }
 
-    if (CTS::Action1() && ! holding_action_button && ! is_attacking) {
+    if (g_controls.Action1() && ! holding_action_button && ! is_attacking) {
         Attack();
     }
-    holding_action_button = CTS::Action1();
+    holding_action_button = g_controls.Action1();
 
 
     // ensures player doesn't go faster when moving diagonally
@@ -106,7 +106,7 @@ void Player::Update() {
     }
 
 
-    if (cooldown_tick > 0) cooldown_tick -= *dt;
+    if (cooldown_tick > 0) cooldown_tick -= g_dt;
     // player is slower when attacking
     // if (is_attacking) {
     //     current_xv *= 0.4;
@@ -115,8 +115,8 @@ void Player::Update() {
 
     old_x = x;
     old_y = y;
-    x += current_xv * (*dt);
-    y += current_yv * (*dt);
+    x += current_xv * (g_dt);
+    y += current_yv * (g_dt);
 
     CollisionUpdate();
     rendering_quad.x = x;
@@ -162,11 +162,11 @@ void Player::CollisionUpdate() {
     // the reduced xv from the position and add the true xv.
     if (current_xv && current_yv) {
         if (collided_y) {
-            x += ((current_xv > 0 ? v : - v) - current_xv) * (*dt);
+            x += ((current_xv > 0 ? v : - v) - current_xv) * (g_dt);
             current_yv = 0;
             CollisionUpdate();
         } else if (collided_x) {
-            y += ((current_yv > 0 ? v: - v) - current_yv) * (*dt);
+            y += ((current_yv > 0 ? v: - v) - current_yv) * (g_dt);
             current_xv = 0;
             CollisionUpdate();
         }
@@ -191,7 +191,7 @@ void Player::UpdateWeapon() {
         is_attacking = false;
     }
     else {
-        weapon.attack_tick -= *dt;
+        weapon.attack_tick -= g_dt;
     }
 }
 

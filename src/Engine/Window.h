@@ -1,6 +1,36 @@
-#include "Window.h"
+#pragma once
 
-Window::Window() {
+#include <Engine/Engine.h>
+
+struct Window {
+
+    void Init();
+    void Clear();
+    void SetDrawGameplay();
+    void SetDrawOther();
+    void Present();
+    void Shutdown();
+
+    SDL_Texture* gameplay_texture;
+    SDL_Texture* other_texture;
+    SDL_Rect other_texture_rect;
+    SDL_Window* window;
+    SDL_Surface* icon;
+};
+
+// Global Window Data
+struct GlobalWindowData {
+    int w;
+    int h;
+    int scale;
+    SDL_Renderer* rdr;
+    SDL_Rect gameplay_viewport;
+};
+extern GlobalWindowData g_window;
+
+#ifdef ENGINE_IMPLEMENTATION
+
+void Window::Init() {
     window = SDL_CreateWindow("juice", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, g_window.w, g_window.h, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
     SDL_UpdateWindowSurface(window);
     g_window.rdr = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
@@ -48,3 +78,8 @@ void Window::Shutdown() {
     SDL_DestroyRenderer(g_window.rdr);
     SDL_DestroyWindow(window);
 }
+
+GlobalWindowData g_window = {1800, 1000, 4, NULL, NULL};
+Window window;
+
+#endif

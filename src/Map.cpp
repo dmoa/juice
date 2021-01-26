@@ -137,10 +137,10 @@ void Map::Update() {
         if (pyth_s(e.x + (*e.asset)->frame_width / 2, e.y + (*e.asset)->frame_height / 2, player->GetDrawCenterX(), player->GetDrawCenterY()) < opacity_distance*opacity_distance) {
             // info.first = entity id
             // info.second = entity opacity
-            info.second = max(object_opacities[info.first] - (*dt) * 500, 130.f);
+            info.second = max(object_opacities[info.first] - (g_dt) * 500, 130.f);
         }
         else {
-            info.second = min(object_opacities[info.first] + (*dt) * 200, 255.f);
+            info.second = min(object_opacities[info.first] + (g_dt) * 200, 255.f);
         }
     }
 }

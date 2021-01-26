@@ -5,7 +5,6 @@
 #include <Engine/Engine.h>
 
 #include "Entity.h"
-#include "../Asset/AssetLoader.h"
 
 struct Map;
 struct Player;

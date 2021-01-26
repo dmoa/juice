@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Classification.h"
-#include "../Asset/AssetLoader.h"
 
 struct Entity {
     ENTITY_TYPE type;

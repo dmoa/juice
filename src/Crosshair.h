@@ -2,8 +2,6 @@
 
 #include <Engine/Engine.h>
 
-#include "Asset/AssetLoader.h"
-
 struct Crosshair {
 
     void LoadAsset();
