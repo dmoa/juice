@@ -12,7 +12,7 @@ inline void GetMouseGameState(int* x, int* y) {
     if (y) *y = *y / g_window.scale + g_window.gameplay_viewport.y;
 }
 
-inline u32 GetMouseDown(int i) { return SDL_GetMouseState(NULL, NULL) == SDL_BUTTON(i); };
+inline bool GetMouseDown(int i = 1) { return SDL_GetMouseState(NULL, NULL) == SDL_BUTTON(i); };
 
 // Keyboard
 

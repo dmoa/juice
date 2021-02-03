@@ -30,7 +30,6 @@ struct EngineClock {
     }
 };
 // odd naming to avoid collision with clock() in <time.h>
-extern EngineClock engine_clock;
 
 #ifdef ENGINE_IMPLEMENTATION
 float g_dt = 0.f;

@@ -36,7 +36,7 @@ void Window::Init() {
     g_window.rdr = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
     gameplay_texture = SDL_CreateTexture(g_window.rdr, SDL_GetWindowPixelFormat(window), SDL_TEXTUREACCESS_TARGET, 768, 768);
-    other_texture = SDL_CreateTexture(g_window.rdr, SDL_GetWindowPixelFormat(window), SDL_TEXTUREACCESS_TARGET, 1000, 1000);
+    other_texture = SDL_CreateTexture(g_window.rdr, SDL_GetWindowPixelFormat(window), SDL_TEXTUREACCESS_TARGET, 768, 768);
     SDL_SetTextureBlendMode(other_texture, SDL_BLENDMODE_BLEND);
 
     icon = IMG_Load("assets/player/red.png");
@@ -48,6 +48,8 @@ void Window::Clear() {
 
     SDL_SetRenderDrawColor(g_window.rdr, 100, 100, 0, 0);
     SDL_RenderClear(g_window.rdr);
+
+    // We don't have to clear gameplay_texture every pixel is drawn over every frame, so it's not necessarry.
 
     SDL_SetRenderTarget(g_window.rdr, other_texture);
     SDL_RenderClear(g_window.rdr);

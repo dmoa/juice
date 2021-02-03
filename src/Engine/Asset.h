@@ -25,7 +25,6 @@ struct Asset_Ase {
 
 struct Asset_Ase_Animated : Asset_Ase {
     int num_frames;
-
     u16* frame_durations;
     std::unordered_map<std::string, Tag_Range> tags;
 };
