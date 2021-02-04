@@ -13,18 +13,22 @@
 - [Window.h](#Window.h)
 <hr>
 
-## How?
+## How? <a id="How?"></a>
 
 ```c++
 // main.cpp:
 #define ENGINE_IMPLEMENTATION
 #include <Engine/Engine.h>
-// Which automatically defines:
+// Also defines:
 Window window;
 EngineClock engine_clock;
 
-// Other files:
+// Other cpp files in project:
 #include <Engine/Engine.h>
+// Also gives globals:
+float g_dt;
+GlobalWindowData g_window;
+GlobalControls g_controls;
 
 // Or if you only want a specific component:
 #include "Animation.h"
@@ -47,7 +51,7 @@ inline void EngineInit();
 inline void EngineQuit();
 ```
 
-## Animation.h
+## Animation.h <a id="Animation.h"></a>
 
 ```c++
 // Animation Struct
@@ -72,10 +76,14 @@ inline void SetAnimation(CurAnimation* anim, Asset_Ase_Animated* asset, std::str
 
 // Only sets the animation if the name passed is not the current animation name.
 // Useful to run every frame as to not spam SetAnimation() and constantly reset values in CurAnimation.
-inline void SetAnimationIf(CurAnimation* anim, Asset_Ase_Animated* asset, std::string name)
+inline void SetAnimationIf(CurAnimation* anim, Asset_Ase_Animated* asset, std::string name);
+
+// Updates the current animation data according to the data in the asset passed.
+// Returns true if the animation cycle has just finished.
+inline bool UpdateAnimation(CurAnimation* anim, Asset_Ase_Animated* asset, float* dt);
 ```
 
-## Asset.h
+## Asset.h <a id="Asset.h"></a>
 
 ```c++
 // .ase Asset Struct
@@ -124,7 +132,7 @@ inline void DestroyAsset_Ase(Asset_Ase* a);
 inline void DestroyAsset_Ase_Animated(Asset_Ase_Animated* a);
 ```
 
-## Clock.h
+## Clock.h <a id="Clock.h"></a>
 
 ```c++
 // Global Delta Time
@@ -147,7 +155,7 @@ struct EngineClock {
 ```
 
 
-## Controls.h
+## Controls.h <a id="Controls.h"></a>
 
 ```c++
 // Gets the mouse coordinates converted into game coordinates.
@@ -185,9 +193,10 @@ struct GlobalControls {
     // Left Ctrl Key || Controller Back Button and Pointing Left
     bool ActionDev();
 };
+extern GlobalControls g_controls;
 ```
 
-## ExtraMath.h
+## ExtraMath.h <a id="ExtraMath.h"></a>
 
 ```c++
 
@@ -202,16 +211,17 @@ inline float pyth_s(float x, float y, float x2, float y2);
 inline int random(int min, int max);
 
 // Minimum of the two.
-inline float min(float a, float b)
+inline float min(float a, float b);
 
 // Maximum of the two.
-inline float max(float a, float b)
+inline float max(float a, float b);
 
 // AABB / Two Rectangle Collision Detection.
-AABB(float x, float y, float w, float h, float x2, float y2, float w2, float h2);
+// Returns true if the rectangles overlap.
+inline bool AABB(float x, float y, float w, float h, float x2, float y2, float w2, float h2);
 ```
 
-## Graphics.h
+## Graphics.h <a id="Graphics.h"></a>
 
 ```c++
 // Gets the texture size.
@@ -225,14 +235,14 @@ inline void RenderCopyWhole(SDL_Renderer* r, SDL_Texture* t, SDL_Rect* _rt, Draw
 void PrintScreen(std::string text, int x, int y);
 ```
 
-## Text.h
+## Text.h <a id="Text.h"></a>
 
 ```c++
 // Source changing, documentated soon.
 ```
 
 
-## Window.h
+## Window.h <a id="Window.h"></a>
 
 ```c++
 // Global Window Data
@@ -243,8 +253,9 @@ struct GlobalWindowData {
     SDL_Renderer* rdr;
     SDL_Rect gameplay_viewport;
 };
+extern GlobalWindowData g_window;
 
-// Window window is created in implementation.
+// Window window is defined in implementation.
 struct Window {
 
     // Creates window using information from g_window.
