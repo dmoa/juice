@@ -4,3 +4,4 @@ archive/*
 *.out
 *.app
 *.pdb
+*.rdbg
