@@ -19,13 +19,13 @@
 // main.cpp:
 #define ENGINE_IMPLEMENTATION
 #include <Engine/Engine.h>
-// Also defines:
+// Also automatically defines:
 Window window;
 EngineClock engine_clock;
 
 // Other cpp files in project:
 #include <Engine/Engine.h>
-// Also gives globals:
+// Also gives access to globals:
 float g_dt;
 GlobalWindowData g_window;
 GlobalControls g_controls;
@@ -238,7 +238,28 @@ void PrintScreen(std::string text, int x, int y);
 ## Text.h <a id="Text.h"></a>
 
 ```c++
-// Source changing, documentated soon.
+// Global Text Component
+struct Text {
+
+    // Loads a font, saving its address in main_font.
+    // By default it looks in assets/font.ttf (relative to the executed path), but can be any path.
+    void LoadFont(std::string path = "assets/font.ttf");
+
+    // Destroys the font main_font is pointing to.
+    void DestroyFont();
+
+    // Creates a texture using text, main_font, and font_color.
+    SDL_Texture* CreateTexture(std::string text);
+
+    // Stores the font used for all things in the Text component.
+    // If you would like to store more than one font, edit the Text struct, this component is very editable.
+    TTF_Font* main_font = NULL;
+
+    // The color used for all texture creation.
+    // To edit it: g_text.font_color = .....
+    SDL_Color font_color = {255, 255, 255};
+};
+extern Text g_text;
 ```
 
 

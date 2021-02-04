@@ -43,12 +43,12 @@ inline void EngineInit() {
     IMG_Init(IMG_INIT_PNG);
     TTF_Init();
     srand(time(0));
-    Text::LoadFont();
+    g_text.LoadFont();
     g_controls.Init();
 }
 
 inline void EngineQuit() {
-    Text::DestroyFont();
+    g_text.DestroyFont();
     TTF_Quit();
     IMG_Quit();
     SDL_Quit();

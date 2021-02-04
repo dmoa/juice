@@ -35,7 +35,7 @@ void PrintScreen(std::string text, int x, int y);
 void PrintScreen(std::string text, int x, int y) {
     SDL_Rect rect = {x, y, -1, -1};
     SDL_Texture* fps_texture = NULL;
-    fps_texture = Text::CreateTexture(text);
+    fps_texture = g_text.CreateTexture(text);
     RenderCopyWhole(g_window.rdr, fps_texture, & rect);
     SDL_DestroyTexture(fps_texture);
 };
