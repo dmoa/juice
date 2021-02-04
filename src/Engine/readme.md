@@ -37,7 +37,7 @@ EngineClock engine_clock;
 #include "Window.h"
 ```
 
-## Engine.h <a id="Engine.h"> testing </a>
+## Engine.h <a id="Engine.h"></a>
 
 ```c++
 // Initialises everything except window. For window, use window.Init().
