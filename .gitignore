@@ -3,3 +3,4 @@ archive/*
 *.exe
 *.out
 *.app
+*.pdb
