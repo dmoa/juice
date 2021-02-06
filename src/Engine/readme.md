@@ -207,7 +207,7 @@ extern GlobalControls g_controls;
 // This method is faster because squaring is faster than square rooting
 inline float pyth_s(float x, float y, float x2, float y2);
 
-// Random number between min and max (inclusive).
+// Random number between min (inclusive) and max (exclusive).
 inline int random(int min, int max);
 
 // Minimum of the two.
