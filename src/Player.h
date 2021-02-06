@@ -19,10 +19,13 @@ struct Weapon {
     SDL_Rect drect;
     SDL_Point pivot;
 
-    float angle;
+    float angle; // current angle
     float attack_tick = -1; // time left in the attack
     float attack_length = 0.2;
-    const int swing_angle = 360;
+    int swing_angle = 360; // angle rotated through entire attack
+
+    // Weapon sometimes flipped in attack scenarios.
+    SDL_RendererFlip is_flipped = SDL_FLIP_NONE;
 };
 
 struct Player {
@@ -67,8 +70,6 @@ struct Player {
 
     bool holding_action_button = false;
     bool is_attacking = false;
-    float cooldown = 0.39;
-    float cooldown_tick = cooldown;
 
     std::vector<SDL_Rect>* map_cb;
 

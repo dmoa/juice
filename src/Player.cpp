@@ -32,18 +32,6 @@ void Player::InitPos() {
 
 void Player::Draw() {
 
-    int mouse_x; int mouse_y; GetMouseGameState(& mouse_x, & mouse_y);
-
-    // If not attacking, weapon should follow mouse. Otherwise do weapon swing.
-    if (! is_attacking) {
-        // +90 at the end because atan2's range is (-rad,rad), when we want (0,360), not (-180, 180).
-        // +180 to make the weapon face away from the cursor.
-        weapon.angle = atan2(mouse_y - GetDrawCenterY(), mouse_x - GetDrawCenterX()) * 180 / PI + 90 + 180;
-    }
-    else {
-        weapon.angle += weapon.swing_angle / weapon.attack_length * (g_dt);
-    }
-
     // If the angle of the weapon makes the weapon point towards the top, then draw the weapon behind the player.
     if (weapon.angle < 90 || weapon.angle > 270) {
         DrawWeapon();
@@ -62,10 +50,10 @@ void Player::DrawCharacter() {
 void Player::DrawWeapon() {
 
     weapon.pivot = {weapon.asset->frame_width / 2, weapon.asset->frame_height * 1.5};
-    // drect's y is + .5 frame_height to align center of weapon with player center. Pivot.y is to offset the rotation since SDL pivots relative to drect.
+    // drect's y is + .5 * frame_height to align center of weapon with player center. Pivot.y is to offset the rotation since SDL pivots relative to drect.
     // We offset to make sure it pivots around the player center.
     weapon.drect = {GetDrawCenterX() - weapon.asset->frame_width / 2, GetDrawCenterY() + weapon.asset->frame_height / 2 - weapon.pivot.y, weapon.asset->frame_width, weapon.asset->frame_height};
-    SDL_RenderCopyEx(g_window.rdr, weapon.asset->texture, NULL, & weapon.drect, weapon.angle, & weapon.pivot, SDL_FLIP_NONE);
+    SDL_RenderCopyEx(g_window.rdr, weapon.asset->texture, NULL, & weapon.drect, weapon.angle, & weapon.pivot, weapon.is_flipped);
 }
 
 void Player::Update() {
@@ -105,13 +93,11 @@ void Player::Update() {
         current_yv /= ROOT2;
     }
 
-
-    if (cooldown_tick > 0) cooldown_tick -= g_dt;
     // player is slower when attacking
-    // if (is_attacking) {
-    //     current_xv *= 0.4;
-    //     current_yv *= 0.4;
-    // }
+    if (is_attacking) {
+        current_xv *= 0.4;
+        current_yv *= 0.4;
+    }
 
     old_x = x;
     old_y = y;
@@ -165,7 +151,8 @@ void Player::CollisionUpdate() {
             x += ((current_xv > 0 ? v : - v) - current_xv) * (g_dt);
             current_yv = 0;
             CollisionUpdate();
-        } else if (collided_x) {
+        }
+        else if (collided_x) {
             y += ((current_yv > 0 ? v: - v) - current_yv) * (g_dt);
             current_xv = 0;
             CollisionUpdate();
@@ -187,16 +174,36 @@ void Player::AnimationUpdate() {
 }
 
 void Player::UpdateWeapon() {
-    if (weapon.attack_tick < 0) {
-        is_attacking = false;
+
+    // If not attacking, weapon should follow mouse. Otherwise do weapon swing.
+    if (! is_attacking) {
+
+        int mouse_x; int mouse_y;
+        GetMouseGameState(& mouse_x, & mouse_y);
+
+        // +90 at the end because atan2's range is (-rad,rad), when we want (0,360), not (-180, 180).
+        // +180 to make the weapon face away from the cursor.
+        weapon.angle = atan2(mouse_y - GetDrawCenterY(), mouse_x - GetDrawCenterX()) * 180 / PI + 90 + 180;
     }
     else {
-        weapon.attack_tick -= g_dt;
+        weapon.angle += weapon.swing_angle / weapon.attack_length * (g_dt);
+
+        if (weapon.attack_tick < 0) {
+            is_attacking = false;
+            weapon.is_flipped = (SDL_RendererFlip) ! weapon.is_flipped;
+        }
+        else {
+            weapon.attack_tick -= g_dt;
+        }
     }
 }
 
 void Player::Attack() {
+
     is_attacking = true;
     weapon.attack_tick = weapon.attack_length;
-    weapon.angle -= weapon.swing_angle / 2;
+
+    // Randomising whether sword will swing clockwise or anticlockwise
+    int rand = random(0, 2);
+    if (rand) weapon.swing_angle *= -1;
 }
