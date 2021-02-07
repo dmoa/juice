@@ -42,7 +42,7 @@ void ECS::Draw() {
             int i1 = draw_order_indexes[j];
             int i2 = draw_order_indexes[j+1];
 
-            if (entities[i1].asset == NULL || entities[i2].asset == NULL) SDL_Log("EREJLK:SJ:FGLKGJ");continue;
+            if (entities[i1].asset == NULL || entities[i2].asset == NULL) { continue; }
 
             // For draw order we use the collision box because the objects' collision box
             // always includes the bottom of the object (nature of topdown game). This
