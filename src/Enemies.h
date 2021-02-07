@@ -5,40 +5,36 @@
 #include <string>
 
 #include <Engine/Engine.h>
-
-
+#include "ECS/ECS.h"
 
 struct Map;
 struct ECS;
 struct Player;
 
-// struct Enemy {
-//     int hp;
-//     bool is_right;
-//     CurrAnimation cur_anim;
-// };
+struct Barrel {
+    float x;
+    float y;
+    bool aggravated;
+    CurAnimation anim;
+};
 
 struct Enemies {
-    // void CreateTextures();
-    // void PassPointers(float* _dt, Map* _map, ECS* _ecs, Player* _player);
-    // void CreateEnemies();
+
+    void GivePointers(ECS* _ecs);
+    void LoadAssets();
+    void DestroyAssets();
+    void InitAllEnemies();
+
     void DrawEnemy(int id);
     void Update();
-    // void UpdateEnemyAnimation(int id, Enemy* j);
-    // void UpdateEnemyMovement(int id, Enemy* j);
 
-    // float*  dt;
-    // Map*    map;
-    // ECS*    ecs;
-    // Player* player;
+    void AddBarrel();
 
-    // const int activation_distance   = 50;
-    // const int deactivation_distance = 80;
-    // const int attack_distance       = 25;
+    ECS* ecs;
 
-    // // Components on top of ECS for enemy only
+    // Note: Thinking about adding void* to entity in ecs, so that we don't
+    // even have to do the lookup. For now not bothering.
+    std::map<int, Barrel> barrels;
 
-    // std::map<int, Enemy> enemies;
-
-    // SDL_Texture* spider_texture;
+    Asset_Ase_Animated* barrel_asset = NULL;
 };

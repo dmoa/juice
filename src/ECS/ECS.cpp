@@ -11,6 +11,11 @@ void ECS::GivePointers(Map* _map, Player* _player, Enemies* _enemies) {
 
 int ECS::AddEntity(ENTITY_TYPE type, float x, float y, Asset_Ase** asset) {
 
+    if (! asset || ! *asset) {
+        SDL_Log("Asset is null pointer");
+        return -1;
+    }
+
     int id = entities.size();
 
     entities[id] = {type, x, y, asset};
@@ -37,17 +42,13 @@ void ECS::Draw() {
             int i1 = draw_order_indexes[j];
             int i2 = draw_order_indexes[j+1];
 
-            // Right now not all entities have an asset struct, so we will do this check for now.
-            // It will be removed later
-            if (entities[i1].asset == NULL || entities[i2].asset == NULL) break;
-            if (*(entities[i1].asset) == NULL || *(entities[i2].asset) == NULL) break;
-            if ((*entities[i1].asset)->collision_box == NULL || (*entities[i2].asset)->collision_box == NULL) break;
+            if (entities[i1].asset == NULL || entities[i2].asset == NULL) SDL_Log("EREJLK:SJ:FGLKGJ");continue;
 
             // For draw order we use the collision box because the objects' collision box
             // always includes the bottom of the object (nature of topdown game). This
             // might change later.
 
-            if (entities[i1].y + (*entities[i1].asset)->collision_box->y + (*entities[i1].asset)->collision_box->h > entities[i2].y + (*entities[i2].asset)->collision_box->y + (*entities[i2].asset)->collision_box->h) {
+            if (entities[i1].y + (*entities[i1].asset)->movement_box->y + (*entities[i1].asset)->movement_box->h > entities[i2].y + (*entities[i2].asset)->movement_box->y + (*entities[i2].asset)->movement_box->h) {
                 draw_order_indexes[j]   = i2;
                 draw_order_indexes[j+1] = i1;
                 has_swapped = true;

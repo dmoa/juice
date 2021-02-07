@@ -33,14 +33,18 @@ int main(int argc, char* argv[]) {
 
     ecs.GivePointers(& map, & player, & enemies);
 
-    player.LoadAsset();
     player.PassPointers(& map, & enemies, & ecs, & g_dt);
+    player.LoadAsset();
     player.InitPos();
 
-    map.LoadAssets();
     map.PassPointers(& player, & g_dt, & ecs);
+    map.LoadAssets();
     map.CreateMapTexture();
     map.CreateCollisionBoxes();
+
+    enemies.GivePointers(& ecs);
+    enemies.LoadAssets();
+    enemies.InitAllEnemies();
 
     crosshair.LoadAsset();
 

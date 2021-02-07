@@ -5,10 +5,10 @@
 void Map::LoadAssets() {
     texture = LoadAsset_IMG("assets/tileset.png");
 
-    still_objects[0] = LoadAsset_Ase("assets/map/tree1.ase");
-    still_objects[1] = LoadAsset_Ase("assets/map/tree2.ase");
-    still_objects[2] = LoadAsset_Ase("assets/map/stone.ase");
-    still_objects[3] = LoadAsset_Ase("assets/map/trunk.ase");
+    //still_objects[0] = LoadAsset_Ase("assets/map/tree1.ase");
+    //still_objects[1] = LoadAsset_Ase("assets/map/tree2.ase");
+    still_objects[0] = LoadAsset_Ase("assets/map/stone.ase");
+    still_objects[1] = LoadAsset_Ase("assets/map/trunk.ase");
 }
 
 void Map::DestroyAssets() {

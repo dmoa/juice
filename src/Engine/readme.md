@@ -80,7 +80,7 @@ inline void SetAnimationIf(CurAnimation* anim, Asset_Ase_Animated* asset, std::s
 
 // Updates the current animation data according to the data in the asset passed.
 // Returns true if the animation cycle has just finished.
-inline bool UpdateAnimation(CurAnimation* anim, Asset_Ase_Animated* asset, float* dt);
+inline bool UpdateAnimation(CurAnimation* anim, Asset_Ase_Animated* asset);
 ```
 
 ## Asset.h <a id="Asset.h"></a>

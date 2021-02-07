@@ -81,7 +81,7 @@ void Player::Update() {
         }
     }
 
-    if (g_controls.Action1() && ! holding_action_button && ! is_attacking) {
+    if (g_controls.Action1() && ! holding_action_button && weapon.attack_tick < - weapon.attack_break) {
         Attack();
     }
     holding_action_button = g_controls.Action1();
@@ -122,21 +122,21 @@ void Player::CollisionUpdate() {
     bool collided_y = false;
 
     for (unsigned int i = 0; i < map_cb->size(); i++) {
-        if (AABB(x + asset->collision_box->x, y + asset->collision_box->y, asset->collision_box->w, asset->collision_box->h, (*map_cb)[i].x, (*map_cb)[i].y, (*map_cb)[i].w, (*map_cb)[i].h)) {
-            if (old_y + asset->collision_box->y >= (*map_cb)[i].y + (*map_cb)[i].h) {
-                y = (*map_cb)[i].y + (*map_cb)[i].h - asset->collision_box->y;
+        if (AABB(x + asset->movement_box->x, y + asset->movement_box->y, asset->movement_box->w, asset->movement_box->h, (*map_cb)[i].x, (*map_cb)[i].y, (*map_cb)[i].w, (*map_cb)[i].h)) {
+            if (old_y + asset->movement_box->y >= (*map_cb)[i].y + (*map_cb)[i].h) {
+                y = (*map_cb)[i].y + (*map_cb)[i].h - asset->movement_box->y;
                 collided_y = true;
             }
-            if (old_x + asset->collision_box->x >= (*map_cb)[i].x + (*map_cb)[i].w) {
-                x = (*map_cb)[i].x + (*map_cb)[i].w - asset->collision_box->x;
+            if (old_x + asset->movement_box->x >= (*map_cb)[i].x + (*map_cb)[i].w) {
+                x = (*map_cb)[i].x + (*map_cb)[i].w - asset->movement_box->x;
                 collided_x = true;
             }
-            if (old_y + asset->collision_box->y + asset->collision_box->h <= (*map_cb)[i].y) {
-                y = (*map_cb)[i].y - asset->collision_box->y - asset->collision_box->h;
+            if (old_y + asset->movement_box->y + asset->movement_box->h <= (*map_cb)[i].y) {
+                y = (*map_cb)[i].y - asset->movement_box->y - asset->movement_box->h;
                 collided_y = true;
             }
-            if (old_x + asset->collision_box->x + asset->collision_box->w <= (*map_cb)[i].x) {
-                x = (*map_cb)[i].x - asset->collision_box->x - asset->collision_box->w;
+            if (old_x + asset->movement_box->x + asset->movement_box->w <= (*map_cb)[i].x) {
+                x = (*map_cb)[i].x - asset->movement_box->x - asset->movement_box->w;
                 collided_x = true;
             }
         }
@@ -161,7 +161,7 @@ void Player::CollisionUpdate() {
 }
 
 void Player::AnimationUpdate() {
-    bool finished_anim = UpdateAnimation(& cur_anim, asset, dt);
+    bool finished_anim = UpdateAnimation(& cur_anim, asset);
 
     if (! is_attacking) {
         if (current_xv || current_yv) {
@@ -175,12 +175,11 @@ void Player::AnimationUpdate() {
 
 void Player::UpdateWeapon() {
 
+    int mouse_x; int mouse_y;
+    GetMouseGameState(& mouse_x, & mouse_y);
+
     // If not attacking, weapon should follow mouse. Otherwise do weapon swing.
     if (! is_attacking) {
-
-        int mouse_x; int mouse_y;
-        GetMouseGameState(& mouse_x, & mouse_y);
-
         // +90 at the end because atan2's range is (-rad,rad), when we want (0,360), not (-180, 180).
         // +180 to make the weapon face away from the cursor.
         weapon.angle = atan2(mouse_y - GetDrawCenterY(), mouse_x - GetDrawCenterX()) * 180 / PI + 90 + 180;
@@ -192,10 +191,11 @@ void Player::UpdateWeapon() {
             is_attacking = false;
             weapon.is_flipped = (SDL_RendererFlip) ! weapon.is_flipped;
         }
-        else {
-            weapon.attack_tick -= g_dt;
-        }
     }
+
+    // We want this to continually tick so that we can use it to check whether attack_break time has passed.
+    // i.e. if weapon.attack_tick < - weapon.attack_break, then we know that the min time between the weapon attacks has passed.
+    weapon.attack_tick -= g_dt;
 }
 
 void Player::Attack() {
@@ -203,7 +203,10 @@ void Player::Attack() {
     is_attacking = true;
     weapon.attack_tick = weapon.attack_length;
 
+    // Haven't decided whether clockwise / anticlockwise will be alternating or be random.
+
     // Randomising whether sword will swing clockwise or anticlockwise
-    int rand = random(0, 2);
-    if (rand) weapon.swing_angle *= -1;
+    //int rand = random(0, 2);
+    //if (rand) weapon.swing_angle *= -1;
+    weapon.swing_angle *= -1;
 }

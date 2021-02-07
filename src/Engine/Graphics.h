@@ -28,6 +28,13 @@ inline void RenderCopyWhole(SDL_Renderer* r, SDL_Texture* t, SDL_Rect* _rt, Draw
     SDL_RenderCopy(r, t, NULL, & rt);
 };
 
+// Render Copy not stretching the item.
+// Takes the width and height from the quad and uses it for the destination rectangle.
+inline void RenderCopy(SDL_Renderer* r, SDL_Texture* t, SDL_Rect* src_r, float x, float y) {
+    SDL_Rect des_r = {x, y, src_r->w, src_r->h};
+    SDL_RenderCopy(r, t, src_r, & des_r);
+}
+
 void PrintScreen(std::string text, int x, int y);
 
 #ifdef ENGINE_IMPLEMENTATION

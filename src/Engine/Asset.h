@@ -17,10 +17,11 @@ struct Asset_Ase {
     SDL_Texture* texture;
     int frame_width;
     int frame_height;
-    // For now, there aren't any cases where a sprite doesn't have a collision box.
-    // If a sprite in the future does not need a collision box, it would likely
-    // be an edge case and we waste an obscure amount of memory when holding an empty pointer.
-    SDL_Rect* collision_box;
+
+    // If a sprite in the future does not need a boxesz, it would likely
+    // be an edge case and we waste an negligable amount of memory when holding empty pointers.
+    SDL_Rect* movement_box;
+    SDL_Rect* damage_box;
 };
 
 struct Asset_Ase_Animated : Asset_Ase {
@@ -38,7 +39,8 @@ inline Asset_Ase_Animated* LoadAsset_Ase_Animated(std::string file_path) {
 
 inline void DestroyAsset_Ase(Asset_Ase* a) {
     SDL_DestroyTexture(a->texture);
-    delete a->collision_box;
+    delete a->movement_box;
+    delete a->damage_box;
     delete a;
 }
 
@@ -47,8 +49,8 @@ inline void DestroyAsset_Ase_Animated(Asset_Ase_Animated* a) {
     // Copying out DestroyAsset_Ase because I'm not sure whether that
     // would make the compiler cast the pointer when it doesn't need to.
     SDL_DestroyTexture(a->texture);
-    delete a->collision_box;
-    delete a;
+    delete a->movement_box;
+    delete a->damage_box;
 }
 
 #ifdef ENGINE_IMPLEMENTATION
@@ -73,6 +75,7 @@ Asset_Ase* LoadAsset_Ase(std::string file_path) {
             output->frame_width,
             output->frame_height,
             new SDL_Rect,
+            new SDL_Rect,
             output->num_frames,
             output->frame_durations,
             output->tags
@@ -84,15 +87,20 @@ Asset_Ase* LoadAsset_Ase(std::string file_path) {
             texture,
             output->frame_width,
             output->frame_height,
+            new SDL_Rect,
             new SDL_Rect
         });
     }
 
     for (int i = 0; i < output->num_slices; i++) {
-        if (output->slices[i].name == "Collision") {
-            *(asset->collision_box) = output->slices[i].quad;
-        } else {
-            SDL_Log("Asset_Ase slice %s not supported", output->slices[i].name.c_str());
+        if (output->slices[i].name == "movement_box") {
+            *(asset->movement_box) = output->slices[i].quad;
+        }
+        else if (output->slices[i].name == "damage_box") {
+            *(asset->damage_box) = output->slices[i].quad;
+        }
+        else {
+            SDL_Log("%s: Asset_Ase slice %s not supported", file_path.c_str(), output->slices[i].name.c_str());
         }
     }
 

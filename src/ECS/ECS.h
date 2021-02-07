@@ -13,7 +13,18 @@ struct Enemies;
 struct ECS {
 
     void GivePointers(Map* _map, Player* _player, Enemies* _enemies);
-    int AddEntity(ENTITY_TYPE type, float x, float y, Asset_Ase** asset = NULL);
+    int AddEntity(ENTITY_TYPE type, float x, float y, Asset_Ase** asset);
+
+    inline int AddEntity(ENTITY_TYPE type, float x, float y, Asset_Ase_Animated** asset) {
+
+        if (asset == NULL || *asset == NULL) {
+            SDL_Log("Asset is null pointer");
+            return -1;
+        }
+        else {
+            return AddEntity(type, x, y, (Asset_Ase**) asset);
+        }
+    }
     void PopEntity(int id);
 
     inline float GetCenterX(int id) { return entities[id].x + (*entities[id].asset)->frame_width / 2; }

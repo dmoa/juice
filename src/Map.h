@@ -14,7 +14,7 @@
 struct Player;
 struct ECS;
 
-#define NUM_STILL_OBJECTS 4
+#define NUM_STILL_OBJECTS 2
 
 struct Map {
 
