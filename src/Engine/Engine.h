@@ -21,6 +21,12 @@ typedef uint8_t  u8;
 // SDL cross platform includes
 #include <SDL2/SDL.h>
 
+// Printf + SDL do not work, and so you are forced to use SDL_Log.
+// I've added a cheat here. If I could avoid it I would.
+
+#undef printf
+#define printf SDL_Log
+
 #ifdef _WIN32
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>

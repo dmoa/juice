@@ -6,6 +6,7 @@
 
 #include <Engine/Engine.h>
 #include "ECS/ECS.h"
+#include "Player.h"
 
 struct Map;
 struct ECS;
@@ -20,7 +21,7 @@ struct Barrel {
 
 struct Enemies {
 
-    void GivePointers(ECS* _ecs);
+    void GivePointers(ECS* _ecs, Player* _player);
     void LoadAssets();
     void DestroyAssets();
     void InitAllEnemies();
@@ -31,10 +32,12 @@ struct Enemies {
     void AddBarrel();
 
     ECS* ecs;
+    Player* player;
 
     // Note: Thinking about adding void* to entity in ecs, so that we don't
     // even have to do the lookup. For now not bothering.
     std::map<int, Barrel> barrels;
 
     Asset_Ase_Animated* barrel_asset = NULL;
+    int barrel_range = 30;
 };

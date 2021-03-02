@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
     map.CreateMapTexture();
     map.CreateCollisionBoxes();
 
-    enemies.GivePointers(& ecs);
+    enemies.GivePointers(& ecs, & player);
     enemies.LoadAssets();
     enemies.InitAllEnemies();
 

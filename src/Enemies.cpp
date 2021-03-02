@@ -1,7 +1,8 @@
 #include "Enemies.h"
 
-void Enemies::GivePointers(ECS* _ecs) {
+void Enemies::GivePointers(ECS* _ecs, Player* _player) {
     ecs = _ecs;
+    player = _player;
 }
 
 void Enemies::LoadAssets() {
@@ -13,7 +14,9 @@ void Enemies::DestroyAssets() {
 }
 
 void Enemies::InitAllEnemies() {
-        AddBarrel();AddBarrel();AddBarrel();AddBarrel();AddBarrel();AddBarrel();AddBarrel();AddBarrel();AddBarrel();AddBarrel();AddBarrel();AddBarrel();AddBarrel();AddBarrel();AddBarrel();AddBarrel();AddBarrel();AddBarrel();AddBarrel();AddBarrel();
+    for (int i = 0; i < 1; i ++) {
+        AddBarrel();
+    }
 }
 
 void Enemies::DrawEnemy(int id) {
@@ -21,10 +24,21 @@ void Enemies::DrawEnemy(int id) {
 }
 
 void Enemies::Update() {
-    for (auto & it : barrels) {
-        Barrel b = it.second;
+    for (auto & barrel_iter : barrels) {
+        int id = barrel_iter.first;
 
-        UpdateAnimation(& b.anim, barrel_asset);
+        bool finished_animation_loop = UpdateAnimation(& barrels[id].anim, barrel_asset);
+
+        // If in range of player and still idle, then get aggravated.
+        if (pyth_s(player->GetDrawCenterX(), player->GetDrawCenterY(), barrels[id].x + barrel_asset->frame_width / 2, barrels[id].y + barrel_asset->frame_height / 2) < barrel_range*barrel_range && barrels[id].anim.name == "Idle") {
+            barrels[id].aggravated = true;
+            SetAnimation(& barrels[id].anim, barrel_asset, "Opening");
+        }
+
+        if (barrels[id].anim.name == "Opening" && finished_animation_loop) {
+            SetAnimation(& barrels[id].anim, barrel_asset, "Attack");
+        }
+
     }
 }
 
