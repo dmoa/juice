@@ -23,7 +23,7 @@ struct Weapon {
     float attack_tick = -1; // time left in the attack
 
     float attack_length = 0.2;
-    float attack_break = 0.05; // min time in between swings
+    float attack_break = 0; // min time in between swings
 
     int swing_angle = 360; // angle rotated through entire attack
 

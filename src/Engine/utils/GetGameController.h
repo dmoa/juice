@@ -1,11 +1,15 @@
 #pragma once
 
+// If there are ever multiple controllers connected and or multiple people playing,
+// I'll have to change this so that it returns an array of SDL_GameController pointers.
+
 inline SDL_GameController* GetGameController() {
 
     SDL_GameController* controller = NULL;
 
+    int num_controllers_connected = 0;
+
     // go through every joystick attatched to the computer
-    SDL_Log("Num controllers connected: %i", SDL_NumJoysticks());
     for (int i = 0; i < SDL_NumJoysticks(); ++i) {
         // is it supported by sdl?
         if (SDL_IsGameController(i)) {
@@ -15,16 +19,17 @@ inline SDL_GameController* GetGameController() {
 
             // if it managed to set it, exit the function
             if (controller) {
+                num_controllers_connected++;
                 return controller;
             }
             // otherwise, throw error that the game controller couldn't attatch to the joystick
             else {
-                SDL_Log("Could not open SDL gamecontroller: %s\n", SDL_GetError());
+                printf("Could not open SDL gamecontroller %i: %s.", i, SDL_GetError());
             }
         }
     }
 
-    if (!controller) SDL_Log("Controller not found");
+    printf("Connected %i controllers", num_controllers_connected);
 
     return NULL;
 }

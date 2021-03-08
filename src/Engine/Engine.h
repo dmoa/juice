@@ -1,6 +1,6 @@
 // Engine is built on top of SDL.
 // SDL functions have prefix SDL_.....
-// Engine functions don't have a prefix, mainly because at the moment there aren't many of them.
+// Engine functions don't have a prefix.
 
 #pragma once
 
@@ -21,10 +21,18 @@ typedef uint8_t  u8;
 // SDL cross platform includes
 #include <SDL2/SDL.h>
 
-// Printf + SDL do not work, and so you are forced to use SDL_Log.
-// I've added a cheat here. If I could avoid it I would.
+// Printf + SDL do not work (something to do with SDL redirecting entry point, I think),
+// and so you are forced to use SDL_Log. I've added a cheat here so that it's more readable.
+// If I could avoid it I would.
 
+// This also means if I ever figure out how to actually use printf, I can smoothly transition
+// by doing something like #define print as printf + "\n"
+
+#undef print
 #undef printf
+
+#define print SDL_Log
+// for any libraries so that I don't have to replace all the printfs with print / SDL_Log.
 #define printf SDL_Log
 
 #ifdef _WIN32

@@ -12,11 +12,9 @@ struct CurAnimation {
 
 inline void SetAnimation(CurAnimation* anim, Asset_Ase_Animated* asset, std::string name) {
 
-    asset->tags.find("Idle");
-
     // If animation doesn't exist, don't bother.
     if (asset->tags.find(name) == asset->tags.end()) {
-        SDL_Log("Failed to set animation %s for asset %s\n", name.c_str(), asset->file_path.c_str());
+        printf("Failed to set animation %s for asset %s\n", name.c_str(), asset->file_path.c_str());
         return;
     }
 

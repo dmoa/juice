@@ -75,7 +75,7 @@ void Window::Present() {
 
 
 void Window::Shutdown() {
-    SDL_Log("Shutting down window");
+    print("Shutting down window.");
     SDL_FreeSurface(icon);
     SDL_DestroyRenderer(g_window.rdr);
     SDL_DestroyWindow(window);

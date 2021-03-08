@@ -17,7 +17,7 @@ extern Text g_text;
 
 void Text::LoadFont(std::string path) {
     main_font = TTF_OpenFont(path.c_str(), 10);
-    if (!main_font) SDL_Log("can't load font"); else SDL_Log("Font loaded.");
+    if (!main_font) SDL_Log("can't load font"); else SDL_Log("Font %s loaded.", path.c_str());
 }
 
 void Text::DestroyFont() {
