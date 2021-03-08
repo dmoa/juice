@@ -16,6 +16,7 @@ struct Barrel {
     float x;
     float y;
     bool aggravated;
+    float timer;
     CurAnimation anim;
 };
 
@@ -40,4 +41,5 @@ struct Enemies {
 
     Asset_Ase_Animated* barrel_asset = NULL;
     int barrel_range = 30;
+    int barrel_aggr_time = 4;
 };

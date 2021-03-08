@@ -14,7 +14,7 @@ void Enemies::DestroyAssets() {
 }
 
 void Enemies::InitAllEnemies() {
-    for (int i = 0; i < 1; i ++) {
+    for (int i = 0; i < 30; i ++) {
         AddBarrel();
     }
 }
@@ -30,15 +30,26 @@ void Enemies::Update() {
         bool finished_animation_loop = UpdateAnimation(& barrels[id].anim, barrel_asset);
 
         // If in range of player and still idle, then get aggravated.
-        if (pyth_s(player->GetDrawCenterX(), player->GetDrawCenterY(), barrels[id].x + barrel_asset->frame_width / 2, barrels[id].y + barrel_asset->frame_height / 2) < barrel_range*barrel_range && barrels[id].anim.name == "Idle") {
+        if (pyth_s(player->GetDrawCenterX(), player->GetDrawCenterY(), barrels[id].x + barrel_asset->frame_width / 2, barrels[id].y + barrel_asset->frame_height / 2) < barrel_range*barrel_range) {
             barrels[id].aggravated = true;
-            SetAnimation(& barrels[id].anim, barrel_asset, "Opening");
+            barrels[id].timer = barrel_aggr_time;
+        }
+        else {
+            barrels[id].timer -= g_dt;
+            if (barrels[id].timer < 0) {
+                barrels[id].aggravated = false;
+            }
         }
 
         if (barrels[id].anim.name == "Opening" && finished_animation_loop) {
             SetAnimation(& barrels[id].anim, barrel_asset, "Attack");
         }
 
+        if (barrels[id].aggravated && barrels[id].anim.name == "Idle") {
+            SetAnimation(& barrels[id].anim, barrel_asset, "Opening");
+        }
+
+        if (! barrels[id].aggravated) SetAnimationIf(& barrels[id].anim, barrel_asset, "Idle");
     }
 }
 
