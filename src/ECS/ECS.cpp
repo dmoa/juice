@@ -12,7 +12,7 @@ void ECS::GivePointers(Map* _map, Player* _player, Enemies* _enemies) {
 int ECS::AddEntity(ENTITY_TYPE type, float x, float y, Asset_Ase** asset) {
 
     if (! asset || ! *asset) {
-        SDL_Log("Asset is null pointer");
+        print("Asset is null pointer");
         return -1;
     }
 
@@ -74,7 +74,7 @@ void ECS::Draw() {
                 enemies->DrawEnemy(j);
                 break;
             default:
-                SDL_Log("Entity not being drawn!, x: %i, y: %i, id: %i, type: %i", entities[j].x, entities[j].y, j, (int) entities[j].type);
+                print("Entity not being drawn!, x: %i, y: %i, id: %i, type: %i", entities[j].x, entities[j].y, j, (int) entities[j].type);
                 break;
         }
 

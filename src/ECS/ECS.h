@@ -18,7 +18,7 @@ struct ECS {
     inline int AddEntity(ENTITY_TYPE type, float x, float y, Asset_Ase_Animated** asset) {
 
         if (asset == NULL || *asset == NULL) {
-            SDL_Log("Asset is null pointer");
+            print("Asset is null pointer");
             return -1;
         }
         else {

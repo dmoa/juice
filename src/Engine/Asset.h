@@ -8,7 +8,7 @@
 
 inline SDL_Texture* LoadAsset_IMG(std::string path) {
     SDL_Texture* texture = IMG_LoadTexture(g_window.rdr, path.c_str());
-    if (!texture) SDL_Log("%s%s", path.c_str(), " not found");
+    if (!texture) print("%s%s", path.c_str(), " not found");
     return texture;
 }
 
@@ -59,12 +59,12 @@ Asset_Ase* LoadAsset_Ase(std::string file_path) {
     Ase_Output* output = Ase_Load(file_path);
 
     SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormatFrom(output->pixels, output->frame_width * output->num_frames, output->frame_height, 8, output->frame_width * output->num_frames, SDL_PIXELFORMAT_INDEX8);
-    if (! surface) SDL_Log("Surface could not be created!, %s\n", SDL_GetError());
+    if (! surface) print("Surface could not be created!, %s\n", SDL_GetError());
     SDL_SetPaletteColors(surface->format->palette, (SDL_Color*) & output->palette.entries, 0, output->palette.num_entries);
     SDL_SetColorKey(surface, SDL_TRUE, output->palette.color_key);
 
     SDL_Texture* texture = SDL_CreateTextureFromSurface(g_window.rdr, surface);
-    if (! texture) SDL_Log("Texture could not be created!, %s, %s\n", SDL_GetError(), file_path.c_str());
+    if (! texture) print("Texture could not be created!, %s, %s\n", SDL_GetError(), file_path.c_str());
     SDL_FreeSurface(surface);
 
     Asset_Ase* asset;
@@ -100,7 +100,7 @@ Asset_Ase* LoadAsset_Ase(std::string file_path) {
             *(asset->damage_box) = output->slices[i].quad;
         }
         else {
-            SDL_Log("%s: Asset_Ase slice %s not supported", file_path.c_str(), output->slices[i].name.c_str());
+            print("%s: Asset_Ase slice %s not supported", file_path.c_str(), output->slices[i].name.c_str());
         }
     }
 

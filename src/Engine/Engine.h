@@ -22,7 +22,7 @@ typedef uint8_t  u8;
 #include <SDL2/SDL.h>
 
 // Printf + SDL do not work (something to do with SDL redirecting entry point, I think),
-// and so you are forced to use SDL_Log. I've added a cheat here so that it's more readable.
+// and so you are forced to use print. I've added a cheat here so that it's more readable.
 // If I could avoid it I would.
 
 // This also means if I ever figure out how to actually use printf, I can smoothly transition
@@ -32,7 +32,7 @@ typedef uint8_t  u8;
 #undef printf
 
 #define print SDL_Log
-// for any libraries so that I don't have to replace all the printfs with print / SDL_Log.
+// for any libraries so that I don't have to replace all the printfs with print / print.
 #define printf SDL_Log
 
 #ifdef _WIN32

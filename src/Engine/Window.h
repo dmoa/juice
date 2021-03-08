@@ -40,7 +40,7 @@ void Window::Init() {
     SDL_SetTextureBlendMode(other_texture, SDL_BLENDMODE_BLEND);
 
     icon = IMG_Load("assets/player/red.png");
-    if (!icon) SDL_Log("icon.png not loaded");
+    if (!icon) print("icon.png not loaded");
     SDL_SetWindowIcon(window, icon);
 }
 

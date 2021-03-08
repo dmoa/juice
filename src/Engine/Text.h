@@ -17,7 +17,7 @@ extern Text g_text;
 
 void Text::LoadFont(std::string path) {
     main_font = TTF_OpenFont(path.c_str(), 10);
-    if (!main_font) SDL_Log("can't load font"); else SDL_Log("Font %s loaded.", path.c_str());
+    if (!main_font) print("can't load font"); else print("Font %s loaded.", path.c_str());
 }
 
 void Text::DestroyFont() {
@@ -26,7 +26,7 @@ void Text::DestroyFont() {
 
 SDL_Texture* Text::CreateTexture(std::string text) {
     SDL_Surface* temp_surface = TTF_RenderText_Solid(main_font, text.c_str(), font_color);
-    if (!temp_surface) SDL_Log("failed to create surface\n");
+    if (!temp_surface) print("failed to create surface\n");
     SDL_Texture* texture = SDL_CreateTextureFromSurface(g_window.rdr, temp_surface);
 
     SDL_FreeSurface(temp_surface);

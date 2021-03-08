@@ -208,7 +208,7 @@ static Ase_Output* Ase_Load(std::string path) {
         };
 
         if (header.color_depth != 8) {
-            SDL_Log("%s: Not in indexed color mode. Only indexed color mode supported.\n", path.c_str());
+            print("%s: Not in indexed color mode. Only indexed color mode supported.\n", path.c_str());
             return NULL;
         }
 
@@ -248,7 +248,7 @@ static Ase_Output* Ase_Load(std::string path) {
             output->frame_durations[i] = frames[i].frame_duration;
 
             if (frames[i].magic_number != FRAME_MN) {
-                SDL_Log("%s: Frame %i magic number not correct, corrupt file?\n", path.c_str(), i);
+                print("%s: Frame %i magic number not correct, corrupt file?\n", path.c_str(), i);
                 Ase_Destroy_Output(output);
                 return NULL;
             }
@@ -274,7 +274,7 @@ static Ase_Output* Ase_Load(std::string path) {
 
                             // We do not support color data with strings in it. Flag 1 means there's a name.
                             if (GetU16(buffer_p + 26) == 1) {
-                                SDL_Log("%s: Name flag detected, cannot load! Color Index: %i.\n", path.c_str(), k);
+                                print("%s: Name flag detected, cannot load! Color Index: %i.\n", path.c_str(), k);
                                 Ase_Destroy_Output(output);
                                 return NULL;
                             }
@@ -290,7 +290,7 @@ static Ase_Output* Ase_Load(std::string path) {
                         u16 cel_type = GetU16(buffer_p + 13);
 
                         if (cel_type != INDEX_FORMAT) {
-                            SDL_Log("%s: Pixel format not supported!\n", path.c_str());
+                            print("%s: Pixel format not supported!\n", path.c_str());
                             Ase_Destroy_Output(output);
                             return NULL;
                         }
@@ -301,7 +301,7 @@ static Ase_Output* Ase_Load(std::string path) {
 
                         unsigned int data_size = Decompressor_Feed(buffer_p + 26, 26 - chunk_size, pixels, width * height, true);
                         if (data_size == -1) {
-                            SDL_Log("%s: Failed to decompress pixels!\n", path.c_str());
+                            print("%s: Failed to decompress pixels!\n", path.c_str());
                             Ase_Destroy_Output(output);
                             return NULL;
                         }
@@ -345,7 +345,7 @@ static Ase_Output* Ase_Load(std::string path) {
                         u32 num_keys = GetU32(buffer_p + 6);
                         u32 flag = GetU32(buffer_p + 10);
                         if (flag != 0) {
-                            SDL_Log("%s: Flag %i not supported!\n", path.c_str(), flag);
+                            print("%s: Flag %i not supported!\n", path.c_str(), flag);
                             Ase_Destroy_Output(output);
                             return NULL;
                         }
@@ -389,7 +389,7 @@ static Ase_Output* Ase_Load(std::string path) {
         return output;
 
     } else {
-        SDL_Log("%s: File could not be loaded.\n", path.c_str());
+        print("%s: File could not be loaded.\n", path.c_str());
         return NULL;
     }
 }
