@@ -18,7 +18,7 @@ struct Asset_Ase {
     int frame_width;
     int frame_height;
 
-    // If a sprite in the future does not need a boxesz, it would likely
+    // If a sprite in the future does not need a boxes, it would likely
     // be an edge case and we waste an negligable amount of memory when holding empty pointers.
     SDL_Rect* movement_box;
     SDL_Rect* damage_box;
