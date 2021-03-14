@@ -14,6 +14,7 @@
 #include "Map.h"
 #include "Enemies.h"
 #include "Crosshair.h"
+#include "Overlay.h"
 
 int main(int argc, char* argv[]) {
     EngineInit();
@@ -27,7 +28,7 @@ int main(int argc, char* argv[]) {
     Map map;
     Enemies enemies;
     Crosshair crosshair;
-
+    Overlay overlay;
 
     gameplay_camera.PassPointers(& player, & map, & g_dt);
 
@@ -47,6 +48,9 @@ int main(int argc, char* argv[]) {
     enemies.InitAllEnemies();
 
     crosshair.LoadAsset();
+
+    overlay.GivePointers(& player);
+    overlay.LoadAssets();
 
     SDL_Event event;
     bool quit = false;
@@ -71,6 +75,8 @@ int main(int argc, char* argv[]) {
                             player.LoadAsset();
                             crosshair.DestroyAsset();
                             crosshair.LoadAsset();
+                            overlay.DestroyAssets();
+                            overlay.LoadAssets();
                             break;
                         default: break;
                     }
@@ -111,6 +117,7 @@ int main(int argc, char* argv[]) {
 
         window.SetDrawOther();
 
+        overlay.Draw();
         PrintScreen(std::to_string( engine_clock.average_fps ), 2, 0);
 
         window.Present();
@@ -118,6 +125,10 @@ int main(int argc, char* argv[]) {
 
     player.DestroyAsset();
     map.DestroyTextures();
+    map.DestroyAssets();
+    crosshair.DestroyAsset();
+    overlay.DestroyAssets();
+
     window.Shutdown();
     EngineQuit();
     return 0;

@@ -32,7 +32,7 @@ extern GlobalWindowData g_window;
 
 void Window::Init() {
     window = SDL_CreateWindow("juice", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, g_window.w, g_window.h, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
-    SDL_UpdateWindowSurface(window);
+    //SDL_UpdateWindowSurface(window);
     g_window.rdr = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
     gameplay_texture = SDL_CreateTexture(g_window.rdr, SDL_GetWindowPixelFormat(window), SDL_TEXTUREACCESS_TARGET, 768, 768);
