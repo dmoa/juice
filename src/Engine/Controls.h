@@ -6,6 +6,9 @@
 
 // Mouse Functions
 
+// For uniformity
+#define GetMouseState SDL_GetMouseState
+
 inline void GetMouseGameState(int* x, int* y) {
     SDL_GetMouseState(x, y);
     if (x) *x = *x / g_window.scale + g_window.gameplay_viewport.x;

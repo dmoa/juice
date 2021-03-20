@@ -49,6 +49,7 @@ struct Player {
 
     void Attack();
 
+
     float x = 30;
     float y = 30;
 
@@ -70,6 +71,9 @@ struct Player {
     float current_xv = 0;
     float current_yv = 0;
     int   v = 110;
+
+    int max_health = 200;
+    int current_health = 100;
 
     bool holding_action_button = false;
     bool is_attacking = false;

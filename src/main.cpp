@@ -102,6 +102,7 @@ int main(int argc, char* argv[]) {
             enemies.Update();
             gameplay_camera.Update();
             crosshair.Update();
+            overlay.Update();
         }
         SDL_ShowCursor(DEV_PAUSED); // if in dev mode -> show cursor
 
@@ -118,7 +119,7 @@ int main(int argc, char* argv[]) {
         window.SetDrawOther();
 
         overlay.Draw();
-        PrintScreen(std::to_string( engine_clock.average_fps ), 2, 0);
+        PrintScreen(std::to_string( engine_clock.average_fps ), 2, g_window.h / g_window.scale - g_text.default_font_size);
 
         window.Present();
     }

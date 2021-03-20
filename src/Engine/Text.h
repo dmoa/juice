@@ -10,13 +10,14 @@ struct Text {
     SDL_Texture* CreateTexture(std::string text);
     TTF_Font* main_font = NULL;
     SDL_Color font_color = {255, 255, 255};
+    const int default_font_size = 10;
 };
 extern Text g_text;
 
 #ifdef ENGINE_IMPLEMENTATION
 
 void Text::LoadFont(std::string path) {
-    main_font = TTF_OpenFont(path.c_str(), 10);
+    main_font = TTF_OpenFont(path.c_str(), default_font_size);
     if (!main_font) print("can't load font"); else print("Font %s loaded.", path.c_str());
 }
 

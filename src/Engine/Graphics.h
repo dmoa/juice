@@ -28,6 +28,10 @@ inline void RenderCopyWhole(SDL_Renderer* r, SDL_Texture* t, SDL_Rect* _rt, Draw
     SDL_RenderCopy(r, t, NULL, & rt);
 };
 
+// inline void RenderCopyStretched(SDL_Renderer* r, SDL_Texture* SDL_Rect* drect) {
+//     SDL_RenderCopy();
+// }
+
 // Render Copy not stretching the item.
 // Takes the width and height from the quad and uses it for the destination rectangle.
 inline void RenderCopy(SDL_Renderer* r, SDL_Texture* t, SDL_Rect* src_r, float x, float y) {

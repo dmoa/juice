@@ -4,6 +4,11 @@
 
 #include "Player.h"
 
+struct SimpleAsset {
+    SDL_Rect drect;
+    Asset_Ase* asset;
+};
+
 struct Overlay {
 
     void GivePointers(Player* _player);
@@ -14,9 +19,8 @@ struct Overlay {
 
     Player* player;
 
-    SDL_Rect heart_drect;
-    SDL_Rect health_bar_drect;
+    SimpleAsset heart;
+    SimpleAsset health_bar;
+    SimpleAsset red_bar;
 
-    Asset_Ase* heart_asset;
-    Asset_Ase* health_bar_asset;
 };
