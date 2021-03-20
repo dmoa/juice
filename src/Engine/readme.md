@@ -231,6 +231,10 @@ inline void GetTextureSize(SDL_Texture* t, int* w, int* h);
 // pos can be either TOP_LEFT or CENTER, which picks the origin to draw from.
 inline void RenderCopyWhole(SDL_Renderer* r, SDL_Texture* t, SDL_Rect* _rt, DrawnFrom pos = TOP_LEFT);
 
+// RenderCopy but does not stretch the item.
+// Takes the width and height from the quad (src_r) and uses it for the destination rectangle internally.
+inline void RenderCopy(SDL_Renderer* r, SDL_Texture* t, SDL_Rect* src_r, float x, float y);
+
 // Prints to the screen. Only uses g_window.rdr renderer.
 void PrintScreen(std::string text, int x, int y);
 ```
@@ -258,6 +262,9 @@ struct Text {
     // The color used for all texture creation.
     // To edit it: g_text.font_color = .....
     SDL_Color font_color = {255, 255, 255};
+
+    // Easily editable default font size which is used in LoadFont.
+    const int default_font_size = 10;
 };
 extern Text g_text;
 ```
