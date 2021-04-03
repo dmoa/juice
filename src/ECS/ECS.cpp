@@ -9,25 +9,23 @@ void ECS::GivePointers(Map* _map, Player* _player, Enemies* _enemies) {
     enemies = _enemies;
 }
 
-int ECS::AddEntity(ENTITY_TYPE type, float x, float y, Asset_Ase** asset, void (*draw_function)(Entity*)) {
+void ECS::AddEntity(Entity* entity) {
 
-    if (! asset || ! *asset) {
+    // We don't check if entity is null because asset being
+    // null is a much more common error to run into.
+    if (! e->asset || ! *(e->asset) ) {
         print("Asset is null pointer");
-        return -1;
+        return;
     }
 
-    int id = entities.size();
-
-    entities[id] = {type, x, y, asset, draw_function};
     draw_order_indexes.push_back(id);
 
-    return id;
 }
 
-void ECS::PopEntity(int id) {
-    entities.erase(id);
-    draw_order_indexes.erase(std::remove(draw_order_indexes.begin(), draw_order_indexes.end(), id), draw_order_indexes.end());
-}
+// void ECS::PopEntity(int id) {
+//     entities.erase(id);
+//     draw_order_indexes.erase(std::remove(draw_order_indexes.begin(), draw_order_indexes.end(), id), draw_order_indexes.end());
+// }
 
 void ECS::Draw() {
 
@@ -61,22 +59,12 @@ void ECS::Draw() {
     }
 
     for (unsigned int i = 0; i < draw_order_indexes.size(); i++) {
-        int j = draw_order_indexes[i];
+        entities[i]->Draw(& entities[i]);
+    }
+}
 
-        switch (entities[j].type) {
-            case PLAYER_TYPE:
-                player->Draw();
-                break;
-            case MAP_TYPE:
-                map->DrawObject(j);
-                break;
-            case ENEMY_TYPE:
-                entities[j].Draw(& entities[j]);
-                break;
-            default:
-                print("Entity not being drawn!, x: %i, y: %i, id: %i, type: %i", entities[j].x, entities[j].y, j, (int) entities[j].type);
-                break;
-        }
-
+void ECS::Update() {
+    for (unsigned int i = 0; i < draw_order_indexes.size(); i++) {
+        entities[i]->Update(& entities[i]);
     }
 }

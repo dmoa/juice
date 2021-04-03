@@ -15,6 +15,7 @@ struct Entity {
     float y;
     // This holds collision_box and quad data which is useful for drawing in ECS.
     Asset_Ase** asset;
+    void* data;
     void (*Draw)(Entity*);
     void (*Update)(Entity*);
 };
@@ -28,8 +29,8 @@ struct Barrel : Animated_Entity {
     float timer;
 }
 
+
 void DrawAnimatedEntity(Entity* e) {
     Animated_Entity* entity = (Animated_Entity*) e;
-
     RenderCopy(g_window.rdr, (*(entity->asset))->texture, & entity->anim.quad, entity->x, entity->y);
 }

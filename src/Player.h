@@ -6,8 +6,6 @@
 
 #include <Engine/Engine.h>
 
-
-
 struct Map;
 struct Enemies;
 struct ECS;

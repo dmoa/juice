@@ -27,7 +27,7 @@ void Player::PassPointers(Map* _map, Enemies* _enemies, ECS* _ecs, float* _dt) {
 }
 
 void Player::InitPos() {
-    id = ecs->AddEntity(PLAYER_TYPE, x, y, (Asset_Ase**) & asset);
+    //id = ecs->AddEntity(PLAYER_TYPE, x, y, (Asset_Ase**) & asset);
 }
 
 void Player::Draw() {

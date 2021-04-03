@@ -51,8 +51,9 @@ void Enemies::Update() {
 
 void Enemies::AddBarrel() {
     int x = random(0, 500); int y = random(0, 500);
-    int id = ecs->AddEntity(ENEMY_TYPE, x, y, & barrel_asset, & DrawBarrel);
 
+    Barrel* barrel = (Barrel*) malloc(sizeof(Barrel));
 
-    SetAnimation(& barrels[id].anim, barrel_asset, "Idle");
+    ecs->AddEntity(barrel);
+    SetAnimation(& barrel.anim, barrel_asset, "Idle");
 }
