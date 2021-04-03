@@ -39,8 +39,8 @@ void Window::Init() {
     other_texture = SDL_CreateTexture(g_window.rdr, SDL_GetWindowPixelFormat(window), SDL_TEXTUREACCESS_TARGET, 768, 768);
     SDL_SetTextureBlendMode(other_texture, SDL_BLENDMODE_BLEND);
 
-    icon = IMG_Load("assets/player/red.png");
-    if (!icon) print("icon.png not loaded");
+    icon = SDL_LoadBMP("assets/icon.bmp");
+    if (!icon) print("assets/icon.bmp not loaded");
     SDL_SetWindowIcon(window, icon);
 }
 
