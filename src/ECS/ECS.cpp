@@ -9,7 +9,7 @@ void ECS::GivePointers(Map* _map, Player* _player, Enemies* _enemies) {
     enemies = _enemies;
 }
 
-int ECS::AddEntity(ENTITY_TYPE type, float x, float y, Asset_Ase** asset) {
+int ECS::AddEntity(ENTITY_TYPE type, float x, float y, Asset_Ase** asset, void (*draw_function)(Entity*)) {
 
     if (! asset || ! *asset) {
         print("Asset is null pointer");
@@ -18,7 +18,7 @@ int ECS::AddEntity(ENTITY_TYPE type, float x, float y, Asset_Ase** asset) {
 
     int id = entities.size();
 
-    entities[id] = {type, x, y, asset};
+    entities[id] = {type, x, y, asset, draw_function};
     draw_order_indexes.push_back(id);
 
     return id;
@@ -71,7 +71,7 @@ void ECS::Draw() {
                 map->DrawObject(j);
                 break;
             case ENEMY_TYPE:
-                enemies->DrawEnemy(j);
+                entities[j].Draw(& entities[j]);
                 break;
             default:
                 print("Entity not being drawn!, x: %i, y: %i, id: %i, type: %i", entities[j].x, entities[j].y, j, (int) entities[j].type);

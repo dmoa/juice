@@ -12,14 +12,6 @@ struct Map;
 struct ECS;
 struct Player;
 
-struct Barrel {
-    float x;
-    float y;
-    bool aggravated;
-    float timer;
-    CurAnimation anim;
-};
-
 struct Enemies {
 
     void GivePointers(ECS* _ecs, Player* _player);
@@ -27,7 +19,7 @@ struct Enemies {
     void DestroyAssets();
     void InitAllEnemies();
 
-    void DrawEnemy(int id);
+    void DrawBarrel(Entity* entity);
     void Update();
 
     void AddBarrel();
