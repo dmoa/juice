@@ -4,6 +4,7 @@
 #include <time.h>
 
 #define PI 3.14159265
+#define ROOT2 1.41421356237
 
 inline float pyth_s(float x, float y, float x2, float y2) {
     return (x-x2)*(x-x2) + (y-y2)*(y-y2);

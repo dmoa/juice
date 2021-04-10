@@ -10,27 +10,27 @@ enum ENTITY_TYPE {
 };
 
 struct Entity {
+
     ENTITY_TYPE type;
     float x;
     float y;
     // This holds collision_box and quad data which is useful for drawing in ECS.
     Asset_Ase** asset;
-    void* data;
-    void (*Draw)(Entity*);
-    void (*Update)(Entity*);
+
+    void Draw() {};
 };
 
-struct Animated_Entity : Entity {
-    CurAnimation anim;
-};
+// A lot entities are going to have similar draw functions,
+// so it's worth adding some small inline ones that are easily accessible.
+// I'm not making a default draw function because I think that'll make it
+// more difficult to see at a glance what entity is using what draw function.
 
-struct Barrel : Animated_Entity {
-    bool aggravated;
-    float timer;
-}
+// I was thinking of doing function pointers, but there are many cases such as in
+// update where you need higher level data, e.g. all barrel enemies would need
+// to access the same variable such as minimum radius to aggravate. And so
+// using function pointers for that might make it messy. And doing half function
+// pointers half function overrides is even messier.
 
-
-void DrawAnimatedEntity(Entity* e) {
-    Animated_Entity* entity = (Animated_Entity*) e;
-    RenderCopy(g_window.rdr, (*(entity->asset))->texture, & entity->anim.quad, entity->x, entity->y);
+inline void DrawAnimatedEntity(Entity* e, CurAnimation* anim) {
+    RenderCopy(g_window.rdr, (*(e->asset))->texture, & anim->quad, e->x, e->y);
 }

@@ -3,22 +3,17 @@
 #include "../Player.h"
 #include "../Enemies.h"
 
-void ECS::GivePointers(Map* _map, Player* _player, Enemies* _enemies) {
-    map = _map;
-    player = _player;
-    enemies = _enemies;
-}
 
-void ECS::AddEntity(Entity* entity) {
+void ECS::AddEntity(Entity* e) {
 
     // We don't check if entity is null because asset being
     // null is a much more common error to run into.
     if (! e->asset || ! *(e->asset) ) {
-        print("Asset is null pointer");
+        print("Asset is null pointer!");
         return;
     }
 
-    draw_order_indexes.push_back(id);
+    draw_order_indexes.push_back(draw_order_indexes.size());
 
 }
 
@@ -40,13 +35,11 @@ void ECS::Draw() {
             int i1 = draw_order_indexes[j];
             int i2 = draw_order_indexes[j+1];
 
-            if (entities[i1].asset == NULL || entities[i2].asset == NULL) { continue; }
-
             // For draw order we use the collision box because the objects' collision box
             // always includes the bottom of the object (nature of topdown game). This
             // might change later.
 
-            if (entities[i1].y + (*entities[i1].asset)->movement_box->y + (*entities[i1].asset)->movement_box->h > entities[i2].y + (*entities[i2].asset)->movement_box->y + (*entities[i2].asset)->movement_box->h) {
+            if (entities[i1]->y + (*entities[i1]->asset)->movement_box->y + (*entities[i1]->asset)->movement_box->h > entities[i2]->y + (*entities[i2]->asset)->movement_box->y + (*entities[i2]->asset)->movement_box->h) {
                 draw_order_indexes[j]   = i2;
                 draw_order_indexes[j+1] = i1;
                 has_swapped = true;
@@ -59,12 +52,13 @@ void ECS::Draw() {
     }
 
     for (unsigned int i = 0; i < draw_order_indexes.size(); i++) {
-        entities[i]->Draw(& entities[i]);
+        entities[i]->Draw();
     }
 }
 
 void ECS::Update() {
     for (unsigned int i = 0; i < draw_order_indexes.size(); i++) {
-        entities[i]->Update(& entities[i]);
+        //entities[i]->Update();
     }
 }
+

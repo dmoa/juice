@@ -12,6 +12,17 @@ struct Map;
 struct ECS;
 struct Player;
 
+#define NUM_ENEMIES 30
+
+struct Barrel : Entity {
+
+    void Draw();
+
+    CurAnimation anim;
+    bool aggravated;
+    float timer;
+};
+
 struct Enemies {
 
     void GivePointers(ECS* _ecs, Player* _player);
@@ -22,14 +33,10 @@ struct Enemies {
     void DrawBarrel(Entity* entity);
     void Update();
 
-    void AddBarrel();
-
     ECS* ecs;
     Player* player;
 
-    // Note: Thinking about adding void* to entity in ecs, so that we don't
-    // even have to do the lookup. For now not bothering.
-    std::map<int, Barrel> barrels;
+    Barrel barrels [NUM_ENEMIES];
 
     Asset_Ase_Animated* barrel_asset = NULL;
     int barrel_range = 30;

@@ -32,8 +32,6 @@ int main(int argc, char* argv[]) {
 
     gameplay_camera.PassPointers(& player, & map, & g_dt);
 
-    ecs.GivePointers(& map, & player, & enemies);
-
     player.PassPointers(& map, & enemies, & ecs, & g_dt);
     player.LoadAsset();
     player.InitPos();

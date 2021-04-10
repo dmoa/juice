@@ -2,9 +2,9 @@
 
 #include <string>
 #include <map>
-#define ROOT2 1.41421356237
 
 #include <Engine/Engine.h>
+#include "ECS/Entity.h"
 
 struct Map;
 struct Enemies;
@@ -29,7 +29,7 @@ struct Weapon {
     SDL_RendererFlip is_flipped = SDL_FLIP_NONE;
 };
 
-struct Player {
+struct Player : Entity {
     void LoadAsset();
     void DestroyAsset();
 

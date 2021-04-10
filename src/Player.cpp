@@ -27,7 +27,7 @@ void Player::PassPointers(Map* _map, Enemies* _enemies, ECS* _ecs, float* _dt) {
 }
 
 void Player::InitPos() {
-    //id = ecs->AddEntity(PLAYER_TYPE, x, y, (Asset_Ase**) & asset);
+    ecs->AddEntity( (Entity*) this );
 }
 
 void Player::Draw() {
@@ -108,11 +108,6 @@ void Player::Update() {
     rendering_quad.x = x;
     rendering_quad.y = y;
     AnimationUpdate();
-
-    // updating pos in the draw objects, so that it can calculate the draw order.
-    ecs->entities[id].x = x;
-    ecs->entities[id].y = y;
-
     UpdateWeapon();
 }
 

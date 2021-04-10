@@ -89,12 +89,12 @@ void Map::CreateMapTexture() {
     // so they have to be independently drawn.
     int x;
     int y;
-    for (int i = 0; i < 100; i++) {
-        x = random(tile_length, GetMapWidth() - tile_length * 2);
-        y = random(tile_length, GetMapHeight() - tile_length * 3);
-        int entity_id = AddEntityIfPossible(x, y, & still_objects[random(0, NUM_STILL_OBJECTS)]); // oddly specific, it's just the numerical value of all the map object enums
-        if (entity_id != -1) object_opacities[entity_id] = 255.f;
-    }
+    // for (int i = 0; i < 100; i++) {
+    //     x = random(tile_length, GetMapWidth() - tile_length * 2);
+    //     y = random(tile_length, GetMapHeight() - tile_length * 3);
+    //     int entity_id = AddEntityIfPossible(x, y, & still_objects[random(0, NUM_STILL_OBJECTS)]); // oddly specific, it's just the numerical value of all the map object enums
+    //     if (entity_id != -1) object_opacities[entity_id] = 255.f;
+    // }
 
 }
 
@@ -120,29 +120,29 @@ void Map::DrawBase() {
 }
 
 void Map::DrawObject(int id) {
-    Entity e = ecs->entities[id];
-    Asset_Ase* a = *(e.asset);
+    // Entity* e = ecs->entities[id];
+    // Asset_Ase* a = *(e.asset);
 
-    SDL_Rect pos = {e.x, e.y, a->frame_width, a->frame_height};
+    // SDL_Rect pos = {e.x, e.y, a->frame_width, a->frame_height};
 
-    SDL_SetTextureAlphaMod(a->texture, object_opacities[id]);
-    SDL_RenderCopy(g_window.rdr, a->texture, NULL, & pos);
+    // SDL_SetTextureAlphaMod(a->texture, object_opacities[id]);
+    // SDL_RenderCopy(g_window.rdr, a->texture, NULL, & pos);
 }
 
 
 void Map::Update() {
-    for (auto & info : object_opacities) {
-        Entity e = ecs->entities[info.first];
+    // for (auto & info : object_opacities) {
+    //     Entity e = ecs->entities[info.first];
 
-        if (pyth_s(e.x + (*e.asset)->frame_width / 2, e.y + (*e.asset)->frame_height / 2, player->GetDrawCenterX(), player->GetDrawCenterY()) < opacity_distance*opacity_distance) {
-            // info.first = entity id
-            // info.second = entity opacity
-            info.second = max(object_opacities[info.first] - (g_dt) * 500, 130.f);
-        }
-        else {
-            info.second = min(object_opacities[info.first] + (g_dt) * 200, 255.f);
-        }
-    }
+    //     if (pyth_s(e.x + (*e.asset)->frame_width / 2, e.y + (*e.asset)->frame_height / 2, player->GetDrawCenterX(), player->GetDrawCenterY()) < opacity_distance*opacity_distance) {
+    //         // info.first = entity id
+    //         // info.second = entity opacity
+    //         info.second = max(object_opacities[info.first] - (g_dt) * 500, 130.f);
+    //     }
+    //     else {
+    //         info.second = min(object_opacities[info.first] + (g_dt) * 200, 255.f);
+    //     }
+    // }
 }
 
 void Map::DestroyTextures() {
@@ -151,10 +151,10 @@ void Map::DestroyTextures() {
 }
 
 int Map::AddEntityIfPossible(int x, int y, Asset_Ase** asset) {
-    for (unsigned int i = 0; i < ecs->entities.size(); i++) {
-        if (AABB(x, y, (*asset)->frame_width, (*asset)->frame_height, ecs->entities[i].x, ecs->entities[i].y, (*ecs->entities[i].asset)->frame_width, (*ecs->entities[i].asset)->frame_height)) {
-            return -1;
-        }
-    }
-    return ecs->AddEntity(MAP_TYPE, x, y, asset);
+    // for (unsigned int i = 0; i < ecs->entities.size(); i++) {
+    //     if (AABB(x, y, (*asset)->frame_width, (*asset)->frame_height, ecs->entities[i].x, ecs->entities[i].y, (*ecs->entities[i].asset)->frame_width, (*ecs->entities[i].asset)->frame_height)) {
+    //         return -1;
+    //     }
+    // }
+    // return ecs->AddEntity(MAP_TYPE, x, y, asset);
 }

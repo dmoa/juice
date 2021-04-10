@@ -14,46 +14,40 @@ void Enemies::DestroyAssets() {
 }
 
 void Enemies::InitAllEnemies() {
-    for (int i = 0; i < 30; i ++) {
-        AddBarrel();
+    for (int i = 0; i < NUM_ENEMIES; i++) {
+
+        barrels[i].x = random(0, 500); barrels[i].y = random(0, 500);
+        SetAnimation(& barrels[i].anim, barrel_asset, "Idle");
+
+        ecs->AddEntity(& barrels[i]);
     }
 }
 
 void Enemies::Update() {
-    // for (auto & barrel_iter : barrels) {
-    //     int id = barrel_iter.first;
 
-    //     bool finished_animation_loop = UpdateAnimation(& barrels[id].anim, barrel_asset);
+    for (int i = 0; i < NUM_ENEMIES; i++) {
 
-    //     // If in range of player and still idle, then get aggravated.
-    //     if (pyth_s(player->GetDrawCenterX(), player->GetDrawCenterY(), barrels[id].x + barrel_asset->frame_width / 2, barrels[id].y + barrel_asset->frame_height / 2) < barrel_range*barrel_range) {
-    //         barrels[id].aggravated = true;
-    //         barrels[id].timer = barrel_aggr_time;
-    //     }
-    //     else {
-    //         barrels[id].timer -= g_dt;
-    //         if (barrels[id].timer < 0) {
-    //             barrels[id].aggravated = false;
-    //         }
-    //     }
+        Barrel* b = & barrels[i];
 
-    //     if (barrels[id].anim.name == "Opening" && finished_animation_loop) {
-    //         SetAnimation(& barrels[id].anim, barrel_asset, "Attack");
-    //     }
+        bool finished_animation_loop = UpdateAnimation(& b->anim, barrel_asset);
 
-    //     if (barrels[id].aggravated && barrels[id].anim.name == "Idle") {
-    //         SetAnimation(& barrels[id].anim, barrel_asset, "Opening");
-    //     }
+        // If in range of player and still idle, then get aggravated.
+        if (pyth_s(player->GetDrawCenterX(), player->GetDrawCenterY(), b->x + barrel_asset->frame_width / 2, b->y + barrel_asset->frame_height / 2) < barrel_range*barrel_range) {
+            b->aggravated = true;
+            b->timer = barrel_aggr_time;
+        }
+        else {
+            b->timer -= g_dt;
+            if (b->timer < 0) b->aggravated = false;
+        }
 
-    //     if (! barrels[id].aggravated) SetAnimationIf(& barrels[id].anim, barrel_asset, "Idle");
-    // }
+        if (b->anim.name == "Opening" && finished_animation_loop) SetAnimation(& b->anim, barrel_asset, "Attack");
+        if (b->aggravated && b->anim.name == "Idle")         SetAnimation(& b->anim, barrel_asset, "Opening");
+        if (! b->aggravated)                                      SetAnimationIf(& b->anim, barrel_asset, "Idle");
+
+    }
 }
 
-void Enemies::AddBarrel() {
-    int x = random(0, 500); int y = random(0, 500);
-
-    Barrel* barrel = (Barrel*) malloc(sizeof(Barrel));
-
-    ecs->AddEntity(barrel);
-    SetAnimation(& barrel.anim, barrel_asset, "Idle");
+void Barrel::Draw() {
+    DrawAnimatedEntity(this, & anim);
 }
