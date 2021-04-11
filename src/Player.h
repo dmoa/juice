@@ -51,8 +51,8 @@ struct Player : Entity {
     float x = 30;
     float y = 30;
 
-    inline float GetDrawCenterX() { return x + asset->frame_width / 2; };
-    inline float GetDrawCenterY() { return y + asset->frame_height / 2; };
+    inline float GetDrawCenterX() { return x + (*asset)->frame_width / 2; };
+    inline float GetDrawCenterY() { return y + (*asset)->frame_height / 2; };
 
     float* dt;
     Map* map;
@@ -78,7 +78,12 @@ struct Player : Entity {
 
     std::vector<SDL_Rect>* map_cb;
 
-    Asset_Ase_Animated* asset;
+    // Using a cheat, because player is an edge case that happens
+    // to manage its own asset, i.e. there are not multiple copies
+    // of player, so, it can store the pointer to the asset directly.
+    Asset_Ase_Animated* _asset = NULL;
+    Asset_Ase** asset = (Asset_Ase**) & _asset;
+
     CurAnimation cur_anim;
 
     SDL_Rect rendering_quad;

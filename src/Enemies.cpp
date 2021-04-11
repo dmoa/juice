@@ -18,6 +18,7 @@ void Enemies::InitAllEnemies() {
 
         barrels[i].x = random(0, 500); barrels[i].y = random(0, 500);
         SetAnimation(& barrels[i].anim, barrel_asset, "Idle");
+        barrels[i].asset = (Asset_Ase**) & barrel_asset;
 
         ecs->AddEntity(& barrels[i]);
     }

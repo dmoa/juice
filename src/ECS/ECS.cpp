@@ -6,6 +6,11 @@
 
 void ECS::AddEntity(Entity* e) {
 
+    if (! e) {
+        print("Entity is null pointer!");
+        return;
+    }
+
     // We don't check if entity is null because asset being
     // null is a much more common error to run into.
     if (! e->asset || ! *(e->asset) ) {

@@ -4,17 +4,20 @@
 #include "ECS/ECS.h"
 
 void Player::LoadAsset() {
-    asset = LoadAsset_Ase_Animated("assets/player/knight.ase");
+
+    // See header for explanation
+    _asset = LoadAsset_Ase_Animated("assets/player/knight.ase");
+
     weapon.asset = LoadAsset_Ase("assets/player/weapons/knife.ase");
     is_flipped = SDL_FLIP_HORIZONTAL;
-    SetAnimation(& cur_anim, asset, "Idle");
+    SetAnimation(& cur_anim, _asset, "Idle");
 
     rendering_quad.w = cur_anim.quad.w;
     rendering_quad.h = cur_anim.quad.h;
 }
 
 void Player::DestroyAsset() {
-    DestroyAsset_Ase_Animated(asset);
+    DestroyAsset_Ase_Animated(_asset);
     DestroyAsset_Ase(weapon.asset);
 }
 
@@ -44,7 +47,7 @@ void Player::Draw() {
 }
 
 void Player::DrawCharacter() {
-    SDL_RenderCopyEx(g_window.rdr, asset->texture, & cur_anim.quad, & rendering_quad, NULL, NULL, is_flipped);
+    SDL_RenderCopyEx(g_window.rdr, (*asset)->texture, & cur_anim.quad, & rendering_quad, NULL, NULL, is_flipped);
 }
 
 void Player::DrawWeapon() {
@@ -117,21 +120,21 @@ void Player::CollisionUpdate() {
     bool collided_y = false;
 
     for (unsigned int i = 0; i < map_cb->size(); i++) {
-        if (AABB(x + asset->movement_box->x, y + asset->movement_box->y, asset->movement_box->w, asset->movement_box->h, (*map_cb)[i].x, (*map_cb)[i].y, (*map_cb)[i].w, (*map_cb)[i].h)) {
-            if (old_y + asset->movement_box->y >= (*map_cb)[i].y + (*map_cb)[i].h) {
-                y = (*map_cb)[i].y + (*map_cb)[i].h - asset->movement_box->y;
+        if (AABB(x + (*asset)->movement_box->x, y + (*asset)->movement_box->y, (*asset)->movement_box->w, (*asset)->movement_box->h, (*map_cb)[i].x, (*map_cb)[i].y, (*map_cb)[i].w, (*map_cb)[i].h)) {
+            if (old_y + (*asset)->movement_box->y >= (*map_cb)[i].y + (*map_cb)[i].h) {
+                y = (*map_cb)[i].y + (*map_cb)[i].h - (*asset)->movement_box->y;
                 collided_y = true;
             }
-            if (old_x + asset->movement_box->x >= (*map_cb)[i].x + (*map_cb)[i].w) {
-                x = (*map_cb)[i].x + (*map_cb)[i].w - asset->movement_box->x;
+            if (old_x + (*asset)->movement_box->x >= (*map_cb)[i].x + (*map_cb)[i].w) {
+                x = (*map_cb)[i].x + (*map_cb)[i].w - (*asset)->movement_box->x;
                 collided_x = true;
             }
-            if (old_y + asset->movement_box->y + asset->movement_box->h <= (*map_cb)[i].y) {
-                y = (*map_cb)[i].y - asset->movement_box->y - asset->movement_box->h;
+            if (old_y + (*asset)->movement_box->y + (*asset)->movement_box->h <= (*map_cb)[i].y) {
+                y = (*map_cb)[i].y - (*asset)->movement_box->y - (*asset)->movement_box->h;
                 collided_y = true;
             }
-            if (old_x + asset->movement_box->x + asset->movement_box->w <= (*map_cb)[i].x) {
-                x = (*map_cb)[i].x - asset->movement_box->x - asset->movement_box->w;
+            if (old_x + (*asset)->movement_box->x + (*asset)->movement_box->w <= (*map_cb)[i].x) {
+                x = (*map_cb)[i].x - (*asset)->movement_box->x - (*asset)->movement_box->w;
                 collided_x = true;
             }
         }
@@ -156,14 +159,14 @@ void Player::CollisionUpdate() {
 }
 
 void Player::AnimationUpdate() {
-    bool finished_anim = UpdateAnimation(& cur_anim, asset);
+    bool finished_anim = UpdateAnimation(& cur_anim, _asset);
 
     if (! is_attacking) {
         if (current_xv || current_yv) {
-            SetAnimationIf(& cur_anim, asset, "Run");
+            SetAnimationIf(& cur_anim, _asset, "Run");
         }
         else {
-            SetAnimationIf(& cur_anim, asset, "Idle");
+            SetAnimationIf(& cur_anim, _asset, "Idle");
         }
     }
 }
