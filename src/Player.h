@@ -47,10 +47,6 @@ struct Player : Entity {
 
     void Attack();
 
-
-    float x = 30;
-    float y = 30;
-
     inline float GetDrawCenterX() { return x + (*asset)->frame_width / 2; };
     inline float GetDrawCenterY() { return y + (*asset)->frame_height / 2; };
 

@@ -31,6 +31,7 @@ void Player::PassPointers(Map* _map, Enemies* _enemies, ECS* _ecs, float* _dt) {
 }
 
 void Player::InitPos() {
+    x = y = 40;
     ecs->AddEntity( (Entity*) this );
 }
 

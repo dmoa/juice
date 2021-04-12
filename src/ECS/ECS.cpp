@@ -48,9 +48,7 @@ void ECS::Draw() {
             }
         }
         // If you haven't swapped any items, then the list is sorted, so no need to continue checking.
-        if (! has_swapped) {
-            break;
-        }
+        if (! has_swapped) break;
     }
 
     for (unsigned int i = 0; i < draw_order_indexes.size(); i++) {

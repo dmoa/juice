@@ -10,5 +10,8 @@ struct Crosshair {
     void Update();
 
     SDL_Texture* texture;
-    SDL_Rect render_rect;
+    SDL_Rect render_rect = {100, 100, -1, -1};
+    float x;
+    float y;
+    float controller_crosshair_v = 300;
 };
