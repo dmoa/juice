@@ -14,13 +14,16 @@
 #define JOYSTICK_RIGHTY SDL_CONTROLLER_AXIS_RIGHTY
 
 // minimum angle for axis to be considered "moved"
-#define AXIS_MIN 14000
+#define AXIS_MIN_MOVED 7000
+// Maximum value for the axis
+#define AXIS_MAX 32767
 
 
 struct GlobalControls {
     const Uint8* keys_down = NULL;
     SDL_GameController* controller = NULL;
     bool action_dev_before = false;
+    int old_mouse_x, old_mouse_y = 0.f;
     void Init();
     bool Left();
     bool Right();
@@ -28,6 +31,7 @@ struct GlobalControls {
     bool Down();
     bool Action1();
     bool ActionDev();
+    bool MouseMoved();
 };
 extern GlobalControls g_controls;
 
@@ -46,10 +50,10 @@ inline bool GetMouseDown(int i = 1) { return SDL_GetMouseState(NULL, NULL) == SD
 // Joystick
 
 // Functions with same functionality, but the names makes it slightly clearer when running them.
-inline bool IsLeft(s16 value) { return value < - AXIS_MIN; };
-inline bool IsRight(s16 value) { return value > AXIS_MIN; };
-inline bool IsUp(s16 value) { return value < - AXIS_MIN; };
-inline bool IsDown(s16 value) { return value > AXIS_MIN; };
+inline bool IsLeft(s16 value) { return value < - AXIS_MIN_MOVED; };
+inline bool IsRight(s16 value) { return value > AXIS_MIN_MOVED; };
+inline bool IsUp(s16 value) { return value < - AXIS_MIN_MOVED; };
+inline bool IsDown(s16 value) { return value > AXIS_MIN_MOVED; };
 
 inline s16 ControllerAxis(SDL_GameControllerAxis button) { return SDL_GameControllerGetAxis(g_controls.controller, button); }
 inline bool ControllerButton(SDL_GameControllerButton button) { return SDL_GameControllerGetButton(g_controls.controller, button); }
@@ -88,6 +92,18 @@ bool GlobalControls::ActionDev() {
     bool action_dev_now = (keys_down[SDL_SCANCODE_LCTRL]) || (ControllerButton(SDL_CONTROLLER_BUTTON_BACK) && g_controls.Left());
     bool result = action_dev_now && ! action_dev_before;
     action_dev_before = action_dev_now;
+
+    return result;
+}
+
+bool GlobalControls::MouseMoved() {
+    int new_x, new_y;
+    GetMouseState(& new_x, & new_y);
+
+    bool result = old_mouse_x != new_x || old_mouse_y != new_y;
+
+    old_mouse_x = new_x;
+    old_mouse_y = new_y;
 
     return result;
 }

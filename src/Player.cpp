@@ -22,12 +22,12 @@ void Player::DestroyAsset() {
     DestroyAsset_Ase(weapon.asset);
 }
 
-void Player::PassPointers(Map* _map, Enemies* _enemies, ECS* _ecs, float* _dt) {
+void Player::PassPointers(Map* _map, Enemies* _enemies, ECS* _ecs, Crosshair* _crosshair) {
     map = _map;
     map_cb = _map->GetCollisionBoxes();
     enemies = _enemies;
     ecs = _ecs;
-    dt = _dt;
+    crosshair = _crosshair;
 }
 
 void Player::InitPos() {
@@ -182,7 +182,8 @@ void Player::UpdateWeapon() {
     if (! is_attacking) {
         // +90 at the end because atan2's range is (-rad,rad), when we want (0,360), not (-180, 180).
         // +180 to make the weapon face away from the cursor.
-        weapon.angle = atan2(mouse_y - GetDrawCenterY(), mouse_x - GetDrawCenterX()) * 180 / PI + 90 + 180;
+        //weapon.angle = atan2(mouse_y - GetDrawCenterY(), mouse_x - GetDrawCenterX()) * 180 / PI + 90 + 180;
+        weapon.angle = atan2(crosshair->y - GetDrawCenterY(), crosshair->x - GetDrawCenterX()) * 180 / PI + 270;
     }
     else {
         weapon.angle += weapon.swing_angle / weapon.attack_length * (g_dt);

@@ -5,6 +5,7 @@
 
 #include <Engine/Engine.h>
 #include "ECS/Entity.h"
+#include "Crosshair.h"
 
 struct Map;
 struct Enemies;
@@ -33,7 +34,7 @@ struct Player : Entity {
     void LoadAsset();
     void DestroyAsset();
 
-    void PassPointers(Map* _map, Enemies* _enemies, ECS* _ecs, float* _dt);
+    void PassPointers(Map* _map, Enemies* _enemies, ECS* _ecs, Crosshair* _crosshair);
     void InitPos();
 
     void Draw();
@@ -50,10 +51,10 @@ struct Player : Entity {
     inline float GetDrawCenterX() { return x + (*asset)->frame_width / 2; };
     inline float GetDrawCenterY() { return y + (*asset)->frame_height / 2; };
 
-    float* dt;
     Map* map;
     Enemies* enemies;
     ECS* ecs;
+    Crosshair* crosshair;
 
     // for lookup in ecs,
     // so that we can set the correct pos for the player in ecs,

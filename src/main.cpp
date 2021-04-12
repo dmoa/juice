@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
 
     gameplay_camera.PassPointers(& player, & map, & g_dt);
 
-    player.PassPointers(& map, & enemies, & ecs, & g_dt);
+    player.PassPointers(& map, & enemies, & ecs, & crosshair);
     player.LoadAsset();
     player.InitPos();
 
