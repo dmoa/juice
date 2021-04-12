@@ -7,6 +7,7 @@ void Player::LoadAsset() {
 
     // See header for explanation
     _asset = LoadAsset_Ase_Animated("assets/player/knight.ase");
+    asset = (Asset_Ase**) (& _asset);
 
     weapon.asset = LoadAsset_Ase("assets/player/weapons/knife.ase");
     is_flipped = SDL_FLIP_HORIZONTAL;
@@ -47,7 +48,7 @@ void Player::Draw() {
 }
 
 void Player::DrawCharacter() {
-    SDL_RenderCopyEx(g_window.rdr, (*asset)->texture, & cur_anim.quad, & rendering_quad, NULL, NULL, is_flipped);
+    SDL_RenderCopyEx(g_window.rdr, _asset->texture, & cur_anim.quad, & rendering_quad, NULL, NULL, is_flipped);
 }
 
 void Player::DrawWeapon() {

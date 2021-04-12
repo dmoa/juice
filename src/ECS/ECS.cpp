@@ -11,21 +11,15 @@ void ECS::AddEntity(Entity* e) {
         return;
     }
 
-    // We don't check if entity is null because asset being
-    // null is a much more common error to run into.
     if (! e->asset || ! *(e->asset) ) {
-        print("Asset is null pointer!");
+        print("Asset is null pointer! %d", e->asset);
         return;
     }
 
+    entities.push_back(e);
     draw_order_indexes.push_back(draw_order_indexes.size());
 
 }
-
-// void ECS::PopEntity(int id) {
-//     entities.erase(id);
-//     draw_order_indexes.erase(std::remove(draw_order_indexes.begin(), draw_order_indexes.end(), id), draw_order_indexes.end());
-// }
 
 void ECS::Draw() {
 
@@ -44,7 +38,10 @@ void ECS::Draw() {
             // always includes the bottom of the object (nature of topdown game). This
             // might change later.
 
-            if (entities[i1]->y + (*entities[i1]->asset)->movement_box->y + (*entities[i1]->asset)->movement_box->h > entities[i2]->y + (*entities[i2]->asset)->movement_box->y + (*entities[i2]->asset)->movement_box->h) {
+            float e1_y = entities[i1]->y + (*(entities[i1]->asset))->movement_box->y + (*(entities[i1]->asset))->movement_box->h;
+            float e2_y = entities[i2]->y + (*(entities[i2]->asset))->movement_box->y + (*(entities[i2]->asset))->movement_box->h;
+
+            if (e1_y > e2_y) {
                 draw_order_indexes[j]   = i2;
                 draw_order_indexes[j+1] = i1;
                 has_swapped = true;
@@ -57,7 +54,7 @@ void ECS::Draw() {
     }
 
     for (unsigned int i = 0; i < draw_order_indexes.size(); i++) {
-        entities[i]->Draw();
+        entities[draw_order_indexes[i]]->Draw();
     }
 }
 

@@ -82,7 +82,9 @@ struct Player : Entity {
     // to manage its own asset, i.e. there are not multiple copies
     // of player, so, it can store the pointer to the asset directly.
     Asset_Ase_Animated* _asset = NULL;
-    Asset_Ase** asset = (Asset_Ase**) & _asset;
+
+    // For some reason, we cannot get addresses for default values :|, so doing it in LoadAsset instead.
+    //Asset_Ase** asset = (Asset_Ase**) (& _asset);
 
     CurAnimation cur_anim;
 

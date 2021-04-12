@@ -17,7 +17,7 @@ struct Entity {
     // This holds collision_box and quad data which is useful for drawing in ECS.
     Asset_Ase** asset = NULL;
 
-    void Draw() {};
+    virtual void Draw() {};
 };
 
 // A lot entities are going to have similar draw functions,
