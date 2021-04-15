@@ -42,14 +42,15 @@ struct Player : Entity {
     void DrawWeapon();
 
     void Update();
+    void MovementUpdate();
     void CollisionUpdate();
     void AnimationUpdate();
     void UpdateWeapon();
 
     void Attack();
 
-    inline float GetDrawCenterX() { return x + (*asset)->frame_width / 2; };
-    inline float GetDrawCenterY() { return y + (*asset)->frame_height / 2; };
+    inline float GetDrawCenterX() { return x + (*asset)->damage_box->x + (*asset)->damage_box->w / 2; };
+    inline float GetDrawCenterY() { return y + (*asset)->damage_box->y + (*asset)->damage_box->h / 2; };
 
     Map* map;
     Enemies* enemies;

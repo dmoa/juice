@@ -57,32 +57,56 @@ void Player::DrawWeapon() {
     weapon.pivot = {weapon.asset->frame_width / 2, weapon.asset->frame_height * 1.5};
     // drect's y is + .5 * frame_height to align center of weapon with player center. Pivot.y is to offset the rotation since SDL pivots relative to drect.
     // We offset to make sure it pivots around the player center.
-    weapon.drect = {GetDrawCenterX() - weapon.asset->frame_width / 2, GetDrawCenterY() + weapon.asset->frame_height / 2 - weapon.pivot.y, weapon.asset->frame_width, weapon.asset->frame_height};
+    weapon.drect = {GetDrawCenterX() - weapon.asset->frame_width / 2, GetDrawCenterY() - weapon.pivot.y, weapon.asset->frame_width, weapon.asset->frame_height};
     SDL_RenderCopyEx(g_window.rdr, weapon.asset->texture, NULL, & weapon.drect, weapon.angle, & weapon.pivot, weapon.is_flipped);
 }
 
 void Player::Update() {
+    MovementUpdate();
+    CollisionUpdate();
+    rendering_quad.x = x;
+    rendering_quad.y = y;
+    AnimationUpdate();
+    UpdateWeapon();
+}
+
+void Player::MovementUpdate() {
 
     current_xv = 0;
     current_yv = 0;
-    if (!(g_controls.Left() && g_controls.Right())) {
-        if (g_controls.Right()) {
+
+    float joystick_xm = ControllerAxis(JOYSTICK_LEFTX);
+    float joystick_ym = ControllerAxis(JOYSTICK_LEFTY);
+    float joystick_m = pyth(joystick_xm, joystick_ym);
+
+    // If joystick is used, then calculate movement from the joystick data.
+    // Otherwise, read keyboard input.
+    if (joystick_m > AXIS_MIN_MOVED) {
+        float sf = v / joystick_m * (joystick_m / AXIS_MAX);
+
+        current_xv = joystick_xm * sf;
+        current_yv = joystick_ym * sf;
+    }
+    else {
+        if (g_controls.Right() && ! g_controls.Left()) {
             current_xv = v;
             is_flipped = SDL_FLIP_NONE;
-
         }
-        if (g_controls.Left()) {
+        if (g_controls.Left() && ! g_controls.Right()) {
             current_xv = -v;
             is_flipped = SDL_FLIP_HORIZONTAL;
-
         }
-    }
-    if (!(g_controls.Up() && g_controls.Down())) {
-        if (g_controls.Up()) {
+        if (g_controls.Up() && ! g_controls.Down()) {
             current_yv = -v;
         }
-        if (g_controls.Down()) {
+        if (g_controls.Down() && ! g_controls.Up()) {
             current_yv = v;
+        }
+
+        // ensures player doesn't go faster when moving diagonally
+        if (current_xv && current_yv) {
+            current_xv /= ROOT2;
+            current_yv /= ROOT2;
         }
     }
 
@@ -90,13 +114,6 @@ void Player::Update() {
         Attack();
     }
     holding_action_button = g_controls.Action1();
-
-
-    // ensures player doesn't go faster when moving diagonally
-    if (current_xv && current_yv) {
-        current_xv /= ROOT2;
-        current_yv /= ROOT2;
-    }
 
     // player is slower when attacking
     if (is_attacking) {
@@ -108,12 +125,6 @@ void Player::Update() {
     old_y = y;
     x += current_xv * (g_dt);
     y += current_yv * (g_dt);
-
-    CollisionUpdate();
-    rendering_quad.x = x;
-    rendering_quad.y = y;
-    AnimationUpdate();
-    UpdateWeapon();
 }
 
 void Player::CollisionUpdate() {

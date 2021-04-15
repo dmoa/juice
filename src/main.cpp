@@ -45,6 +45,7 @@ int main(int argc, char* argv[]) {
     enemies.LoadAssets();
     enemies.InitAllEnemies();
 
+    crosshair.GivePointers(& player);
     crosshair.LoadAsset();
 
     overlay.GivePointers(& player);
