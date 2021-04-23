@@ -18,6 +18,11 @@ typedef uint32_t u32;
 typedef uint16_t u16;
 typedef uint8_t  u8;
 
+// malloc with auto casting
+// We don't use new because new usually implies a constructor.
+#define amalloc(t) (t*)(malloc(sizeof(t)))
+#define amalloc_arr(t,n) (t*)(malloc(sizeof(t)*n)) // this might be wrong, wip
+
 // SDL cross platform includes
 #include <SDL2/SDL.h>
 

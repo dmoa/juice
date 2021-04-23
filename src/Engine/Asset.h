@@ -39,25 +39,25 @@ inline Asset_Ase_Animated* LoadAsset_Ase_Animated(std::string file_path) {
 
 inline void DestroyAsset_Ase(Asset_Ase* a) {
     SDL_DestroyTexture(a->texture);
-    delete a->movement_box;
-    delete a->damage_box;
-    delete a;
+    free(a->movement_box);
+    free(a->damage_box);
+    free(a);
 }
 
 inline void DestroyAsset_Ase_Animated(Asset_Ase_Animated* a) {
-    delete a->frame_durations;
+    free(a->frame_durations);
     // Copying out DestroyAsset_Ase because I'm not sure whether that
     // would make the compiler cast the pointer when it doesn't need to.
     SDL_DestroyTexture(a->texture);
-    delete a->movement_box;
-    delete a->damage_box;
+    free(a->movement_box);
+    free(a->damage_box);
 }
 
 #ifdef ENGINE_IMPLEMENTATION
 
 Asset_Ase* LoadAsset_Ase(std::string file_path) {
-    Ase_Output* output = Ase_Load(file_path);
 
+    Ase_Output* output = Ase_Load(file_path);
     SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormatFrom(output->pixels, output->frame_width * output->num_frames, output->frame_height, 8, output->frame_width * output->num_frames, SDL_PIXELFORMAT_INDEX8);
     if (! surface) print("Surface could not be created!, %s\n", SDL_GetError());
     SDL_SetPaletteColors(surface->format->palette, (SDL_Color*) & output->palette.entries, 0, output->palette.num_entries);
@@ -68,28 +68,31 @@ Asset_Ase* LoadAsset_Ase(std::string file_path) {
     SDL_FreeSurface(surface);
 
     Asset_Ase* asset;
+
     if (output->num_frames > 1) {
-        asset = new Asset_Ase_Animated ({
+        asset = (Asset_Ase*) amalloc(Asset_Ase_Animated);
+        *asset = Asset_Ase_Animated {
             file_path,
             texture,
             output->frame_width,
             output->frame_height,
-            new SDL_Rect,
-            new SDL_Rect,
+            amalloc(SDL_Rect),
+            amalloc(SDL_Rect),
             output->num_frames,
             output->frame_durations,
             output->tags
-        });
+        };
     }
     else {
-        asset = new Asset_Ase ({
+        asset = amalloc(Asset_Ase);
+        *asset = {
             file_path,
             texture,
             output->frame_width,
             output->frame_height,
-            new SDL_Rect,
-            new SDL_Rect
-        });
+            amalloc(SDL_Rect),
+            amalloc(SDL_Rect)
+        };
     }
 
     for (int i = 0; i < output->num_slices; i++) {
@@ -107,9 +110,9 @@ Asset_Ase* LoadAsset_Ase(std::string file_path) {
     // Not using Ase_Destroy_Output() because we still want to use
     // the tags and frame durations from output. Instead, we only delete the pixels
     // and the output container because the pixel data has been copied into SDL_Texture.
-    delete [] output->pixels;
-    delete [] output->slices;
-    delete output;
+    free(output->pixels);
+    free(output->slices);
+    free(output);
 
     return asset;
 }

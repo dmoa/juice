@@ -11,6 +11,7 @@ enum ENTITY_TYPE {
 
 struct Entity {
 
+    // We aren't actually using the entity types anywhere, but I'd bet that I'll definitely need them for some reason in the future.
     ENTITY_TYPE type;
     float x;
     float y;
@@ -20,14 +21,15 @@ struct Entity {
     virtual void Draw() {};
 };
 
+
 // A lot entities are going to have similar draw functions,
 // so it's worth adding some small inline ones that are easily accessible.
 // I'm not making a default draw function because I think that'll make it
 // more difficult to see at a glance what entity is using what draw function.
 
 // I was thinking of doing function pointers, but there are many cases such as in
-// update where you need higher level data, e.g. all barrel enemies would need
-// to access the same variable such as minimum radius to aggravate. And so
+// enemy update where you need higher level data, e.g. all barrel enemies would need
+// to access the same variable such as minimum radius to aggravate, and so
 // using function pointers for that might make it messy. And doing half function
 // pointers half function overrides is even messier.
 

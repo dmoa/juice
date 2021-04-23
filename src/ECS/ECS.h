@@ -14,9 +14,6 @@ struct ECS {
 
     void AddEntity(Entity* e);
 
-    inline float GetCenterX(int id) { return entities[id]->x + (*entities[id]->asset)->frame_width / 2; }
-    inline float GetCenterY(int id) { return entities[id]->y + (*entities[id]->asset)->frame_height / 2; }
-
     void Draw();
     void Update();
 

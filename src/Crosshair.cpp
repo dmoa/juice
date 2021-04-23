@@ -46,7 +46,6 @@ void Crosshair::Update() {
 
         float sf = controller_crosshair_r / joystick_m;
 
-
         joystick_x = joystick_xm * sf;
         joystick_y = joystick_ym * sf;
 

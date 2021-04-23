@@ -153,7 +153,6 @@ struct Slice {
 };
 
 struct Ase_Output {
-    Ase_Output() {}; // c++ bullshit makes me define an empty constructor...
     u8* pixels;
     int frame_width;
     int frame_height;
@@ -212,14 +211,14 @@ static Ase_Output* Ase_Load(std::string path) {
             return NULL;
         }
 
-        Ase_Output* output = new Ase_Output();
-        output->pixels = new u8 [header.width * header.height * header.num_frames];
-        output->frame_width  = header.width;
+        Ase_Output* output = amalloc(Ase_Output);
+        output->pixels = (u8*) malloc(sizeof(u8) * header.width * header.height * header.num_frames);
+        output->frame_width = header.width;
         output->frame_height = header.height;
         output->palette.color_key = header.palette_entry;
 
-        output->frame_durations = new u16 [header.num_frames];
-        output->num_frames   = header.num_frames;
+        output->frame_durations = (u16*) malloc(sizeof(u16) * header.num_frames);
+        output->num_frames = header.num_frames;
 
         // Aseprite doesn't tell us upfront how many slices we're given,
         // so there's no way really of creating the array of size X before
@@ -255,6 +254,7 @@ static Ase_Output* Ase_Load(std::string path) {
 
             buffer_p += FRAME_SIZE;
 
+
             for (int j = 0; j < frames[i].new_num_chunks; j++) {
 
                 u32 chunk_size = GetU32(buffer_p);
@@ -263,7 +263,6 @@ static Ase_Output* Ase_Load(std::string path) {
                 switch (chunk_type) {
 
                     case PALETTE: {
-
                         output->palette.num_entries = GetU32(buffer_p + 6);
                         // specifies the range of unique colors in the palette
                         // There may be many repeated colors, so range -> efficient.
@@ -284,7 +283,6 @@ static Ase_Output* Ase_Load(std::string path) {
                     }
 
                     case CEL: {
-
                         s16 x_offset = GetU16(buffer_p + 8);
                         s16 y_offset = GetU16(buffer_p + 10);
                         u16 cel_type = GetU16(buffer_p + 13);
@@ -318,7 +316,6 @@ static Ase_Output* Ase_Load(std::string path) {
                     }
 
                     case TAGS: {
-
                         u16 num_tags = GetU16(buffer_p + 6);;
 
                         // iterate over each tag and append data to output->tags
@@ -328,15 +325,19 @@ static Ase_Output* Ase_Load(std::string path) {
                             std::string tag_name = "";
                             // get string from buffer
                             u16 slen = GetU16(buffer_p + tag_buffer_offset + 33);
-                            for (int a = 0; a < slen; a ++) {
+                            for (int a = 0; a < slen; a++) {
                                 tag_name += *(buffer_p + tag_buffer_offset + a + 35);
                             }
 
+
+                            print("123");
+                            print("%i", output->tags.size());
+                            // bug here:
                             output->tags[tag_name] = {
                                 GetU16(buffer_p + tag_buffer_offset + 16), // .from
                                 GetU16(buffer_p + tag_buffer_offset + 18)  // .to
                             };
-
+                            print("456");
                             tag_buffer_offset += 19 + slen;
                         }
                         break;
@@ -380,12 +381,14 @@ static Ase_Output* Ase_Load(std::string path) {
             }
         }
 
+
         // convert vector to array for output
-        output->slices = new Slice [temp_slices.size()];
+        output->slices = amalloc_arr(Slice, temp_slices.size());
         for (int i = 0; i < temp_slices.size(); i ++) {
             output->slices[i] = temp_slices[i];
         }
         output->num_slices = temp_slices.size();
+
 
         return output;
 
@@ -396,8 +399,8 @@ static Ase_Output* Ase_Load(std::string path) {
 }
 
 inline void Ase_Destroy_Output(Ase_Output* output) {
-    delete [] output->pixels;
-    delete [] output->frame_durations;
-    delete [] output->slices;
-    delete output;
+    free(output->pixels);
+    free(output->frame_durations);
+    free(output->slices);
+    free(output);
 }

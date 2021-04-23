@@ -25,10 +25,10 @@ void ECS::Draw() {
 
     // bubble sort for draw order
 
-    for (int _ = 0; _ < draw_order_indexes.size(); _ ++) {
+    for (int i = 0; i < draw_order_indexes.size(); i++) {
 
         bool has_swapped = false;
-        for (int j = 0; j < draw_order_indexes.size() - _ - 1; j ++) {
+        for (int j = 0; j < draw_order_indexes.size() - i - 1; j++) {
 
             // indexes and names of enemies
             int i1 = draw_order_indexes[j];
