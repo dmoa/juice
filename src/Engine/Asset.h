@@ -13,7 +13,7 @@ inline SDL_Texture* LoadAsset_IMG(std::string path) {
 }
 
 struct Asset_Ase {
-    std::string file_path; // defacto name
+    string file_path; // defacto name
     SDL_Texture* texture;
     int frame_width;
     int frame_height;
@@ -27,7 +27,7 @@ struct Asset_Ase {
 struct Asset_Ase_Animated : Asset_Ase {
     int num_frames;
     u16* frame_durations;
-    std::unordered_map<std::string, Tag_Range> tags;
+    Tags tags;
 };
 
 
@@ -38,6 +38,7 @@ inline Asset_Ase_Animated* LoadAsset_Ase_Animated(std::string file_path) {
 }
 
 inline void DestroyAsset_Ase(Asset_Ase* a) {
+    strfree(& a->file_path);
     SDL_DestroyTexture(a->texture);
     free(a->movement_box);
     free(a->damage_box);
@@ -45,12 +46,16 @@ inline void DestroyAsset_Ase(Asset_Ase* a) {
 }
 
 inline void DestroyAsset_Ase_Animated(Asset_Ase_Animated* a) {
-    free(a->frame_durations);
-    // Copying out DestroyAsset_Ase because I'm not sure whether that
-    // would make the compiler cast the pointer when it doesn't need to.
+    // Copying out DestroyAsset_Ase because if we don't then we free a before we can free frame_durations and tags.
+    strfree(& a->file_path);
     SDL_DestroyTexture(a->texture);
     free(a->movement_box);
     free(a->damage_box);
+
+    free(a->frame_durations);
+    free(a->tags.tags);
+
+    free(a);
 }
 
 #ifdef ENGINE_IMPLEMENTATION
@@ -68,31 +73,32 @@ Asset_Ase* LoadAsset_Ase(std::string file_path) {
     SDL_FreeSurface(surface);
 
     Asset_Ase* asset;
-
     if (output->num_frames > 1) {
-        asset = (Asset_Ase*) amalloc(Asset_Ase_Animated);
-        *asset = Asset_Ase_Animated {
-            file_path,
+        Asset_Ase_Animated* _asset = bmalloc(Asset_Ase_Animated);
+        *_asset =  {
+            strmalloc(file_path.c_str()),
             texture,
             output->frame_width,
             output->frame_height,
-            amalloc(SDL_Rect),
-            amalloc(SDL_Rect),
+            bmalloc(SDL_Rect),
+            bmalloc(SDL_Rect),
             output->num_frames,
             output->frame_durations,
             output->tags
         };
+        asset = (Asset_Ase*) _asset;
     }
     else {
-        asset = amalloc(Asset_Ase);
+        asset = bmalloc(Asset_Ase);
         *asset = {
-            file_path,
+            strmalloc(file_path.c_str()),
             texture,
             output->frame_width,
             output->frame_height,
-            amalloc(SDL_Rect),
-            amalloc(SDL_Rect)
+            bmalloc(SDL_Rect),
+            bmalloc(SDL_Rect)
         };
+        free(output->tags.tags);
     }
 
     for (int i = 0; i < output->num_slices; i++) {
@@ -113,6 +119,7 @@ Asset_Ase* LoadAsset_Ase(std::string file_path) {
     free(output->pixels);
     free(output->slices);
     free(output);
+
 
     return asset;
 }

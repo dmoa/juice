@@ -112,7 +112,6 @@ struct Ase_Header {
     u8  pixel_width;
     u8  pixel_height;
 
-
     // Rendered grid for aseprite, not for asset loading.
     s16  x_grid;
     s16  y_grid;
@@ -128,12 +127,6 @@ struct Ase_Frame {
     u32 new_num_chunks; // number of chunks, if 0, use old field.
 };
 
-struct Ase_Tag {
-    u16 from;
-    u16 to;
-    std::string name;
-};
-
 // Need to fix, for now assuming .ase are indexed sprites,
 // but will need to change in the future as there won't always be 256 entries.
 struct Palette_Chunk {
@@ -143,8 +136,14 @@ struct Palette_Chunk {
 };
 
 struct Tag_Range {
+    string name;
     u16 from;
     u16 to;
+};
+
+struct Tags {
+    u16 num_tags;
+    Tag_Range* tags;
 };
 
 struct Slice {
@@ -158,7 +157,7 @@ struct Ase_Output {
     int frame_height;
     Palette_Chunk palette;
 
-    std::unordered_map<std::string, Tag_Range> tags;
+    Tags tags;
 
     u16* frame_durations;
     int num_frames;
@@ -211,13 +210,13 @@ static Ase_Output* Ase_Load(std::string path) {
             return NULL;
         }
 
-        Ase_Output* output = amalloc(Ase_Output);
-        output->pixels = (u8*) malloc(sizeof(u8) * header.width * header.height * header.num_frames);
+        Ase_Output* output = bmalloc(Ase_Output);
+        output->pixels = bmalloc_arr(u8, header.width * header.height * header.num_frames);
         output->frame_width = header.width;
         output->frame_height = header.height;
         output->palette.color_key = header.palette_entry;
 
-        output->frame_durations = (u16*) malloc(sizeof(u16) * header.num_frames);
+        output->frame_durations = bmalloc_arr(u16, header.num_frames);
         output->num_frames = header.num_frames;
 
         // Aseprite doesn't tell us upfront how many slices we're given,
@@ -316,11 +315,12 @@ static Ase_Output* Ase_Load(std::string path) {
                     }
 
                     case TAGS: {
-                        u16 num_tags = GetU16(buffer_p + 6);;
+                        output->tags.num_tags = GetU16(buffer_p + 6);;
+                        output->tags.tags = bmalloc_arr(Tag_Range, output->tags.num_tags);
 
                         // iterate over each tag and append data to output->tags
                         int tag_buffer_offset = 0;
-                        for (int k = 0; k < num_tags; k ++) {
+                        for (int k = 0; k < output->tags.num_tags; k ++) {
 
                             std::string tag_name = "";
                             // get string from buffer
@@ -329,15 +329,12 @@ static Ase_Output* Ase_Load(std::string path) {
                                 tag_name += *(buffer_p + tag_buffer_offset + a + 35);
                             }
 
-
-                            print("123");
-                            print("%i", output->tags.size());
                             // bug here:
-                            output->tags[tag_name] = {
+                            output->tags.tags[k] = {
+                                strmalloc(tag_name.c_str()),
                                 GetU16(buffer_p + tag_buffer_offset + 16), // .from
                                 GetU16(buffer_p + tag_buffer_offset + 18)  // .to
                             };
-                            print("456");
                             tag_buffer_offset += 19 + slen;
                         }
                         break;
@@ -383,7 +380,7 @@ static Ase_Output* Ase_Load(std::string path) {
 
 
         // convert vector to array for output
-        output->slices = amalloc_arr(Slice, temp_slices.size());
+        output->slices = bmalloc_arr(Slice,temp_slices.size());
         for (int i = 0; i < temp_slices.size(); i ++) {
             output->slices[i] = temp_slices[i];
         }
@@ -402,5 +399,6 @@ inline void Ase_Destroy_Output(Ase_Output* output) {
     free(output->pixels);
     free(output->frame_durations);
     free(output->slices);
+    free(output->tags.tags);
     free(output);
 }
