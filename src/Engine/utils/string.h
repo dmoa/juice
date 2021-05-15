@@ -1,22 +1,24 @@
 #pragma once
 
-struct string {
-    char* str;
-    u8 len;
-};
 
-inline string strmalloc(const char* src_str) {
-	string s = { (char*) malloc(sizeof(char) * (strlen(src_str)) + 1), strlen(src_str)};
-    s.str[s.len] = '\0';
-    strcpy(s.str, src_str);
+// strmalloc without adding wtihout terminating character
+inline char* strmalloc_wt(const char* src) {
+    int len = strlen(src);
+    char* s = bmalloc_arr(char, strlen(src) + 1);
+    strcpy(s, src);
+
     return s;
-};
+}
 
-inline void strfree(string* s) {
-    if (! s) return;
-    free(s->str);
-};
+inline char* strmalloc(const char* src) {
+    int len = strlen(src);
+    char* s = bmalloc_arr(char, strlen(src) + 1);
+    strcpy(s, src);
+    s[len] = '\0';
+
+    return s;
+}
 
 inline bool strequal(const char* a, const char* b) { return strcmp(a, b) == 0; }
-inline bool strequal(string a, const char* b) { return strcmp(a.str, b) == 0; }
-inline bool strequal(string a, string b) { return strcmp(a.str, b.str) == 0; }
+inline bool strequal(char* a, const char* b) { return strcmp(a, b) == 0; }
+inline bool strequal(char* a, char* b) { return strcmp(a, b) == 0; }
