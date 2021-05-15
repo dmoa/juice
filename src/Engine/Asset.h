@@ -12,6 +12,11 @@ inline SDL_Texture* LoadAsset_IMG(std::string path) {
     return texture;
 }
 
+struct Tags {
+    Tag_Range* tags;
+    u16 num_tags;
+};
+
 struct Asset_Ase {
     string file_path; // defacto name
     SDL_Texture* texture;
@@ -38,22 +43,28 @@ inline Asset_Ase_Animated* LoadAsset_Ase_Animated(std::string file_path) {
 }
 
 inline void DestroyAsset_Ase(Asset_Ase* a) {
-    strfree(& a->file_path);
+    free(a->file_path.str);
     SDL_DestroyTexture(a->texture);
     free(a->movement_box);
     free(a->damage_box);
+
     free(a);
 }
 
 inline void DestroyAsset_Ase_Animated(Asset_Ase_Animated* a) {
     // Copying out DestroyAsset_Ase because if we don't then we free a before we can free frame_durations and tags.
-    strfree(& a->file_path);
+    free(a->file_path.str);
     SDL_DestroyTexture(a->texture);
     free(a->movement_box);
     free(a->damage_box);
 
     free(a->frame_durations);
-    free(a->tags.tags);
+
+    for (int i = 0; i < a->tags.num_tags; i++) {
+        free(a->tags.tags[i].name.str);
+    }
+    // We try to free instead of freeing because assets that do not have any tags loaded do never run malloc, which means that output->tags will be a NULL pointer if an asset has not assets.
+    tryfree(a->tags.tags);
 
     free(a);
 }
@@ -84,7 +95,7 @@ Asset_Ase* LoadAsset_Ase(std::string file_path) {
             bmalloc(SDL_Rect),
             output->num_frames,
             output->frame_durations,
-            output->tags
+            {output->tags, output->num_tags}
         };
         asset = (Asset_Ase*) _asset;
     }
@@ -98,18 +109,22 @@ Asset_Ase* LoadAsset_Ase(std::string file_path) {
             bmalloc(SDL_Rect),
             bmalloc(SDL_Rect)
         };
-        free(output->tags.tags);
+
+        tryfree(output->tags);
+        for (int i = 0; i < output->num_tags; i++) {
+            free(output->tags[i].name.str);
+        }
     }
 
     for (int i = 0; i < output->num_slices; i++) {
-        if (output->slices[i].name == "movement_box") {
+        if (strequal(output->slices[i].name, "movement_box")) {
             *(asset->movement_box) = output->slices[i].quad;
         }
-        else if (output->slices[i].name == "damage_box") {
+        else if (strequal(output->slices[i].name, "damage_box")) {
             *(asset->damage_box) = output->slices[i].quad;
         }
         else {
-            print("%s: Asset_Ase slice %s not supported", file_path.c_str(), output->slices[i].name.c_str());
+            print("%s: Asset_Ase slice %s not supported", file_path.c_str(), output->slices[i].name.str);
         }
     }
 
@@ -117,6 +132,9 @@ Asset_Ase* LoadAsset_Ase(std::string file_path) {
     // the tags and frame durations from output. Instead, we only delete the pixels
     // and the output container because the pixel data has been copied into SDL_Texture.
     free(output->pixels);
+    for (int i = 0; i < output->num_slices; i++) {
+        free(output->slices[i].name.str);
+    }
     free(output->slices);
     free(output);
 

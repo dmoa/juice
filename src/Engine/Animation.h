@@ -10,16 +10,26 @@ struct CurAnimation {
     SDL_Rect quad;
 };
 
+inline Tag_Range GetTag(Tags tags, const char* str) {
+    for (u16 i = 0; i < tags.num_tags; i++) {
+        if (strequal(tags.tags[i].name, str)) return tags.tags[i];
+    }
+    return {"", -1, -1};
+}
+
 inline void SetAnimation(CurAnimation* anim, Asset_Ase_Animated* asset, std::string name) {
 
+    Tag_Range tag = GetTag(asset->tags, name.c_str());
+
     // If animation doesn't exist, don't bother.
-    if (asset->tags.find(name) == asset->tags.end()) {
-        printf("Failed to set animation %s for asset %s\n", name.c_str(), asset->file_path.c_str());
+    // We can check if from is -1, because that is what returned from GetTag if we can't find the animation.
+    if (tag.from == -1) {
+        printf("Failed to set animation %s for asset %s\n", name.c_str(), asset->file_path.str);
         return;
     }
 
     anim->name = name;
-    anim->frame_i = asset->tags[name].from;
+    anim->frame_i = tag.from;
     anim->tick = asset->frame_durations[anim->frame_i];
     anim->quad = {
                 anim->frame_i * asset->frame_width,
@@ -37,7 +47,7 @@ inline bool UpdateAnimation(CurAnimation* anim, Asset_Ase_Animated* asset) {
     anim->tick -= g_dt * 1000; // convert dt into milliseconds
     if (anim->tick < 0) {
 
-        Tag_Range t = asset->tags[anim->name];
+        Tag_Range t = GetTag(asset->tags, anim->name.c_str());
         anim->frame_i = (anim->frame_i - t.from + 1) % (t.to - t.from + 1) + t.from;
         anim->tick = asset->frame_durations[anim->frame_i];
 

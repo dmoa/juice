@@ -22,7 +22,8 @@ typedef uint8_t  u8;
 // malloc with auto casting
 // We don't use new because new usually implies a constructor.
 #define bmalloc(t) (t*)(malloc(sizeof(t)))
-#define bmalloc_arr(t,n) (t*)(malloc(sizeof(t)*n)) // this might be wrong, wip
+#define bmalloc_arr(t,n) (t*)(malloc(sizeof(t)*n))
+#define tryfree(a); if (a != NULL) {free(a);}
 
 #include "utils/string.h"
 

@@ -141,31 +141,40 @@ struct Tag_Range {
     u16 to;
 };
 
-struct Tags {
-    u16 num_tags;
-    Tag_Range* tags;
-};
-
 struct Slice {
-    std::string name;
+    string name;
     SDL_Rect quad;
 };
 
 struct Ase_Output {
-    u8* pixels;
+    u8* pixels = NULL;
     int frame_width;
     int frame_height;
     Palette_Chunk palette;
 
-    Tags tags;
+    Tag_Range* tags = NULL;
+    u16 num_tags = 0;
 
-    u16* frame_durations;
-    int num_frames;
+    u16* frame_durations = NULL;
+    int num_frames = 0;
 
-    Slice* slices;
-    u32 num_slices;
+    Slice* slices = NULL;
+    u32 num_slices = 0;
 };
 
+// We have to do this because aseprite strings are not null terminating :/
+inline string GetAseString(char* p) {
+
+    string tag_name;
+    tag_name.len = GetU16(p);
+    int string_bs = sizeof(char) * (tag_name.len + 1);
+
+    tag_name.str = (char*) malloc(string_bs);
+    memcpy(tag_name.str, p + 2, string_bs);
+    tag_name.str[tag_name.len] = '\0';
+
+    return tag_name;
+}
 
 inline void Ase_Destroy_Output(Ase_Output* output);
 
@@ -315,27 +324,23 @@ static Ase_Output* Ase_Load(std::string path) {
                     }
 
                     case TAGS: {
-                        output->tags.num_tags = GetU16(buffer_p + 6);;
-                        output->tags.tags = bmalloc_arr(Tag_Range, output->tags.num_tags);
+                        output->num_tags = GetU16(buffer_p + 6);
+                        output->tags = bmalloc_arr(Tag_Range, output->num_tags);
 
                         // iterate over each tag and append data to output->tags
                         int tag_buffer_offset = 0;
-                        for (int k = 0; k < output->tags.num_tags; k ++) {
+                        for (int k = 0; k < output->num_tags; k ++) {
 
-                            std::string tag_name = "";
-                            // get string from buffer
-                            u16 slen = GetU16(buffer_p + tag_buffer_offset + 33);
-                            for (int a = 0; a < slen; a++) {
-                                tag_name += *(buffer_p + tag_buffer_offset + a + 35);
-                            }
 
-                            // bug here:
-                            output->tags.tags[k] = {
-                                strmalloc(tag_name.c_str()),
+                            string tag_name = GetAseString(buffer_p + tag_buffer_offset + 33);
+
+                            output->tags[k] = {
+                                tag_name,
                                 GetU16(buffer_p + tag_buffer_offset + 16), // .from
                                 GetU16(buffer_p + tag_buffer_offset + 18)  // .to
                             };
-                            tag_buffer_offset += 19 + slen;
+
+                            tag_buffer_offset += 19 + tag_name.len;
                         }
                         break;
                     }
@@ -348,26 +353,21 @@ static Ase_Output* Ase_Load(std::string path) {
                             return NULL;
                         }
 
-                        // get string
-                        int slen = GetU16(buffer_p + 18);
-                        std::string name = "";
-                        for (int a = 0; a < slen; a++) {
-                            name += *(buffer_p + 20 + a);
-                        }
-
                         // For now, we assume that the slice is the same
                         // throughout all the frames, so we don't care about
                         // the starting frame_number.
                         // int frame_number = GetU32(buffer_p + 20 + slen);
 
+                        string slice_name = GetAseString(buffer_p + 18);
+
                         SDL_Rect quad = {
-                            (s32) GetU32(buffer_p + slen + 24),
-                            (s32) GetU32(buffer_p + slen + 28),
-                            GetU32(buffer_p + slen + 32),
-                            GetU32(buffer_p + slen + 36)
+                            (s32) GetU32(buffer_p + slice_name.len + 24),
+                            (s32) GetU32(buffer_p + slice_name.len + 28),
+                            GetU32(buffer_p + slice_name.len + 32),
+                            GetU32(buffer_p + slice_name.len + 36)
                         };
 
-                        temp_slices.push_back({name, quad});
+                        temp_slices.push_back({slice_name, quad});
 
                         break;
                     }
@@ -380,7 +380,7 @@ static Ase_Output* Ase_Load(std::string path) {
 
 
         // convert vector to array for output
-        output->slices = bmalloc_arr(Slice,temp_slices.size());
+        output->slices = bmalloc_arr(Slice, temp_slices.size());
         for (int i = 0; i < temp_slices.size(); i ++) {
             output->slices[i] = temp_slices[i];
         }
@@ -398,7 +398,15 @@ static Ase_Output* Ase_Load(std::string path) {
 inline void Ase_Destroy_Output(Ase_Output* output) {
     free(output->pixels);
     free(output->frame_durations);
-    free(output->slices);
-    free(output->tags.tags);
+
+    for (int i = 0; i < output->num_slices; i++) {
+        free(output->slices[i].name.str);
+    }
+    for (int i = 0; i < output->num_tags; i++) {
+        free(output->tags[i].name.str);
+    }
+
+    if (output->slices != NULL) free(output->slices);
+    if (output->tags != NULL) free(output->tags);
     free(output);
 }
