@@ -33,6 +33,7 @@ int main(int argc, char* argv[]) {
     gameplay_camera.PassPointers(& player, & map, & g_dt);
 
     player.PassPointers(& map, & enemies, & ecs, & crosshair);
+
     player.LoadAsset();
     player.InitPos();
 
@@ -64,9 +65,6 @@ int main(int argc, char* argv[]) {
                     break;
                 case SDL_KEYDOWN:
                     switch (event.key.keysym.sym) {
-                        case SDLK_ESCAPE:
-                            quit = true;
-                            break;
                         case SDLK_r:
                             map.DestroyAssets();
                             map.LoadAssets();
@@ -90,6 +88,7 @@ int main(int argc, char* argv[]) {
         }
 
         if (g_controls.ActionDev()) DEV_PAUSED = ! DEV_PAUSED;
+        if (g_controls.Back()) quit = true;
 
         engine_clock.tick();
 
@@ -122,6 +121,7 @@ int main(int argc, char* argv[]) {
 
         window.Present();
     }
+
 
     player.DestroyAsset();
     map.DestroyTextures();

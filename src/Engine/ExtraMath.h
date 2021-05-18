@@ -30,9 +30,13 @@ inline float max(float a, float b) {
 }
 
 inline int abs(int n) {
-    return (n<0)?(-n):(n);
+    return (n<0) ? -n : n;
 }
 
 inline bool AABB(float x, float y, float w, float h, float x2, float y2, float w2, float h2) {
     return x + w > x2 && x < x2 + w2 && y + h > y2 && y < y2 + h2;
+}
+
+inline bool AABB(SDL_Rect* a, SDL_Rect* b) {
+    return a->x + a->w > b->x && a->x < b->x + b->w && a->y + a->h > b->y && a->y < b->y + b->h;
 }

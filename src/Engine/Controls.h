@@ -32,6 +32,7 @@ struct GlobalControls {
     bool Action1();
     bool ActionDev();
     bool MouseMoved();
+    bool Back();
 };
 extern GlobalControls g_controls;
 
@@ -94,6 +95,10 @@ bool GlobalControls::ActionDev() {
     action_dev_before = action_dev_now;
 
     return result;
+}
+
+bool GlobalControls::Back() {
+    return keys_down[SDL_SCANCODE_ESCAPE] || ControllerButton(SDL_CONTROLLER_BUTTON_START);
 }
 
 bool GlobalControls::MouseMoved() {

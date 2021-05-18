@@ -10,6 +10,7 @@ void Player::LoadAsset() {
     asset = (Asset_Ase**) (& _asset);
 
     weapon.asset = LoadAsset_Ase("assets/player/weapons/knife.ase");
+
     is_flipped = SDL_FLIP_HORIZONTAL;
     SetAnimation(& cur_anim, _asset, "Idle");
 
@@ -90,11 +91,9 @@ void Player::MovementUpdate() {
     else {
         if (g_controls.Right() && ! g_controls.Left()) {
             current_xv = v;
-            is_flipped = SDL_FLIP_NONE;
         }
         if (g_controls.Left() && ! g_controls.Right()) {
             current_xv = -v;
-            is_flipped = SDL_FLIP_HORIZONTAL;
         }
         if (g_controls.Up() && ! g_controls.Down()) {
             current_yv = -v;
@@ -172,6 +171,7 @@ void Player::CollisionUpdate() {
 }
 
 void Player::AnimationUpdate() {
+
     bool finished_anim = UpdateAnimation(& cur_anim, _asset);
 
     if (! is_attacking) {
@@ -182,6 +182,15 @@ void Player::AnimationUpdate() {
             SetAnimationIf(& cur_anim, _asset, "Idle");
         }
     }
+
+    // Player direction depends whether the cursor is to the left or to the right of the center of the player.
+    if (crosshair->x > GetDrawCenterX()) {
+        is_flipped = SDL_FLIP_NONE;
+    }
+    else {
+        is_flipped = SDL_FLIP_HORIZONTAL;
+    }
+
 }
 
 void Player::UpdateWeapon() {

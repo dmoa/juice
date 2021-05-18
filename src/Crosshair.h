@@ -20,9 +20,11 @@ struct Crosshair {
     // Was the last movement with the crosshair done with a controller?
     bool last_move_with_controller = false;
 
+    // center of the crosshair
     float x = 100;
     float y = 100;
+
     // The distance from the player to the crosshair when
     // controlling the crosshair with a controller.
-    float controller_crosshair_r = 20;
+    float controller_crosshair_r = 23;
 };

@@ -19,8 +19,11 @@ struct Barrel : Entity {
     void Draw();
 
     CurAnimation anim;
-    bool aggravated;
-    float timer;
+    bool aggravated = false;
+    float agg_timer = -1;
+
+    // How long before barrel can do damage again.
+    float attack_timer = -1;
 };
 
 struct Enemies {
@@ -41,4 +44,6 @@ struct Enemies {
     Asset_Ase_Animated* barrel_asset = NULL;
     int barrel_range = 30;
     int barrel_aggr_time = 4;
+    float barrel_attack_interval;
+    int barrel_damage = 1;
 };
