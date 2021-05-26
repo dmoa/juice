@@ -117,7 +117,6 @@ int main(int argc, char* argv[]) {
         window.SetDrawOther();
 
         overlay.Draw();
-        PrintScreen(std::to_string( engine_clock.average_fps ), 2, g_window.h / g_window.scale - g_text.default_font_size);
 
         window.Present();
     }

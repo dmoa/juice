@@ -183,12 +183,15 @@ void Player::AnimationUpdate() {
         }
     }
 
-    // Player direction depends whether the cursor is to the left or to the right of the center of the player.
-    if (crosshair->x > GetDrawCenterX()) {
-        is_flipped = SDL_FLIP_NONE;
-    }
-    else {
-        is_flipped = SDL_FLIP_HORIZONTAL;
+    // Only change direction if crosshair is actually drawn / active.
+    if (crosshair->is_drawn) {
+        // Player direction depends whether the crosshair is to the left or to the right of the center of the player.
+        if (crosshair->x > GetDrawCenterX()) {
+            is_flipped = SDL_FLIP_NONE;
+        }
+        else {
+            is_flipped = SDL_FLIP_HORIZONTAL;
+        }
     }
 
 }
@@ -200,10 +203,14 @@ void Player::UpdateWeapon() {
 
     // If not attacking, weapon should follow mouse. Otherwise do weapon swing.
     if (! is_attacking) {
-        // +90 at the end because atan2's range is (-rad,rad), when we want (0,360), not (-180, 180).
-        // +180 to make the weapon face away from the cursor.
-        //weapon.angle = atan2(mouse_y - GetDrawCenterY(), mouse_x - GetDrawCenterX()) * 180 / PI + 90 + 180;
-        weapon.angle = atan2(crosshair->y - GetDrawCenterY(), crosshair->x - GetDrawCenterX()) * 180 / PI + 270;
+
+        // Update the angle only if the crosshair is on the screen, otherwise, assume crosshair position relative to player has not changed.
+        if (crosshair->is_drawn) {
+            // +90 at the end because atan2's range is (-rad,rad), when we want (0,360), not (-180, 180).
+            // +180 to make the weapon face away from the cursor.
+            weapon.angle = atan2(crosshair->y - GetDrawCenterY(), crosshair->x - GetDrawCenterX()) * 180 / PI + 270;
+        }
+
     }
     else {
         weapon.angle += weapon.swing_angle / weapon.attack_length * (g_dt);
