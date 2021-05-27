@@ -1,5 +1,9 @@
 #pragma once
 
+#include <Engine/Engine.h>
+
+#define FreeGameController SDL_GameControllerClose
+
 // If there are ever multiple controllers connected and or multiple people playing,
 // I'll have to change this so that it returns an array of SDL_GameController pointers.
 
@@ -7,6 +11,7 @@ inline SDL_GameController* GetGameController() {
 
     SDL_GameController* controller = NULL;
 
+    // Not using right now, but will relatively soon.
     int num_controllers_connected = 0;
 
     // go through every joystick attatched to the computer
@@ -19,17 +24,16 @@ inline SDL_GameController* GetGameController() {
 
             // if it managed to set it, exit the function
             if (controller) {
+
                 num_controllers_connected++;
                 return controller;
             }
             // otherwise, throw error that the game controller couldn't attatch to the joystick
             else {
-                printf("Could not open SDL gamecontroller %i: %s.", i, SDL_GetError());
+                print("Could not open SDL gamecontroller %i: %s.", i, SDL_GetError());
             }
         }
     }
-
-    printf("Connected %i controllers", num_controllers_connected);
 
     return NULL;
 }

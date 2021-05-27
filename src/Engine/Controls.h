@@ -23,7 +23,7 @@ struct GlobalControls {
     const Uint8* keys_down = NULL;
     SDL_GameController* controller = NULL;
     bool action_dev_before = false;
-    int old_mouse_x, old_mouse_y = 0.f;
+    int old_mouse_x, old_mouse_y = 0;
     void Init();
     bool Left();
     bool Right();

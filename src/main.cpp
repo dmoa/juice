@@ -19,6 +19,8 @@
 int main(int argc, char* argv[]) {
     EngineInit();
     window.Init();
+    // To give some legit old_mouse coords before running MouseMoved in the wild. Otherwise, MouseMoved can give the wrong answer.
+    g_controls.MouseMoved();
 
     bool DEV_PAUSED = false;
 
@@ -52,6 +54,7 @@ int main(int argc, char* argv[]) {
     overlay.GivePointers(& player);
     overlay.LoadAssets();
 
+
     SDL_Event event;
     bool quit = false;
     while (!quit) {
@@ -70,6 +73,7 @@ int main(int argc, char* argv[]) {
                             map.LoadAssets();
                             player.DestroyAsset();
                             player.LoadAsset();
+                            player.current_health = player.max_health;
                             crosshair.DestroyAsset();
                             crosshair.LoadAsset();
                             overlay.DestroyAssets();
@@ -83,6 +87,15 @@ int main(int argc, char* argv[]) {
                         g_window.h = event.window.data2;
                     }
                     break;
+
+                case SDL_CONTROLLERDEVICEADDED:
+                    g_controls.controller = GetGameController();
+                    break;
+
+                case SDL_CONTROLLERDEVICEREMOVED:
+                    FreeGameController(g_controls.controller);
+                    break;
+
                 default: break;
             }
         }

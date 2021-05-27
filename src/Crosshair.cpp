@@ -23,7 +23,6 @@ void Crosshair::Update() {
     if (g_controls.MouseMoved() || ! last_move_with_controller) {
 
         last_move_with_controller = false;
-
         // Passing render_rect coords to GetMouseGameState and not x and y,
         // because x and y are floats, and casting pointers causes bugs.
         GetMouseGameState(& render_rect.x, & render_rect.y);

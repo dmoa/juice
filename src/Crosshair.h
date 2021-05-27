@@ -16,9 +16,9 @@ struct Crosshair {
 
     SDL_Texture* texture;
     SDL_Rect render_rect = {100, 100, -1, -1};
-    bool is_drawn = true;
+    bool is_drawn = false;
     // Was the last movement with the crosshair done with a controller?
-    bool last_move_with_controller = false;
+    bool last_move_with_controller = true;
 
     // center of the crosshair
     float x = 100;
