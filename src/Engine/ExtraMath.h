@@ -37,6 +37,6 @@ inline bool AABB(float x, float y, float w, float h, float x2, float y2, float w
     return x + w > x2 && x < x2 + w2 && y + h > y2 && y < y2 + h2;
 }
 
-inline bool AABB(SDL_Rect* a, SDL_Rect* b) {
-    return a->x + a->w > b->x && a->x < b->x + b->w && a->y + a->h > b->y && a->y < b->y + b->h;
+inline bool AABB(Asset_Ase* a, Asset_Ase* b, float x, float y, float x2, float y2) {
+    return x + a->damage_box->x + a->damage_box->w > x2 + b->damage_box->x && x + a->damage_box->x < x2 + b->damage_box->x + b->damage_box->w && y + a->damage_box->y + a->damage_box->h > y2 + b->damage_box->y && y + a->damage_box->y < y2 + b->damage_box->y + b->damage_box->h;
 }

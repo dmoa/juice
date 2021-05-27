@@ -38,24 +38,25 @@ void Enemies::Update() {
             b->aggravated = true;
             b->agg_timer = barrel_aggr_time;
 
-            // Future damage collision check, tbc...
-            // if (AABB((*player->asset)->damage_box, barrel_asset->damage_box) && player->y + (*player->asset)->movement_box->h > b->y + barrel_asset->movement_box->h) print("%f", b->attack_timer);
+            // If player enemy damage boxes collide (and for now it's just barrel so we can generalise) and if player is in front of enemy
+            if (AABB(*player->asset, barrel_asset, player->x, player->y, b->x, b->y) && player->y + (*player->asset)->movement_box->y + (*player->asset)->movement_box->h > b->y + barrel_asset->movement_box->y + barrel_asset->movement_box->h) {
 
-            // If the attack_timer is not in use, activate it, otherwise, keep using it by counting down.
-            if (b->attack_timer == -1) {
-                // The reason we don't do:
-                // b->attack_timer = barrel_attack_interval;
-                // is because we want the moment we are in range of the player to damage it, rather than waiting one cycle before damaging the player.
-                b->attack_timer = 0;
-            }
-            else {
-                b->attack_timer -= g_dt;
-                if (b->attack_timer < 0) {
-                    b->attack_timer = b->anim.tick / 1000;
-                    player->current_health -= barrel_damage;
+                // If the attack_timer is not in use, activate it, otherwise, keep using it by counting down.
+                if (b->attack_timer == -1) {
+                    // The reason we don't do:
+                    // b->attack_timer = barrel_attack_interval;
+                    // is because we want the moment we are in range of the player to damage it, rather than waiting one cycle before damaging the player.
+                    b->attack_timer = 0;
                 }
-            }
+                else {
+                    b->attack_timer -= g_dt;
+                    if (b->attack_timer < 0) {
+                        b->attack_timer = b->anim.tick / 1000;
+                        player->current_health -= barrel_damage;
+                    }
+                }
 
+            }
         }
         else {
             b->agg_timer -= g_dt;
