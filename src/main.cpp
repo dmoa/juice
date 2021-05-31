@@ -54,6 +54,7 @@ int main(int argc, char* argv[]) {
     overlay.GivePointers(& player);
     overlay.LoadAssets();
 
+    free(NULL);
 
     SDL_Event event;
     bool quit = false;
@@ -94,6 +95,7 @@ int main(int argc, char* argv[]) {
 
                 case SDL_CONTROLLERDEVICEREMOVED:
                     FreeGameController(g_controls.controller);
+                    g_controls.controller = NULL;
                     break;
 
                 default: break;
@@ -114,6 +116,8 @@ int main(int argc, char* argv[]) {
             gameplay_camera.Update();
             crosshair.Update();
             overlay.Update();
+
+            player.FinishUpdate();  
         }
         SDL_ShowCursor(DEV_PAUSED); // if in dev mode -> show cursor
 

@@ -63,8 +63,8 @@ inline void DestroyAsset_Ase_Animated(Asset_Ase_Animated* a) {
     for (int i = 0; i < a->tags.num_tags; i++) {
         free(a->tags.tags[i].name);
     }
-    // We try to free instead of freeing because assets that do not have any tags loaded do never run malloc, which means that output->tags will be a NULL pointer if an asset has not assets.
-    tryfree(a->tags.tags);
+
+    free(a->tags.tags);
 
     free(a);
 }
@@ -110,7 +110,7 @@ Asset_Ase* LoadAsset_Ase(std::string file_path) {
             bmalloc(SDL_Rect)
         };
 
-        tryfree(output->tags);
+        free(output->tags);
         for (int i = 0; i < output->num_tags; i++) {
             free(output->tags[i].name);
         }

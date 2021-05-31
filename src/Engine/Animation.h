@@ -17,7 +17,7 @@ inline Tag_Range GetTag(Tags tags, char* str) {
     return {"", -1, -1};
 }
 
-inline void SetAnimation(CurAnimation* anim, Asset_Ase_Animated* asset, char* name) {
+inline void Animation_Set(CurAnimation* anim, Asset_Ase_Animated* asset, char* name) {
 
     Tag_Range tag = GetTag(asset->tags, name);
 
@@ -28,7 +28,7 @@ inline void SetAnimation(CurAnimation* anim, Asset_Ase_Animated* asset, char* na
         return;
     }
 
-    tryfree(anim->name); // Because initial char could be null
+    free(anim->name); // Free will ignore if anim->name is NULL, so nothing to worry about.
     anim->name = strmalloc(name);
 
     anim->frame_i = tag.from;
@@ -41,11 +41,11 @@ inline void SetAnimation(CurAnimation* anim, Asset_Ase_Animated* asset, char* na
     };
 }
 
-inline void SetAnimationIf(CurAnimation* anim, Asset_Ase_Animated* asset, char* name) {
-    if (! strequal(name, anim->name)) SetAnimation(anim, asset, name);
+inline void Animation_SetIf(CurAnimation* anim, Asset_Ase_Animated* asset, char* name) {
+    if (! strequal(name, anim->name)) Animation_Set(anim, asset, name);
 }
 
-inline bool UpdateAnimation(CurAnimation* anim, Asset_Ase_Animated* asset) {
+inline bool Animation_Update(CurAnimation* anim, Asset_Ase_Animated* asset) {
     anim->tick -= g_dt * 1000; // convert dt into milliseconds
     if (anim->tick < 0) {
 

@@ -409,8 +409,8 @@ inline void Ase_Destroy_Output(Ase_Output* output) {
         free(output->tags[i].name);
     }
 
-    if (output->slices != NULL) free(output->slices);
-    if (output->tags != NULL) free(output->tags);
+    free(output->slices);
+    free(output->tags);
 
     free(output);
 }
