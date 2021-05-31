@@ -42,12 +42,16 @@ struct Player : Entity {
     void DrawWeapon();
 
     void Update();
-    void MovementUpdate();
-    void CollisionUpdate();
-    void AnimationUpdate();
+    void UpdateMovement();
+    void UpdateCollision();
+    void UpdateAnimation();
     void UpdateWeapon();
 
     void Attack();
+    // We need this because in order to have proper collision detection with enemies,
+    // the crosshair has to be updated with the updates player info,
+    // so we cannot do enemy collision detection until after the crosshair has been updated.
+    void FinishUpdate();
 
     inline float GetDrawCenterX() { return x + (*asset)->damage_box->x + (*asset)->damage_box->w / 2; };
     inline float GetDrawCenterY() { return y + (*asset)->damage_box->y + (*asset)->damage_box->h / 2; };
@@ -80,9 +84,6 @@ struct Player : Entity {
     // to manage its own asset, i.e. there are not multiple copies
     // of player, so, it can store the pointer to the asset directly.
     Asset_Ase_Animated* _asset = NULL;
-
-    // For some reason, we cannot get addresses for default values :|, so doing it in LoadAsset instead.
-    //Asset_Ase** asset = (Asset_Ase**) (& _asset);
 
     CurAnimation cur_anim;
 

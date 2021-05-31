@@ -17,7 +17,7 @@ void Enemies::InitAllEnemies() {
     for (int i = 0; i < NUM_ENEMIES; i++) {
 
         barrels[i].x = random(0, 500); barrels[i].y = random(0, 500);
-        SetAnimation(& barrels[i].anim, barrel_asset, "Idle");
+        Animation_Set(& barrels[i].anim, barrel_asset, "Idle");
         barrels[i].asset = (Asset_Ase**) & barrel_asset;
 
         ecs->AddEntity(& barrels[i]);
@@ -30,7 +30,7 @@ void Enemies::Update() {
 
         Barrel* b = & barrels[i];
 
-        bool finished_animation_loop = UpdateAnimation(& b->anim, barrel_asset);
+        bool finished_animation_loop = Animation_Update(& b->anim, barrel_asset);
 
         // If in range of player and still idle, then get aggravated.
         if (pyth_s(player->GetDrawCenterX(), player->GetDrawCenterY(), b->x + barrel_asset->frame_width / 2, b->y + barrel_asset->frame_height / 2) < barrel_range*barrel_range) {
@@ -38,7 +38,7 @@ void Enemies::Update() {
             b->aggravated = true;
             b->agg_timer = barrel_aggr_time;
 
-            // If player enemy damage boxes collide (and for now it's just barrel so we can generalise) and if player is in front of enemy
+            // If player enemy damage boxes collide (and for now it's just barrel so we can generalise) and if player is in front of enemy (logically in front of enemy means the player is below the enemy)
             if (AABB(*player->asset, barrel_asset, player->x, player->y, b->x, b->y) && player->y + (*player->asset)->movement_box->y + (*player->asset)->movement_box->h > b->y + barrel_asset->movement_box->y + barrel_asset->movement_box->h) {
 
                 // If the attack_timer is not in use, activate it, otherwise, keep using it by counting down.
@@ -66,9 +66,9 @@ void Enemies::Update() {
             }
         }
 
-        if (strequal(b->anim.name, "Opening") && finished_animation_loop) SetAnimation(& b->anim, barrel_asset, "Attack");
-        if (b->aggravated && strequal(b->anim.name, "Idle")) SetAnimation(& b->anim, barrel_asset, "Opening");
-        if (! b->aggravated) SetAnimationIf(& b->anim, barrel_asset, "Idle");
+        if (strequal(b->anim.name, "Opening") && finished_animation_loop) Animation_Set(& b->anim, barrel_asset, "Attack");
+        if (b->aggravated && strequal(b->anim.name, "Idle")) Animation_Set(& b->anim, barrel_asset, "Opening");
+        if (! b->aggravated) Animation_SetIf(& b->anim, barrel_asset, "Idle");
 
     }
 }

@@ -20,7 +20,9 @@ void Crosshair::Draw() {
 void Crosshair::Update() {
 
     // If the mouse moves or we've been using the mouse before, then update the crosshair according to the mouse coords.
-    if (g_controls.MouseMoved() || ! last_move_with_controller) {
+    // OR, if the controller is not connected to begin with, we don't have care whether the last move was with the controller
+    // or the mouse, since we know it's going to be moved by the mouse.
+    if (g_controls.controller == NULL || g_controls.MouseMoved() || ! last_move_with_controller) {
 
         last_move_with_controller = false;
         // Passing render_rect coords to GetMouseGameState and not x and y,
@@ -52,8 +54,8 @@ void Crosshair::Update() {
         y = player->GetDrawCenterY() + joystick_y;
     }
 
-    // We draw the controller if it was moved with the mouse, or, the joystick hits a minimum bar of movement.
-    is_drawn = (! last_move_with_controller) || (last_move_with_controller && (joystick_x || joystick_y));
+    // We draw the crosshair if no controller is connected, if it was moved with the mouse, or, the joystick hits a minimum bar of movement.
+    is_drawn = (g_controls.controller == NULL) || (! last_move_with_controller) || (last_move_with_controller && (joystick_x || joystick_y));
 
     render_rect.x = x;
     render_rect.y = y;

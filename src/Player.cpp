@@ -12,7 +12,7 @@ void Player::LoadAsset() {
     weapon.asset = LoadAsset_Ase("assets/player/weapons/knife.ase");
 
     is_flipped = SDL_FLIP_HORIZONTAL;
-    SetAnimation(& cur_anim, _asset, "Idle");
+    Animation_Set(& cur_anim, _asset, "Idle");
 
     rendering_quad.w = cur_anim.quad.w;
     rendering_quad.h = cur_anim.quad.h;
@@ -63,15 +63,15 @@ void Player::DrawWeapon() {
 }
 
 void Player::Update() {
-    MovementUpdate();
-    CollisionUpdate();
+    UpdateMovement();
+    UpdateCollision();
     rendering_quad.x = x;
     rendering_quad.y = y;
-    AnimationUpdate();
+    UpdateAnimation();
     UpdateWeapon();
 }
 
-void Player::MovementUpdate() {
+void Player::UpdateMovement() {
 
     current_xv = 0;
     current_yv = 0;
@@ -126,7 +126,7 @@ void Player::MovementUpdate() {
     y += current_yv * (g_dt);
 }
 
-void Player::CollisionUpdate() {
+void Player::UpdateCollision() {
 
     bool collided_x = false;
     bool collided_y = false;
@@ -160,26 +160,26 @@ void Player::CollisionUpdate() {
         if (collided_y) {
             x += ((current_xv > 0 ? v : - v) - current_xv) * (g_dt);
             current_yv = 0;
-            CollisionUpdate();
+            UpdateCollision();
         }
         else if (collided_x) {
             y += ((current_yv > 0 ? v: - v) - current_yv) * (g_dt);
             current_xv = 0;
-            CollisionUpdate();
+            UpdateCollision();
         }
     }
 }
 
-void Player::AnimationUpdate() {
+void Player::UpdateAnimation() {
 
-    bool finished_anim = UpdateAnimation(& cur_anim, _asset);
+    bool finished_anim = Animation_Update(& cur_anim, _asset);
 
     if (! is_attacking) {
         if (current_xv || current_yv) {
-            SetAnimationIf(& cur_anim, _asset, "Run");
+            Animation_SetIf(& cur_anim, _asset, "Run");
         }
         else {
-            SetAnimationIf(& cur_anim, _asset, "Idle");
+            Animation_SetIf(& cur_anim, _asset, "Idle");
         }
     }
 
@@ -224,6 +224,7 @@ void Player::UpdateWeapon() {
     // We want this to continually tick so that we can use it to check whether attack_break time has passed.
     // i.e. if weapon.attack_tick < - weapon.attack_break, then we know that the min time between the weapon attacks has passed.
     weapon.attack_tick -= g_dt;
+
 }
 
 void Player::Attack() {
@@ -237,4 +238,19 @@ void Player::Attack() {
     //int rand = random(0, 2);
     //if (rand) weapon.swing_angle *= -1;
     weapon.swing_angle *= -1;
+}
+
+void Player::FinishUpdate() {
+
+    if (is_attacking) {
+        for (int i = 0; i < NUM_ENEMIES; i++) {
+            Barrel* b = & enemies->barrels[i];
+            Crosshair* c = crosshair;
+            // For now, the crosshair is our best friend in figuring out where the player is damaging.
+            if (AABB_Movement(c->x - c->render_rect.w / 2, c->y - c->render_rect.h / 2, c->render_rect.w, c->render_rect.h, enemies->barrel_asset, b->x, b->y)) {
+                print("Enemy attacked! %f %f", b->x, b->y);
+            }
+        }
+    }
+
 }
