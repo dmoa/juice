@@ -34,11 +34,10 @@ void ECS::Draw() {
 
     // bubble sort for draw order
 
-    int num_not_null = 0;
-    for (int i = 0; i < MAX_ENTITIES; i++) {
+    for (int i = 0; i < old_num_entities; i++) {
 
         bool has_swapped = false;
-        for (int j = 0; j < MAX_ENTITIES - i - 1; j++) {
+        for (int j = 0; j < old_num_entities - i - 1; j++) {
 
             if (entities[j+1] == NULL) continue;
             // swap the null entity and the other entity here before we try to define e1_y and e2_y (if we try with NULL we'll get a seg fault)
@@ -69,16 +68,12 @@ void ECS::Draw() {
     }
 
     for (int i = 0; i < num_active_entities; i++) {
-        if (entities[i] == NULL) {
-            print("%i", i);
-            continue;
-        }
-        if (i == 30 and entities[i] != NULL) print("WOW THIS MUST BE PLAYER: %i", (int) entities[i]->type);
         entities[i]->Draw();
     }
 }
 
 void ECS::Update() {
+    old_num_entities = num_active_entities;
     for (int i = num_active_entities - 1; i >= 0; i--) {
         if (entities[i]->should_delete) {
             entities[i] = NULL;

@@ -20,6 +20,7 @@ struct ECS {
     void Draw();
     void Update();
 
+    int old_num_entities = 0;
     int num_active_entities = 0;
     Entity* entities [MAX_ENTITIES];
 };
