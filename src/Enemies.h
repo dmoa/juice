@@ -6,13 +6,12 @@
 
 #include <Engine/Engine.h>
 #include "ECS/ECS.h"
+#include "ECS/Max.h"
 #include "Player.h"
 
 struct Map;
 struct ECS;
 struct Player;
-
-#define NUM_ENEMIES 30
 
 struct Barrel : Entity {
 
@@ -39,7 +38,7 @@ struct Enemies {
     ECS* ecs;
     Player* player;
 
-    Barrel barrels [NUM_ENEMIES];
+    Barrel barrels [MAX_ENEMIES];
 
     Asset_Ase_Animated* barrel_asset = NULL;
     int barrel_range = 30;

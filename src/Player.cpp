@@ -33,6 +33,7 @@ void Player::PassPointers(Map* _map, Enemies* _enemies, ECS* _ecs, Crosshair* _c
 
 void Player::InitPos() {
     x = y = 40;
+    type = PLAYER_TYPE;
     ecs->AddEntity( (Entity*) this );
 }
 
@@ -243,12 +244,12 @@ void Player::Attack() {
 void Player::FinishUpdate() {
 
     if (is_attacking) {
-        for (int i = 0; i < NUM_ENEMIES; i++) {
+        for (int i = 0; i < MAX_ENEMIES; i++) {
             Barrel* b = & enemies->barrels[i];
             Crosshair* c = crosshair;
             // For now, the crosshair is our best friend in figuring out where the player is damaging.
             if (AABB_Movement(c->x - c->render_rect.w / 2, c->y - c->render_rect.h / 2, c->render_rect.w, c->render_rect.h, enemies->barrel_asset, b->x, b->y)) {
-                print("Enemy attacked! %f %f", b->x, b->y);
+                b->should_delete = true;
             }
         }
     }

@@ -34,8 +34,9 @@ int main(int argc, char* argv[]) {
 
     gameplay_camera.PassPointers(& player, & map, & g_dt);
 
-    player.PassPointers(& map, & enemies, & ecs, & crosshair);
+    ecs.Init();
 
+    player.PassPointers(& map, & enemies, & ecs, & crosshair);
     player.LoadAsset();
     player.InitPos();
 
@@ -117,7 +118,9 @@ int main(int argc, char* argv[]) {
             crosshair.Update();
             overlay.Update();
 
-            player.FinishUpdate();  
+            player.FinishUpdate();
+
+            ecs.Update();
         }
         SDL_ShowCursor(DEV_PAUSED); // if in dev mode -> show cursor
 

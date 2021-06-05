@@ -25,7 +25,10 @@ struct Asset_Ase {
 
     // If a sprite in the future does not need a boxes, it would likely
     // be an edge case and we waste an negligable amount of memory when holding empty pointers.
+
+    // For the draw order and for where an asset / entity can be damaged
     SDL_Rect* movement_box;
+    // Used by the asset / entity to damage other assets / entities.
     SDL_Rect* damage_box;
 };
 

@@ -19,6 +19,10 @@ struct Entity {
     Asset_Ase** asset = NULL;
 
     virtual void Draw() {};
+
+
+    // For ECS
+    bool should_delete = false;
 };
 
 

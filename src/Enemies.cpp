@@ -14,9 +14,10 @@ void Enemies::DestroyAssets() {
 }
 
 void Enemies::InitAllEnemies() {
-    for (int i = 0; i < NUM_ENEMIES; i++) {
+    for (int i = 0; i < MAX_ENEMIES; i++) {
 
         barrels[i].x = random(0, 500); barrels[i].y = random(0, 500);
+        barrels[i].type = ENEMY_TYPE;
         Animation_Set(& barrels[i].anim, barrel_asset, "Idle");
         barrels[i].asset = (Asset_Ase**) & barrel_asset;
 
@@ -26,7 +27,7 @@ void Enemies::InitAllEnemies() {
 
 void Enemies::Update() {
 
-    for (int i = 0; i < NUM_ENEMIES; i++) {
+    for (int i = 0; i < MAX_ENEMIES; i++) {
 
         Barrel* b = & barrels[i];
 
