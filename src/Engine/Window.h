@@ -31,8 +31,10 @@ extern GlobalWindowData g_window;
 #ifdef ENGINE_IMPLEMENTATION
 
 void Window::Init() {
-    window = SDL_CreateWindow("juice", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, g_window.w, g_window.h, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
-    //SDL_UpdateWindowSurface(window);
+
+    window = SDL_CreateWindow("juice", 0, 0, 0, 0, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED);
+
+    SDL_GetWindowSize(window, & g_window.w, & g_window.h);
     g_window.rdr = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
     gameplay_texture = SDL_CreateTexture(g_window.rdr, SDL_GetWindowPixelFormat(window), SDL_TEXTUREACCESS_TARGET, 768, 768);
@@ -73,15 +75,13 @@ void Window::Present() {
     SDL_RenderPresent(g_window.rdr);
 }
 
-
 void Window::Shutdown() {
-    print("Shutting down window.");
     SDL_FreeSurface(icon);
     SDL_DestroyRenderer(g_window.rdr);
     SDL_DestroyWindow(window);
 }
 
-GlobalWindowData g_window = {1800, 1000, 4, NULL, NULL};
+GlobalWindowData g_window = {-1, -1, 4, NULL, NULL};
 Window window;
 
 #endif
