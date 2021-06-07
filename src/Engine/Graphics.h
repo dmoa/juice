@@ -35,11 +35,12 @@ inline void RenderCopy(SDL_Renderer* r, SDL_Texture* t, SDL_Rect* src_r, float x
     SDL_RenderCopy(r, t, src_r, & des_r);
 }
 
-void PrintScreen(std::string text, int x, int y);
+void PrintScreen(char* text, int x, int y);
+
 
 #ifdef ENGINE_IMPLEMENTATION
 
-void PrintScreen(std::string text, int x, int y) {
+void PrintScreen(char* text, int x, int y) {
     SDL_Rect rect = {x, y, -1, -1};
     SDL_Texture* fps_texture = NULL;
     fps_texture = g_text.CreateTexture(text);

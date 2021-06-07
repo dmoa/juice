@@ -24,15 +24,18 @@ struct GlobalControls {
     SDL_GameController* controller = NULL;
     bool action_dev_before = false;
     int old_mouse_x, old_mouse_y = 0;
+
     void Init();
+
     bool Left();
     bool Right();
     bool Up();
     bool Down();
+
     bool Action1();
-    bool ActionDev();
-    bool MouseMoved();
     bool Back();
+    bool MouseMoved();
+    bool ActionDev();
 };
 extern GlobalControls g_controls;
 
@@ -87,16 +90,6 @@ bool GlobalControls::Action1() {
     return GetMouseDown(SDL_BUTTON_LEFT) || ControllerButton(SDL_CONTROLLER_BUTTON_X);
 }
 
-bool GlobalControls::ActionDev() {
-    // To make sure the function doesn't constantly spam ActionDev is down.
-    // It acts more as a key down event.
-    bool action_dev_now = (keys_down[SDL_SCANCODE_LCTRL]) || (ControllerButton(SDL_CONTROLLER_BUTTON_BACK) && g_controls.Left());
-    bool result = action_dev_now && ! action_dev_before;
-    action_dev_before = action_dev_now;
-
-    return result;
-}
-
 bool GlobalControls::Back() {
     return keys_down[SDL_SCANCODE_ESCAPE] || ControllerButton(SDL_CONTROLLER_BUTTON_START);
 }
@@ -109,6 +102,16 @@ bool GlobalControls::MouseMoved() {
 
     old_mouse_x = new_x;
     old_mouse_y = new_y;
+
+    return result;
+}
+
+bool GlobalControls::ActionDev() {
+    // To make sure the function doesn't constantly spam ActionDev is down.
+    // It acts more as a key down event.
+    bool action_dev_now = (keys_down[SDL_SCANCODE_LCTRL]) || (ControllerButton(SDL_CONTROLLER_BUTTON_BACK) && g_controls.Left());
+    bool result = action_dev_now && ! action_dev_before;
+    action_dev_before = action_dev_now;
 
     return result;
 }

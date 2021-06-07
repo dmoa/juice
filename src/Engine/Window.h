@@ -2,6 +2,16 @@
 
 #include <Engine/Engine.h>
 
+// Global Window Data
+struct GlobalWindowData {
+    int w;
+    int h;
+    int scale;
+    SDL_Renderer* rdr;
+    SDL_Rect gameplay_viewport;
+};
+extern GlobalWindowData g_window;
+
 struct Window {
 
     void Init();
@@ -18,15 +28,6 @@ struct Window {
     SDL_Surface* icon;
 };
 
-// Global Window Data
-struct GlobalWindowData {
-    int w;
-    int h;
-    int scale;
-    SDL_Renderer* rdr;
-    SDL_Rect gameplay_viewport;
-};
-extern GlobalWindowData g_window;
 
 #ifdef ENGINE_IMPLEMENTATION
 

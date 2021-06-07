@@ -6,7 +6,7 @@
 #include "Engine.h"
 #include "utils/ase_loader.h"
 
-inline SDL_Texture* LoadAsset_IMG(std::string path) {
+inline SDL_Texture* LoadAsset_IMG(char* path) {
     SDL_Texture* texture = IMG_LoadTexture(g_window.rdr, path.c_str());
     if (!texture) print("%s%s", path.c_str(), " not found");
     return texture;
@@ -39,9 +39,9 @@ struct Asset_Ase_Animated : Asset_Ase {
 };
 
 
-Asset_Ase* LoadAsset_Ase(std::string file_path);
+Asset_Ase* LoadAsset_Ase(char* file_path);
 
-inline Asset_Ase_Animated* LoadAsset_Ase_Animated(std::string file_path) {
+inline Asset_Ase_Animated* LoadAsset_Ase_Animated(char* file_path) {
     return (Asset_Ase_Animated*) LoadAsset_Ase(file_path);
 }
 
@@ -74,7 +74,7 @@ inline void DestroyAsset_Ase_Animated(Asset_Ase_Animated* a) {
 
 #ifdef ENGINE_IMPLEMENTATION
 
-Asset_Ase* LoadAsset_Ase(std::string file_path) {
+Asset_Ase* LoadAsset_Ase(char* file_path) {
 
     Ase_Output* output = Ase_Load(file_path);
     SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormatFrom(output->pixels, output->frame_width * output->num_frames, output->frame_height, 8, output->frame_width * output->num_frames, SDL_PIXELFORMAT_INDEX8);

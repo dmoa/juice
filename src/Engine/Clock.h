@@ -6,7 +6,7 @@
 extern float g_dt;
 
 struct EngineClock {
-    // dt
+
     float last_tick_time = 0;
 
     // for average fps
