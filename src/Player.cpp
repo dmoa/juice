@@ -56,7 +56,7 @@ void Player::DrawCharacter() {
 
 void Player::DrawWeapon() {
 
-    weapon.pivot = {weapon.asset->frame_width / 2, weapon.asset->frame_height * 1.5};
+    weapon.pivot = {weapon.asset->frame_width / 2, weapon.asset->frame_height};
     // drect's y is + .5 * frame_height to align center of weapon with player center. Pivot.y is to offset the rotation since SDL pivots relative to drect.
     // We offset to make sure it pivots around the player center.
     weapon.drect = {GetDrawCenterX() - weapon.asset->frame_width / 2, GetDrawCenterY() - weapon.pivot.y, weapon.asset->frame_width, weapon.asset->frame_height};
