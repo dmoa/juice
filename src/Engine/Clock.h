@@ -1,4 +1,4 @@
-#include <SDL2/SDL.h>
+#include <Engine/Engine.h>
 
 // The more previous fps we store, the more accurate the average fps.
 #define ACCURACY 50
@@ -13,6 +13,7 @@ struct EngineClock {
     float fpss [ACCURACY];
     int fpss_index = -1;
     int average_fps = -1;
+    char average_fps_str [5];
 
     void tick() {
         float tick_time = SDL_GetTicks();
@@ -27,6 +28,7 @@ struct EngineClock {
 
         if (g_dt != 0) fpss[fpss_index] = 1 / g_dt;
         fpss_index = (fpss_index + 1) % ACCURACY;
+        itoa(average_fps, average_fps_str, 10);
     }
 };
 // odd naming to avoid collision with clock() in <time.h>

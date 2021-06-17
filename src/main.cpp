@@ -138,9 +138,10 @@ int main(int argc, char* argv[]) {
 
         overlay.Draw();
 
+        PrintScreen(engine_clock.average_fps_str, 0, 75);
+
         window.Present();
     }
-
 
     player.DestroyAsset();
     map.DestroyTextures();

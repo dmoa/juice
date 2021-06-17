@@ -7,8 +7,8 @@
 #include "utils/ase_loader.h"
 
 inline SDL_Texture* LoadAsset_IMG(char* path) {
-    SDL_Texture* texture = IMG_LoadTexture(g_window.rdr, path.c_str());
-    if (!texture) print("%s%s", path.c_str(), " not found");
+    SDL_Texture* texture = IMG_LoadTexture(g_window.rdr, path);
+    if (!texture) print("%s%s", path, " not found");
     return texture;
 }
 
@@ -83,14 +83,14 @@ Asset_Ase* LoadAsset_Ase(char* file_path) {
     SDL_SetColorKey(surface, SDL_TRUE, output->palette.color_key);
 
     SDL_Texture* texture = SDL_CreateTextureFromSurface(g_window.rdr, surface);
-    if (! texture) print("Texture could not be created!, %s, %s\n", SDL_GetError(), file_path.c_str());
+    if (! texture) print("Texture could not be created!, %s, %s\n", SDL_GetError(), file_path);
     SDL_FreeSurface(surface);
 
     Asset_Ase* asset;
     if (output->num_frames > 1) {
         Asset_Ase_Animated* _asset = bmalloc(Asset_Ase_Animated);
         *_asset =  {
-            strmalloc_wt(file_path.c_str()),
+            strmalloc_wt(file_path),
             texture,
             output->frame_width,
             output->frame_height,
@@ -105,7 +105,7 @@ Asset_Ase* LoadAsset_Ase(char* file_path) {
     else {
         asset = bmalloc(Asset_Ase);
         *asset = {
-            strmalloc_wt(file_path.c_str()),
+            strmalloc_wt(file_path),
             texture,
             output->frame_width,
             output->frame_height,
@@ -127,7 +127,7 @@ Asset_Ase* LoadAsset_Ase(char* file_path) {
             *(asset->damage_box) = output->slices[i].quad;
         }
         else {
-            print("%s: Asset_Ase slice %s not supported", file_path.c_str(), output->slices[i].name);
+            print("%s: Asset_Ase slice %s not supported", file_path, output->slices[i].name);
         }
     }
 
