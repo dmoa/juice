@@ -5,6 +5,8 @@
 
 #define PI 3.14159265
 #define ROOT2 1.41421356237
+#define ToRadians(a) a*PI/180
+struct v2 { float x; float y; };
 
 inline float pyth_s(float x, float y, float x2, float y2) {
     return (x-x2)*(x-x2) + (y-y2)*(y-y2);
@@ -43,4 +45,33 @@ inline bool AABB(Asset_Ase* a, Asset_Ase* b, float x, float y, float x2, float y
 
 inline bool AABB_Movement(float x, float y, float w, float h, Asset_Ase* a, float x2, float y2) {
     return x + w > x2 + a->movement_box->x && x < x2 + a->movement_box->x + a->movement_box->w && y + h > y2 + a->movement_box->y && y < y2 + a->movement_box->y + a->movement_box->h;
+}
+
+// This explains it better than I could: http://jeffreythompson.org/collision-detection/line-line.php
+inline bool LineLine(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4) {
+
+    float a = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3)) / ((y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1));
+    float b = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)) / ((y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1));
+
+    return a >= 0 && a <= 1 && b >= 0 && b <= 1;
+}
+
+inline bool lineRect(float x1, float y1, float x2, float y2, float rx, float ry, float rw, float rh) {
+
+    // check if the line has hit any of the rectangle's sides
+    bool left = LineLine(x1, y1, x2, y2, rx, ry, rx, ry + rh);
+    bool right = LineLine(x1, y1, x2, y2, rx + rw, ry, rx + rw, ry + rh);
+    bool top = LineLine(x1, y1, x2, y2, rx, ry, rx + rw, ry);
+    bool bottom = LineLine(x1, y1, x2, y2, rx, ry + rh, rx + rw, ry + rh);
+
+    return left || right || top || bottom;
+}
+
+inline v2 RotatePoint(v2 point, v2 source, float wrong_angle) {
+
+    float radius = pyth(point.x - source.x, point.y - source.y);
+    float angle = ToRadians(- wrong_angle);
+    point.x -= source.x; point.y -= source.y;
+
+    return {source.x + point.x * cos(angle) - point.y * sin(angle), source.y + point.x * sin(angle) + point.y * cos(angle)};
 }
