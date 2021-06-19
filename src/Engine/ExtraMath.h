@@ -56,7 +56,7 @@ inline bool LineLine(float x1, float y1, float x2, float y2, float x3, float y3,
     return a >= 0 && a <= 1 && b >= 0 && b <= 1;
 }
 
-inline bool lineRect(float x1, float y1, float x2, float y2, float rx, float ry, float rw, float rh) {
+inline bool LineRect(float x1, float y1, float x2, float y2, float rx, float ry, float rw, float rh) {
 
     // check if the line has hit any of the rectangle's sides
     bool left = LineLine(x1, y1, x2, y2, rx, ry, rx, ry + rh);
@@ -65,6 +65,33 @@ inline bool lineRect(float x1, float y1, float x2, float y2, float rx, float ry,
     bool bottom = LineLine(x1, y1, x2, y2, rx, ry + rh, rx + rw, ry + rh);
 
     return left || right || top || bottom;
+}
+
+inline void RectToV2(SDL_Rect* r, v2* vertices) {
+
+    vertices[0] = {r->x, r->y};
+    vertices[1] = {r->x + r->w, r->y};
+    vertices[2] = {r->x + r->w, r->y + r->h};
+    vertices[3] = {r->x, r->y + r->h};
+}
+
+// Assuming polygon has 4 sides for now
+template <typename A, typename B>
+inline bool PolygonPoint(v2* vertices, A px, B py) {
+
+    bool collision = false;
+
+    for (int i = 0; i < 4; i++) {
+
+        v2 p1 = vertices[i];
+        v2 p2 = vertices[(i + 1) % 4];
+
+        if ((p1.y > py != p2.y > py) && px < (p2.x - p1.x) * (py - p1.y) / (p2.y - p1.y) + p1.x) {
+            collision = ! collision;
+        }
+    }
+
+    return collision;
 }
 
 inline v2 RotatePoint(v2 point, v2 source, float wrong_angle) {

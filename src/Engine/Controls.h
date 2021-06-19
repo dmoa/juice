@@ -42,11 +42,7 @@ extern GlobalControls g_controls;
 
 // Mouse
 
-inline void GetMouseGameState(int* x, int* y) {
-    SDL_GetMouseState(x, y);
-    if (x) *x = *x / g_window.scale + g_window.gameplay_viewport.x;
-    if (y) *y = *y / g_window.scale + g_window.gameplay_viewport.y;
-}
+void GetMouseGameState(int* x, int* y);
 
 inline bool GetMouseDown(int i = 1) { return SDL_GetMouseState(NULL, NULL) == SDL_BUTTON(i); };
 
@@ -117,5 +113,11 @@ bool GlobalControls::ActionDev() {
 }
 
 GlobalControls g_controls;
+
+void GetMouseGameState(int* x, int* y) {
+    SDL_GetMouseState(x, y);
+    if (x) *x = *x / g_window.scale + g_window.gameplay_viewport.x;
+    if (y) *y = *y / g_window.scale + g_window.gameplay_viewport.y;
+}
 
 #endif
