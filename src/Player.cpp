@@ -246,9 +246,27 @@ void Player::FinishUpdate() {
     if (is_attacking) {
         for (int i = 0; i < MAX_ENEMIES; i++) {
             Barrel* b = & enemies->barrels[i];
-            Crosshair* c = crosshair;
-            // For now, the crosshair is our best friend in figuring out where the player is damaging.
-            if (AABB_Movement(c->x - c->render_rect.w / 2, c->y - c->render_rect.h / 2, c->render_rect.w, c->render_rect.h, enemies->barrel_asset, b->x, b->y)) {
+
+            // Clipping and transforming the draw rectangle of weapon with the bounds damage box rectangle of weapon.
+            SDL_Rect _damage_box = weapon.drect;
+            _damage_box.x += weapon.asset->damage_box->x;
+            _damage_box.y += weapon.asset->damage_box->y;
+            _damage_box.w = weapon.asset->damage_box->w;
+            _damage_box.h = weapon.asset->damage_box->h;
+
+            v2 player_damage_box [4];
+            RectToV2(& _damage_box, player_damage_box);
+
+            // Clipping and transforming the draw rectangle of enemy with the bounds movement rectangle (we assume the movement rectangle is where the enemy can be damaged).
+
+            SDL_Rect enemy_can_be_damage_box = {
+                b->x + (*b->asset)->movement_box->x,
+                b->y + (*b->asset)->movement_box->y,
+                (*b->asset)->movement_box->w,
+                (*b->asset)->movement_box->h
+            };
+
+            if (PolygonRectangle(player_damage_box, & enemy_can_be_damage_box)) {
                 b->should_delete = true;
             }
         }
