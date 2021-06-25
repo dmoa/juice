@@ -6,7 +6,10 @@
 #define PI 3.14159265
 #define ROOT2 1.41421356237
 #define ToRadians(a) a*PI/180
-struct v2 { float x; float y; };
+typedef SDL_Point v2;
+
+// Assuming all polygons have four sides (it's all we need for now)
+#define POLYGON_NUM_POINTS 4
 
 inline float pyth_s(float x, float y, float x2, float y2) {
     return (x-x2)*(x-x2) + (y-y2)*(y-y2);
@@ -67,6 +70,11 @@ inline bool LineRect(float x1, float y1, float x2, float y2, float rx, float ry,
     return left || right || top || bottom;
 }
 
+inline bool PointRect(float x, float y, SDL_Rect* rect) {
+    return x > rect->x && x < rect->x + rect->w && y > rect->y && y < rect->y + rect->h;
+}
+
+// Not safe
 inline void RectToV2(SDL_Rect* r, v2* vertices) {
 
     vertices[0] = {r->x, r->y};
@@ -81,10 +89,10 @@ inline bool PolygonPoint(v2* vertices, A px, B py) {
 
     bool collision = false;
 
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < POLYGON_NUM_POINTS; i++) {
 
         v2 p1 = vertices[i];
-        v2 p2 = vertices[(i + 1) % 4];
+        v2 p2 = vertices[(i + 1) % POLYGON_NUM_POINTS];
 
         if ((p1.y > py != p2.y > py) && px < (p2.x - p1.x) * (py - p1.y) / (p2.y - p1.y) + p1.x) {
             collision = ! collision;
@@ -94,11 +102,31 @@ inline bool PolygonPoint(v2* vertices, A px, B py) {
     return collision;
 }
 
-inline v2 RotatePoint(v2 point, v2 source, float wrong_angle) {
+template <typename A, typename B>
+inline void RotatePoint(A* point_x, B* point_y, v2* source, float wrong_angle) {
 
-    float radius = pyth(point.x - source.x, point.y - source.y);
+    float radius = pyth(*point_x - source->x, *point_y - source->y);
     float angle = ToRadians(- wrong_angle);
-    point.x -= source.x; point.y -= source.y;
+    *point_x -= source->x; *point_y -= source->y;
 
-    return {source.x + point.x * cos(angle) - point.y * sin(angle), source.y + point.x * sin(angle) + point.y * cos(angle)};
+    *point_x = source->x + *point_x * cos(angle) - *point_y * sin(angle);
+    *point_y = source->y + *point_x * sin(angle) + *point_y * cos(angle);
+}
+
+inline bool PolygonRectangle(v2* vertices, SDL_Rect* rect) {
+
+    // @DONE Checks if every line of the polygon collides with the rectangle.
+    // @DONE Checks if any point of the rectangle is inside the polygon - For rectangles engulfed by polygons
+    // @DONE?! Checks if any point of the polygon is inside the rectangle - For polygons engulfed by rectangles
+
+    for (int i = 0; i < POLYGON_NUM_POINTS; i++) {
+
+        v2 p1 = vertices[i];
+        v2 p2 = vertices[(i + 1) % POLYGON_NUM_POINTS];
+
+        if (LineRect(p1.x, p1.y, p2.x, p2.y, rect->x, rect->y, rect->w, rect->h)) return true;
+        if (PointRect(p1.x, p1.y, rect)) return true;
+    }
+
+    return PolygonPoint(vertices, rect->x, rect->y) || PolygonPoint(vertices, rect->x + rect->w, rect->y) || PolygonPoint(vertices, rect->x + rect->w, rect->y + rect->h) || PolygonPoint(vertices, rect->x, rect->y + rect->h);
 }
