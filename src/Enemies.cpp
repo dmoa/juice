@@ -30,6 +30,7 @@ void Enemies::Update() {
     for (int i = 0; i < MAX_ENEMIES; i++) {
 
         Barrel* b = & barrels[i];
+        if (b->deleted) continue;
 
         bool finished_animation_loop = Animation_Update(& b->anim, barrel_asset);
 

@@ -21,8 +21,12 @@ struct Entity {
     virtual void Draw() {};
 
 
-    // For ECS
-    bool should_delete = false;
+    // Used by ECS to detect and remove "deleted enemies"
+    // We don't actually delete the entity because often times we reuse it differently.
+    // E.g. Enemies has a fixed size array of entities. So, instead of deleting one from a flexible array,
+    // we can just check in the enemy loop whether it is deleted or not, and ignore it in the array if it's deleted.
+    // Then, to add new entities, we can go through the array and fill the deleted entity with the new entity.
+    bool deleted = false;
 };
 
 

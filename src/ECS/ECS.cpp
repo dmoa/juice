@@ -73,9 +73,10 @@ void ECS::Draw() {
 }
 
 void ECS::Update() {
+    // ECS is not in charge of freeing entities, only freeing the pointer that it has itself.
     old_num_entities = num_active_entities;
     for (int i = num_active_entities - 1; i >= 0; i--) {
-        if (entities[i]->should_delete) {
+        if (entities[i]->deleted) {
             entities[i] = NULL;
             num_active_entities--;
         }

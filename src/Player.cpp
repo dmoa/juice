@@ -243,9 +243,12 @@ void Player::Attack() {
 
 void Player::FinishUpdate() {
 
+    is_attacking = true;
+
     if (is_attacking) {
         for (int i = 0; i < MAX_ENEMIES; i++) {
             Barrel* b = & enemies->barrels[i];
+            if (b->deleted) continue;
 
             // Clipping and transforming the draw rectangle of weapon with the bounds damage box rectangle of weapon.
             SDL_Rect _damage_box = weapon.drect;
@@ -259,15 +262,17 @@ void Player::FinishUpdate() {
 
             // Clipping and transforming the draw rectangle of enemy with the bounds movement rectangle (we assume the movement rectangle is where the enemy can be damaged).
 
-            SDL_Rect enemy_can_be_damage_box = {
+            SDL_Rect enemy_can_be_damaged_box = {
                 b->x + (*b->asset)->movement_box->x,
                 b->y + (*b->asset)->movement_box->y,
                 (*b->asset)->movement_box->w,
                 (*b->asset)->movement_box->h
             };
 
-            if (PolygonRectangle(player_damage_box, & enemy_can_be_damage_box)) {
-                b->should_delete = true;
+            SDL_RenderFillRect(g_window.rdr, & enemy_can_be_damaged_box);
+
+            if (PolygonRectangle(player_damage_box, & enemy_can_be_damaged_box)) {
+                b->deleted = true;
             }
         }
     }
