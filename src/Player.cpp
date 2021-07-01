@@ -243,8 +243,6 @@ void Player::Attack() {
 
 void Player::FinishUpdate() {
 
-    is_attacking = true;
-
     if (is_attacking) {
         for (int i = 0; i < MAX_ENEMIES; i++) {
             Barrel* b = & enemies->barrels[i];
@@ -259,14 +257,17 @@ void Player::FinishUpdate() {
             untransformed_rect.w = weapon.asset->damage_box->w;
             untransformed_rect.h = weapon.asset->damage_box->h;
 
-            v2 player_damage_box [5];
-            v2 pivot = {weapon.pivot.x + untransformed_rect.x, weapon.pivot.y + untransformed_rect.y};
+            v2 player_damage_box [4];
+            // SDL draw pivot is relative to drect (which is what weapon.pivot is),
+            // while for rotating points in 3d space we're going to need the absolute pivot coords.
+            v2 pivot = {weapon.drect.x + weapon.pivot.x, weapon.drect.y + weapon.pivot.y};
             RectToV2(& untransformed_rect, player_damage_box);
-            player_damage_box[4] = player_damage_box[0];
-            SDL_RenderDrawLines(g_window.rdr, player_damage_box, 5);
-            for (int i = 0; i < 5; i++) RotatePoint(& player_damage_box[i], & pivot, weapon.angle);
-            SDL_RenderDrawLines(g_window.rdr, player_damage_box, 5);
-            // Clipping and transforming the draw rectangle of enemy with the bounds movement rectangle (we assume the movement rectangle is where the enemy can be damaged).
+
+            for (int i = 0; i < 4; i++)
+                RotatePoint(& player_damage_box[i], & pivot, weapon.angle);
+
+            // Clipping and transforming the draw rectangle of enemy with the bounds movement rectangle
+            // (we assume the movement rectangle is where the enemy can be damaged).
 
             SDL_Rect enemy_can_be_damaged_box = {
                 b->x + (*b->asset)->movement_box->x,
@@ -275,7 +276,7 @@ void Player::FinishUpdate() {
                 (*b->asset)->movement_box->h
             };
 
-            SDL_RenderFillRect(g_window.rdr, & enemy_can_be_damaged_box);
+            // One hit kill of the enemy for now
 
             if (PolygonRectangle(player_damage_box, & enemy_can_be_damaged_box)) {
                 b->deleted = true;

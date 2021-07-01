@@ -102,26 +102,14 @@ inline bool PolygonPoint(v2* vertices, A px, B py) {
     return collision;
 }
 
-template <typename A, typename B>
-inline void RotatePoint(A* point_x, B* point_y, v2* source, float wrong_angle) {
-
-    float radius = pyth(*point_x - source->x, *point_y - source->y);
-    float angle = ToRadians(- wrong_angle);
-    *point_x -= source->x; *point_y -= source->y;
-
-    *point_x = source->x + *point_x * cos(angle) - *point_y * sin(angle);
-    *point_y = source->y + *point_x * sin(angle) + *point_y * cos(angle);
-}
-
-// Trying to identify the problem
 inline void RotatePoint(v2* point, v2* source, float wrong_angle) {
-    float radius = pyth(point->x - source->x, point->y - source->y); // @Constant, seems to be fine
-    printf("%f", radius);
-    float angle = ToRadians(- wrong_angle); // Not even important whether angle is wrong, because the problem is that the rotated point is nowhere near where its meant to be anyway, so the angle is the least of our problems
-    point->x -= source->x; point->y -= source->y;
 
-    point->x = source->x + point->x * cos(angle)     - point->y * sin(angle);
-    point->y = source->y + point->x * sin(angle) + point->y * cos(angle);
+    float angle = ToRadians(wrong_angle);
+    float tx = point->x - source->x;
+    float ty = point->y - source->y;
+
+    point->x = source->x + tx * cos(angle) - ty * sin(angle);
+    point->y = source->y + ty * cos(angle) + tx * sin(angle);
 }
 
 inline bool PolygonRectangle(v2* vertices, SDL_Rect* rect) {

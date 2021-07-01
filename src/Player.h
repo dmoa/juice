@@ -16,7 +16,7 @@ struct ECS;
 struct Weapon {
     Asset_Ase* asset;
     SDL_Rect drect;
-    SDL_Point pivot;
+    v2 pivot;
 
     float angle; // current angle
     float attack_tick = -1; // time left in the attack
