@@ -250,16 +250,22 @@ void Player::FinishUpdate() {
             Barrel* b = & enemies->barrels[i];
             if (b->deleted) continue;
 
-            // Clipping and transforming the draw rectangle of weapon with the bounds damage box rectangle of weapon.
-            SDL_Rect _damage_box = weapon.drect;
-            _damage_box.x += weapon.asset->damage_box->x;
-            _damage_box.y += weapon.asset->damage_box->y;
-            _damage_box.w = weapon.asset->damage_box->w;
-            _damage_box.h = weapon.asset->damage_box->h;
+            // @TODO all of this should use floating point values in the future for more accurate collision detection
 
-            v2 player_damage_box [4];
-            RectToV2(& _damage_box, player_damage_box);
+            // Clipping and transforming and rotating the draw rectangle of weapon using the bounds damage box rectangle and angle of the weapon.
+            SDL_Rect untransformed_rect = weapon.drect;
+            untransformed_rect.x += weapon.asset->damage_box->x;
+            untransformed_rect.y += weapon.asset->damage_box->y;
+            untransformed_rect.w = weapon.asset->damage_box->w;
+            untransformed_rect.h = weapon.asset->damage_box->h;
 
+            v2 player_damage_box [5];
+            v2 pivot = {weapon.pivot.x + untransformed_rect.x, weapon.pivot.y + untransformed_rect.y};
+            RectToV2(& untransformed_rect, player_damage_box);
+            player_damage_box[4] = player_damage_box[0];
+            SDL_RenderDrawLines(g_window.rdr, player_damage_box, 5);
+            for (int i = 0; i < 5; i++) RotatePoint(& player_damage_box[i], & pivot, weapon.angle);
+            SDL_RenderDrawLines(g_window.rdr, player_damage_box, 5);
             // Clipping and transforming the draw rectangle of enemy with the bounds movement rectangle (we assume the movement rectangle is where the enemy can be damaged).
 
             SDL_Rect enemy_can_be_damaged_box = {
